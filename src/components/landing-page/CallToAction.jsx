@@ -35,8 +35,8 @@ function CallToAction() {
 
       <div className="relative max-w-6xl mx-auto">
         <div className="text-center mb-14">
-          <span className="text-xs font-semibold text-red-400 uppercase tracking-wide">Simple process</span>
-          <h2 className="text-3xl md:text-4xl font-bold italic mt-2">How It Works</h2>
+          <span className="text-xs font-semibold text-red-400 uppercase tracking-wide">FL</span>
+          <h2 className="text-3xl md:text-4xl font-bold italic mt-2">How To Begin Studying With FlashLearn</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">

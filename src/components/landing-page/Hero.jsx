@@ -36,11 +36,11 @@ function Hero() {
               style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
             >
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 leading-tight">
-                Study smarter, <span className="text-red-500">retain more.</span>
+                Master any topic, <span className="text-red-500">in half the time.</span>
               </h2>
               <p className="text-slate-500 mt-4 max-w-md mx-auto text-sm">
-                FlashLearn delivers spaced-repetition flashcard decks across Software
-                Engineering, Philosophy, Biblical Studies, Business, and Hospitality.
+               Our smart flashcards adapt to your memory, showing you challenging material right when you need it.
+                Create your own custom decks, or instantly study from community-made decks.
               </p>
             </div>
           </motion.div>

@@ -58,8 +58,8 @@ function Footer() {
         <div>
           <h5 className="text-white text-xs font-semibold uppercase tracking-wide mb-4">Contact Us</h5>
           <ul className="space-y-2.5 text-sm">
-            <li>support@flashlearn.app</li>
-            <li>+254 700 000 000</li>
+            <li>supportfl@gmail.com</li>
+            <li>+254 719 527 252</li>
           </ul>
         </div>
       </div>

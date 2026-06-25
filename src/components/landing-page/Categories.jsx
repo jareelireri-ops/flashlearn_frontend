@@ -29,8 +29,8 @@ function Categories() {
     <section className="py-20 px-6 max-w-6xl mx-auto">
       <div className="text-center mb-10">
         <span className="text-xs font-semibold text-red-500 uppercase tracking-wide">Explore</span>
-        <h2 className="text-3xl font-bold text-slate-900 mt-2">5 Categories</h2>
-        <p className="text-slate-500 mt-2">Real content, curated and ready to study.</p>
+        <h2 className="text-3xl font-bold text-slate-900 mt-2"> Categories</h2>
+        <p className="text-slate-500 mt-2">Our Decks are grouped under various categories based on your need!</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
