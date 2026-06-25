@@ -12,19 +12,14 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<Landing />} />
 
+      {/* Public — guests see blurred/locked previews, logged-in users see full content */}
+      <Route path="/library" element={<Library />} />
+
       <Route
         path="/dashboard"
         element={
           <ProtectedRoute>
             <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/library"
-        element={
-          <ProtectedRoute>
-            <Library />
           </ProtectedRoute>
         }
       />
