@@ -1,10 +1,15 @@
+import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
+import AppRoutes from './routes/AppRoutes'
 import './index.css'
 
 function App() {
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-red-500">FlashLearn Frontend is Live!</h1>
-    </div>
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </BrowserRouter>
   )
 }
 
