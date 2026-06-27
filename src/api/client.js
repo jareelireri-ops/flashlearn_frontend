@@ -12,8 +12,21 @@ client.interceptors.request.use((config) => {
   return config
 })
 
+client.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('access_token')
+      localStorage.removeItem('user')
+      window.location.href = '/'
+    }
+    return Promise.reject(error)
+  }
+)
+
 export default client
 
+// PUBLIC (no auth required)
 export async function getPublicCategories() {
   const response = await client.get('/public/categories')
   return response.data
@@ -24,14 +37,15 @@ export async function getPublicDecks(params = {}) {
   return response.data
 }
 
-export async function getMyCollection() {
-  const response = await client.get('/collection')
+export async function getDeckPreview(deckId) {
+  const response = await client.get(`/decks/${deckId}/preview`)
   return response.data
 }
 
-export async function getCompletionStats() {
-  const response = await client.get('/study/analytics/completion')
-  return response.data // [{ deck_id, deck_title, total_cards, cards_reviewed, completion_pct }]
+// COLLECTION
+export async function getMyCollection() {
+  const response = await client.get('/collection')
+  return response.data
 }
 
 export async function addToCollection(deckId) {
@@ -39,34 +53,124 @@ export async function addToCollection(deckId) {
   return response.data
 }
 
+export async function removeFromCollection(deckId) {
+  const response = await client.delete(`/collection/remove/${deckId}`)
+  return response.data
+}
+
+// STUDY SESSIONS
 export async function startStudySession(deckId) {
   const response = await client.post(`/study/${deckId}/start`)
   return response.data
 }
 
-client.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // If the server returns 401 Unauthorized (invalid/expired token)
-    if (error.response && error.response.status === 401) {
-      // Clear the credentials from local storage
-      localStorage.removeItem('access_token')
-      localStorage.removeIte-m('user')
-      
-      // Force reload the page - redirect to home
-      window.location.href = '/'
-    }
-    return Promise.reject(error)
-  }
-)
-
-// DASHBOARD ENDPOINTS
+// DASHBOARD & ANALYTICS
 export async function getDashboardStats() {
   const response = await client.get('/study/dashboard')
-  return response.data 
+  return response.data
 }
 
 export async function getTopDecks() {
   const response = await client.get('/study/analytics/top-decks')
+  return response.data
+}
+
+export async function getDailyAnalytics(days = 7) {
+  const response = await client.get('/study/analytics/daily', { params: { days } })
+  return response.data
+}
+
+export async function getCompletionStats() {
+  const response = await client.get('/study/analytics/completion')
+  return response.data
+}
+
+// FIX: was using `axiosInstance` which doesn't exist — changed to `client`.
+// This was crashing the Dashboard entirely with a ReferenceError.
+export async function checkDueCards() {
+  const response = await client.get('/reviews/due')
+  return response.data
+}
+
+// PROFILE
+export async function updateProfile(data) {
+  const response = await client.put('/profile', data)
+  return response.data
+}
+
+// NOTIFICATIONS
+export async function getUnreadNotificationCount() {
+  const response = await client.get('/notifications/unread-count')
+  return response.data
+}
+
+export async function listNotifications(unreadOnly = false) {
+  const response = await client.get('/notifications', {
+    params: unreadOnly ? { unread: 'true' } : {},
+  })
+  return response.data
+}
+
+export async function markNotificationRead(notificationId) {
+  const response = await client.put(`/notifications/${notificationId}/read`)
+  return response.data
+}
+
+export async function markAllNotificationsRead() {
+  const response = await client.put('/notifications/read-all')
+  return response.data
+}
+
+export async function deleteNotification(notificationId) {
+  const response = await client.delete(`/notifications/${notificationId}`)
+  return response.data
+}
+
+// REPORTS
+export async function submitReport(data) {
+  // data: { deck_id?, flashcard_id?, reason }
+  const response = await client.post('/reports', data)
+  return response.data
+}
+
+// DECK MANAGEMENT
+export async function getUserDecks() {
+  const response = await client.get('/decks')
+  return response.data
+}
+
+export async function createDeck(data) {
+  const response = await client.post('/decks', data)
+  return response.data
+}
+
+export async function updateDeck(deckId, data) {
+  const response = await client.put(`/decks/${deckId}`, data)
+  return response.data
+}
+
+export async function deleteDeck(deckId) {
+  const response = await client.delete(`/decks/${deckId}`)
+  return response.data
+}
+
+// FLASHCARD MANAGEMENT
+export async function getDeckFlashcards(deckId) {
+  const response = await client.get(`/decks/${deckId}/flashcards`)
+  return response.data
+}
+
+export async function addFlashcard(deckId, data) {
+  const response = await client.post(`/decks/${deckId}/flashcards`, data)
+  return response.data
+}
+
+export async function updateFlashcard(cardId, data) {
+  const response = await client.put(`/flashcards/${cardId}`, data)
+  return response.data
+}
+
+export async function deleteFlashcard(cardId) {
+  const response = await client.delete(`/flashcards/${cardId}`)
   return response.data
 }

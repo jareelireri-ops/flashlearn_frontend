@@ -6,13 +6,14 @@ import Dashboard from '../pages/Dashboard'
 import Library from '../pages/Library'
 import Builder from '../pages/Builder'
 import StudyArea from '../pages/StudyArea'
+import Notifications from '../pages/Notifications'
 
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
 
-      {/* Public — guests see blurred/locked previews, logged-in users see full content */}
+      {/* Public routes for guests, but logged-in users see full content */}
       <Route path="/library" element={<Library />} />
 
       <Route
@@ -39,6 +40,16 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      <Route 
+        path="/notifications" 
+        element={
+          <ProtectedRoute>
+            <Notifications />
+          </ProtectedRoute>
+        } 
+      />
+      
     </Routes>
   )
 }

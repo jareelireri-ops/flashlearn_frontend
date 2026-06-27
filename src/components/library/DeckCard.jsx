@@ -19,7 +19,7 @@ function DeckCard({ deck, completion, onClick, onSave }) {
       {onSave && (
         <button
           onClick={(e) => {
-            e.stopPropagation() // Prevents opening the drawer when clicking save
+            e.stopPropagation() // To prevent opening the drawer when clicking save
             onSave()
           }}
           className="absolute top-3 right-3 p-1.5 bg-slate-100 hover:bg-red-100 text-slate-400 hover:text-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-all z-10"

@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext, useMemo } from 'react'
-import { Search, ChevronLeft, Filter, BookOpen, Plus } from 'lucide-react'
-import { useNavigate, Link } from 'react-router-dom'
+import { Search, Filter, BookOpen, Plus } from 'lucide-react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
 import { UIContext } from '../context/UIContext'
 import {
@@ -11,6 +11,7 @@ import {
   addToCollection,
 } from '../api/client'
 import Navbar from '../components/ReusableComponents/Navbar'
+import Breadcrumbs from '../components/ReusableComponents/Breadcrumbs'
 import DeckCard from '../components/library/DeckCard'
 import DeckDrawer from '../components/library/DeckDrawer'
 
@@ -18,13 +19,11 @@ function Library() {
   const { user } = useContext(AuthContext)
   const { openAuthModal } = useContext(UIContext)
   const navigate = useNavigate()
+  const location = useLocation()
 
-  const [tab, setTab] = useState('discover') 
+  const [tab, setTab] = useState(location.state?.tab || 'discover')
   const [categories, setCategories] = useState([])
-
-    // Look for the passed state from the footer, otherwise default to 'All'
   const [activeCategory, setActiveCategory] = useState(location.state?.category || 'All')
-
   const [activeDifficulty, setActiveDifficulty] = useState('All')
   const [search, setSearch] = useState('')
 
@@ -52,15 +51,16 @@ function Library() {
       .finally(() => setLoading(false))
   }, [activeCategory, activeDifficulty, search])
 
-    useEffect(() => {
+  useEffect(() => {
     if (location.state?.category) {
       setActiveCategory(location.state.category)
-      // Optional: scroll back to the top of the page when clicking a footer link
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
-  }, [location.state?.category])
+    if (location.state?.tab) {
+      setTab(location.state.tab)
+    }
+  }, [location.state?.category, location.state?.tab])
 
-  // Fetch user's collection
   const fetchMyCollection = () => {
     if (!user) return
     getMyCollection().then(setCollectionDecks).catch(() => {})
@@ -91,7 +91,6 @@ function Library() {
     setSelectedIsOwner(isOwner)
   }
 
-  // Quick Save functionality
   async function handleSaveDeck(deck) {
     if (!user) {
       openAuthModal('login')
@@ -99,7 +98,7 @@ function Library() {
     }
     try {
       await addToCollection(deck.id)
-      fetchMyCollection() // Refresh collection instantly
+      fetchMyCollection()
       alert(`"${deck.title}" saved to your collection!`)
     } catch (error) {
       alert(error.response?.data?.error || 'Failed to save deck')
@@ -108,17 +107,20 @@ function Library() {
 
   const activeList = tab === 'collection' ? filteredCollection : discoverDecks
 
+  const breadcrumbItems = [
+    { label: 'Library', path: '/library' },
+    { label: tab === 'collection' ? 'My Collection' : 'Discover' },
+  ]
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-6 py-8">
-        {/* Top Header Row */}
+        <Breadcrumbs items={breadcrumbItems} />
+
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
           <div className="flex items-center gap-3">
-            <Link to="/" className="text-slate-400 hover:text-slate-600 transition">
-              <ChevronLeft size={20} />
-            </Link>
             <h1 className="text-2xl font-bold text-slate-900">Library</h1>
             <span className="text-xs font-medium bg-slate-100 text-slate-500 px-2 py-1 rounded-full">
               {tab === 'collection' ? filteredCollection.length : discoverDecks.length} decks
@@ -137,7 +139,6 @@ function Library() {
           </div>
         </div>
 
-        {/* Controls Row */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
           <div className="flex bg-slate-100 rounded-lg p-1 self-start lg:self-auto">
             <button
@@ -189,7 +190,6 @@ function Library() {
           </div>
         </div>
 
-        {/* Empty States */}
         {tab === 'collection' && !user && (
           <div className="text-center py-20 bg-white rounded-xl border border-slate-200 shadow-sm">
             <h3 className="text-lg font-bold text-slate-900 mb-2">Sign in to save decks</h3>
@@ -197,15 +197,12 @@ function Library() {
           </div>
         )}
 
-        {/* Deck Grid */}
         {loading && tab === 'discover' ? (
           <div className="text-center py-20 text-slate-400">Loading decks...</div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            
-            {/* Create New Deck Card (Only visible in Collection tab) */}
             {tab === 'collection' && user && (
-              <div 
+              <div
                 onClick={() => navigate('/decks/manage')}
                 className="bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl p-4 flex flex-col items-center justify-center text-slate-500 hover:text-slate-900 hover:border-slate-400 hover:bg-slate-100 transition-all cursor-pointer min-h-[180px]"
               >
@@ -217,19 +214,15 @@ function Library() {
               </div>
             )}
 
-            {/* List of Decks */}
             {activeList.map((deck) => {
-              // Check if deck is already in user's collection so we don't show the save button if they already have it
               const isSaved = collectionDecks.some((c) => c.id === deck.id)
-              
               return (
                 <DeckCard
                   key={deck.id}
                   deck={deck}
                   completion={tab === 'collection' ? completionMap[deck.id] : null}
                   onClick={() => handleDeckClick(deck, tab === 'collection' ? deck.is_owner : false)}
-                  // Only pass onSave if we are in Discover and the user hasn't saved it yet
-                  onSave={tab === 'discover' && !isSaved ? () => handleSaveDeck(deck) : null} 
+                  onSave={tab === 'discover' && !isSaved ? () => handleSaveDeck(deck) : null}
                 />
               )
             })}
