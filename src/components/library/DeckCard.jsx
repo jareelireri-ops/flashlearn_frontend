@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react'
+import { Plus, Sparkles } from 'lucide-react'
 
 const DIFFICULTY_STYLES = {
   easy: 'bg-emerald-50 text-emerald-600',
@@ -6,7 +6,7 @@ const DIFFICULTY_STYLES = {
   hard: 'bg-red-50 text-red-600',
 }
 
-function DeckCard({ deck, completion, onClick, onSave }) {
+function DeckCard({ deck, completion, onClick, onSave, hasNewCards }) {
   const pct = completion?.completion_pct ?? null
   const isDone = pct === 100
 
@@ -40,7 +40,17 @@ function DeckCard({ deck, completion, onClick, onSave }) {
         </span>
       </div>
 
-      <h3 className="font-semibold text-slate-900 pr-6">{deck.title}</h3>
+      <div className="flex items-center gap-1.5 pr-6">
+        <h3 className="font-semibold text-slate-900">{deck.title}</h3>
+        {hasNewCards && (
+          <span
+            className="flex items-center gap-0.5 text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded-full shrink-0"
+            title="New cards have been added since you last studied this deck"
+          >
+            <Sparkles size={10} /> NEW CARDS
+          </span>
+        )}
+      </div>
       <p className="text-sm text-slate-500 mt-1 line-clamp-2">{deck.description}</p>
 
       <div className="flex items-center justify-between mt-4">

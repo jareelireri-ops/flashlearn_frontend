@@ -15,6 +15,14 @@ import Breadcrumbs from '../components/ReusableComponents/Breadcrumbs'
 import DeckCard from '../components/library/DeckCard'
 import DeckDrawer from '../components/library/DeckDrawer'
 
+// A deck is said to have new cards only if the user has already studied it before
+//  AND it was updated after their last review on the deck
+function hasNewCardsSinceLastReview(deck, completion) {
+  if (!completion || !completion.cards_reviewed || !completion.last_reviewed_at) return false
+  if (!deck.updated_at) return false
+  return new Date(deck.updated_at) > new Date(completion.last_reviewed_at)
+}
+
 function Library() {
   const { user } = useContext(AuthContext)
   const { openAuthModal } = useContext(UIContext)
@@ -216,11 +224,13 @@ function Library() {
 
             {activeList.map((deck) => {
               const isSaved = collectionDecks.some((c) => c.id === deck.id)
+              const completion = tab === 'collection' ? completionMap[deck.id] : null
               return (
                 <DeckCard
                   key={deck.id}
                   deck={deck}
-                  completion={tab === 'collection' ? completionMap[deck.id] : null}
+                  completion={completion}
+                  hasNewCards={tab === 'collection' && hasNewCardsSinceLastReview(deck, completion)}
                   onClick={() => handleDeckClick(deck, tab === 'collection' ? deck.is_owner : false)}
                   onSave={tab === 'discover' && !isSaved ? () => handleSaveDeck(deck) : null}
                 />

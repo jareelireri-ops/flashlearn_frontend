@@ -60,7 +60,39 @@ export async function removeFromCollection(deckId) {
 
 // STUDY SESSIONS
 export async function startStudySession(deckId) {
-  const response = await client.post(`/study/${deckId}/start`)
+  const response = await client.post(`/study/${deckId}/start`, {}, {
+    headers: { 'Content-Type': 'application/json' }
+  })
+  return response.data
+}
+
+export async function getActiveSession(deckId) {
+  const response = await client.get(`/study/${deckId}/active`)
+  return response.data
+}
+
+export async function pauseSession(sessionId, currentCardIndex) {
+  const response = await client.patch(`/study/sessions/${sessionId}/pause`, {
+    current_card_index: currentCardIndex,
+  })
+  return response.data
+}
+
+export async function resumeSession(sessionId) {
+  const response = await client.patch(`/study/sessions/${sessionId}/resume`)
+  return response.data
+}
+
+export async function completeSession(sessionId) {
+  const response = await client.patch(`/study/sessions/${sessionId}/complete`)
+  return response.data
+}
+
+export async function submitRating(sessionId, flashcardId, rating) {
+  const response = await client.post(`/study/sessions/${sessionId}/review`, {
+    flashcard_id: flashcardId,
+    rating,
+  })
   return response.data
 }
 
@@ -85,8 +117,6 @@ export async function getCompletionStats() {
   return response.data
 }
 
-// FIX: was using `axiosInstance` which doesn't exist — changed to `client`.
-// This was crashing the Dashboard entirely with a ReferenceError.
 export async function checkDueCards() {
   const response = await client.get('/reviews/due')
   return response.data
@@ -128,7 +158,6 @@ export async function deleteNotification(notificationId) {
 
 // REPORTS
 export async function submitReport(data) {
-  // data: { deck_id?, flashcard_id?, reason }
   const response = await client.post('/reports', data)
   return response.data
 }
