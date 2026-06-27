@@ -2,9 +2,11 @@ import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { UIContext } from '../../context/UIContext'
+import { AuthContext } from '../../context/AuthContext'
 
 function Hero() {
   const { openAuthModal } = useContext(UIContext)
+  const { user } = useContext(AuthContext)
   const navigate = useNavigate()
   const [flipped, setFlipped] = useState(false)
 
@@ -28,7 +30,7 @@ function Hero() {
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 leading-tight whitespace-nowrap">
                 What is <span className="text-red-500">Flash Learn?</span>
               </h1>
-              <p className="text-slate-400 text-sm mt-4">Hover to find out →</p>
+              <p className="text-slate-400 text-sm mt-4">Place mouse here to find out</p>
             </div>
 
             <div
@@ -48,10 +50,10 @@ function Hero() {
 
         <div className="flex justify-center gap-4 mt-12">
           <button
-            onClick={() => openAuthModal('register')}
+            onClick={() => user ? navigate('/dashboard') : openAuthModal('register')}
             className="px-6 py-3 rounded-full bg-slate-900 text-white font-medium hover:bg-slate-800 transition shadow-lg shadow-slate-900/10"
           >
-            Start Learning →
+            {user ? 'Go to Dashboard →' : 'Start Learning →'}
           </button>
           <button
             onClick={() => navigate('/library')}

@@ -43,3 +43,30 @@ export async function startStudySession(deckId) {
   const response = await client.post(`/study/${deckId}/start`)
   return response.data
 }
+
+client.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // If the server returns 401 Unauthorized (invalid/expired token)
+    if (error.response && error.response.status === 401) {
+      // Clear the credentials from local storage
+      localStorage.removeItem('access_token')
+      localStorage.removeIte-m('user')
+      
+      // Force reload the page - redirect to home
+      window.location.href = '/'
+    }
+    return Promise.reject(error)
+  }
+)
+
+// DASHBOARD ENDPOINTS
+export async function getDashboardStats() {
+  const response = await client.get('/study/dashboard')
+  return response.data 
+}
+
+export async function getTopDecks() {
+  const response = await client.get('/study/analytics/top-decks')
+  return response.data
+}

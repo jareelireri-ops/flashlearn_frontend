@@ -26,11 +26,11 @@ function Footer() {
           <h5 className="text-white text-xs font-semibold uppercase tracking-wide mb-4">Explore</h5>
           <ul className="space-y-2.5 text-sm">
             <li><button onClick={() => navigate('/library')} className="hover:text-white transition">Browse All Decks</button></li>
-            <li><button onClick={() => navigate('/library')} className="hover:text-white transition">Software Engineering</button></li>
-            <li><button onClick={() => navigate('/library')} className="hover:text-white transition">Philosophy</button></li>
-            <li><button onClick={() => navigate('/library')} className="hover:text-white transition">Biblical Studies</button></li>
-            <li><button onClick={() => navigate('/library')} className="hover:text-white transition">Business Management</button></li>
-            <li><button onClick={() => navigate('/library')} className="hover:text-white transition">Hospitality</button></li>
+            <li><button onClick={() => navigate('/library', { state: { category: 'Software Engineering' } })} className="hover:text-white transition">Software Engineering</button></li>
+            <li><button onClick={() => navigate('/library', { state: { category: 'Philosophy' } })} className="hover:text-white transition">Philosophy</button></li>
+            <li><button onClick={() => navigate('/library', { state: { category: 'Biblical Studies' } })} className="hover:text-white transition">Biblical Studies</button></li>
+            <li><button onClick={() => navigate('/library', { state: { category: 'Business Management' } })} className="hover:text-white transition">Business Management</button></li>
+            <li><button onClick={() => navigate('/library', { state: { category: 'Hospitality' } })} className="hover:text-white transition">Hospitality</button></li>
           </ul>
         </div>
 
