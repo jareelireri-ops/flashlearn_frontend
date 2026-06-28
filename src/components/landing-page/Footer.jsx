@@ -51,7 +51,11 @@ function Footer() {
             )}
             <li><button onClick={() => navigate('/library')} className="hover:text-white transition">Browse Categories</button></li>
             <li><a href="#" className="hover:text-white transition">About Us</a></li>
-            <li><a href="#" className="hover:text-white transition">Admin Portal</a></li>
+            <li>
+              <button onClick={() => openAuthModal('login', { redirectAdminTo: '/admin' })} className="hover:text-white transition">
+                Admin Portal
+              </button>
+            </li>
           </ul>
         </div>
 

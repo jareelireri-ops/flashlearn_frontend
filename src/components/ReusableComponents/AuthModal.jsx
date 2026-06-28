@@ -1,11 +1,13 @@
 import { useState, useContext, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { X, Eye, EyeOff } from 'lucide-react'
 import { AuthContext } from '../../context/AuthContext'
 import { UIContext } from '../../context/UIContext'
 
 function AuthModal() {
   const { login, register } = useContext(AuthContext)
-  const { authModalOpen, authModalView, setAuthModalView, closeAuthModal } = useContext(UIContext)
+  const { authModalOpen, authModalView, authModalOptions, setAuthModalView, closeAuthModal } = useContext(UIContext)
+  const navigate = useNavigate()
 
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -33,8 +35,15 @@ function AuthModal() {
     setServerError(null)
     setLoading(true)
     try {
-      await login(loginData.email, loginData.password)
+      const loggedInUser = await login(loginData.email, loginData.password)
       closeAuthModal()
+
+      // If this login was triggered from the Admin Portal link and the account
+      // really is an admin, send them straight to the console. A non-admin
+      // using this same link just closes the modal like any normal sign-in.
+      if (authModalOptions?.redirectAdminTo && loggedInUser?.role === 'admin') {
+        navigate(authModalOptions.redirectAdminTo)
+      }
     } catch (err) {
       setServerError(err.response?.data?.error || 'Failed to sign in. Please try again.')
     } finally {

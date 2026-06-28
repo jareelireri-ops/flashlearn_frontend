@@ -203,3 +203,35 @@ export async function deleteFlashcard(cardId) {
   const response = await client.delete(`/flashcards/${cardId}`)
   return response.data
 }
+
+
+// ADMIN
+
+export async function getAllUsers() {
+  const response = await client.get('/admin/users')
+  return response.data // [{ id, email, name, role, is_active, created_at }]
+}
+
+export async function updateUserStatus(userId, isActive) {
+  const response = await client.put(`/admin/users/${userId}/status`, { is_active: isActive })
+  return response.data
+}
+
+export async function getAdminReports(status = null) {
+  const response = await client.get('/admin/reports', {
+    params: status ? { status } : {},
+  })
+  return response.data // [{ id, reporter_id, deck_id, flashcard_id, reason, status, created_at }]
+}
+
+export async function resolveReport(reportId, status) {
+  const response = await client.put(`/admin/reports/${reportId}`, { status })
+  return response.data
+}
+
+export async function adminDeleteContent({ deckId, flashcardId }) {
+  const response = await client.delete('/admin/content', {
+    params: deckId ? { deck_id: deckId } : { flashcard_id: flashcardId },
+  })
+  return response.data
+}

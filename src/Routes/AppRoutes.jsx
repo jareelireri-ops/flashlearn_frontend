@@ -7,6 +7,7 @@ import Library from '../pages/Library'
 import Builder from '../pages/Builder'
 import StudyArea from '../pages/StudyArea'
 import Notifications from '../pages/Notifications'
+import Admin from '../pages/Admin'
 
 function AppRoutes() {
   return (
@@ -49,7 +50,16 @@ function AppRoutes() {
           </ProtectedRoute>
         } 
       />
-      
+
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <Admin />
+          </ProtectedRoute>
+        }
+      />
+
     </Routes>
   )
 }
