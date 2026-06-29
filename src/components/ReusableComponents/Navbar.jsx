@@ -13,23 +13,29 @@ function Navbar() {
   const navigate = useNavigate()
 
   return (
-    <nav className="flex items-center justify-between px-6 py-4 max-w-6xl mx-auto bg-white border-b border-slate-200">
+    <nav className="flex items-center justify-between px-8 py-4 bg-white border-b-2 border-gray-900">
 
-      <Link to="/" className="flex items-center gap-2 transition hover:opacity-80">
-        <div className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white text-sm font-bold shadow-sm">
+      {/* Logo */}
+      <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+        <div
+          className="w-7 h-7 bg-red-600 flex items-center justify-center text-white text-xs font-bold"
+          style={{ borderRadius: 0, fontFamily: '"Bebas Neue", "Impact", sans-serif', letterSpacing: '0.05em' }}
+        >
           FL
         </div>
-        <span className="font-semibold text-gray-900 tracking-tight">FlashLearn</span>
+        <span className="font-semibold text-gray-900 text-sm tracking-tight">FlashLearn</span>
       </Link>
 
+      {/* Auth-aware right side */}
       {user ? (
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-5">
+          {/* Notifications */}
           <button
             onClick={() => navigate('/notifications')}
-            className="relative text-slate-500 hover:text-slate-900 transition"
+            className="relative text-gray-400 hover:text-gray-900 transition-colors"
             title="Notifications"
           >
-            <Bell size={20} />
+            <Bell size={18} />
             {unreadCount > 0 && (
               <span className="absolute -top-1.5 -right-1.5">
                 <NotificationBadge count={unreadCount} />
@@ -37,14 +43,23 @@ function Navbar() {
             )}
           </button>
 
-          <span className="font-medium text-gray-900">{user.name}</span>
+          {/* Username */}
+          <span className="text-sm font-medium text-gray-900">{user.name}</span>
+
+          {/* Dashboard CTA */}
           <button
             onClick={() => navigate('/dashboard')}
-            className="px-4 py-2 rounded-full bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition shadow-sm"
+            className="px-4 py-2 bg-gray-900 text-white text-sm font-semibold border border-gray-900 hover:bg-gray-800 transition-colors"
+            style={{ borderRadius: 0 }}
           >
             View Dashboard
           </button>
-          <button onClick={logout} className="text-sm text-gray-500 hover:text-gray-700 transition">
+
+          {/* Logout */}
+          <button
+            onClick={logout}
+            className="text-sm text-gray-400 hover:text-gray-700 transition-colors font-medium"
+          >
             Logout
           </button>
         </div>
@@ -52,15 +67,16 @@ function Navbar() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => openAuthModal('login')}
-            className="text-sm font-medium text-gray-700 hover:text-gray-900 transition"
+            className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
           >
             Sign in
           </button>
           <button
             onClick={() => openAuthModal('register')}
-            className="px-5 py-2 rounded-full bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition shadow-sm"
+            className="px-5 py-2 bg-red-600 text-white text-sm font-semibold border border-red-600 hover:bg-red-700 transition-colors"
+            style={{ borderRadius: 0 }}
           >
-            Get Started
+            Get started
           </button>
         </div>
       )}

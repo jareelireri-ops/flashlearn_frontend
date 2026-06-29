@@ -145,7 +145,7 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, onExit }) => {
                 <p className="rating-prompt">How well did you know this?</p>
                 <div className="rating-btns">
                   <button className="rating-btn hard" onClick={() => handleRate("hard")} disabled={isSubmitting}>Hard</button>
-                  <button className="rating-btn good" onClick={() => handleRate("good")} disabled={isSubmitting}>Good</button>
+                  <button className="rating-btn good" onClick={() => handleRate("medium")} disabled={isSubmitting}>Medium</button>
                   <button className="rating-btn easy" onClick={() => handleRate("easy")} disabled={isSubmitting}>Easy</button>
                 </div>
               </div>

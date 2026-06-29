@@ -1,4 +1,4 @@
-import { BookOpen, Play, ArrowRight } from 'lucide-react'
+import { BookOpen, Play, Sparkles } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 function ContinueStudying({ completionStats }) {
@@ -17,7 +17,7 @@ function ContinueStudying({ completionStats }) {
           onClick={() => navigate('/library')}
           className="text-sm font-semibold text-red-500 hover:text-red-600 transition flex items-center gap-1"
         >
-          All decks <ArrowRight size={14} />
+          <Sparkles size={14} /> Browse Library
         </button>
       </div>
 
