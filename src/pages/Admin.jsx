@@ -9,8 +9,8 @@ import {
   resolveReport,
   adminDeleteContent,
 } from '../api/client'
-import UserManagementTable from '../components/admin/UserManagementTable'
-import ReportsTable from '../components/admin/ReportsTable'
+import UserManagementTable from '../components/Admin/UserManagementTable'
+import ReportsTable from '../components/Admin/ReportsTable'
 
 function Admin() {
   const { user, logout } = useContext(AuthContext)
