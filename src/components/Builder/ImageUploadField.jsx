@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Image, Upload } from 'lucide-react'
 import { MAX_IMAGE_BYTES, fileToBase64 } from '../ReusableComponents/constants'
 
-//  Reusable image upload function (used by both row edit + new card form)
+//  Reusable image upload function to be used when creating new card and editting too
 function ImageUploadField({ value, onChange, error, onError }) {
   const [loading, setLoading] = useState(false)
   const inputId = `image-upload-${Math.random().toString(36).slice(2)}`

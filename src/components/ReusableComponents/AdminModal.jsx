@@ -38,7 +38,7 @@ function AdminModal() {
         navigate('/admin')
       } else {
         // Credentials were valid but belong to a non-admin account.
-        // Don't leave the app silently signed in as them through this portal.
+        // No leaving the app silently signed in as them through this portal.
         await logout()
         setServerError('This portal is for administrators only. Please use an admin account.')
       }

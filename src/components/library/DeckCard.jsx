@@ -15,7 +15,7 @@ function DeckCard({ deck, completion, onClick, onSave, onRemove, hasNewCards }) 
       onClick={onClick}
       className="relative bg-white border border-slate-200 rounded-2xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer group"
     >
-      {/* Quick Save Button (Shows on hover) */}
+      {/* Quick Save Button Shows as a plus on hover) */}
       {onSave && (
         <button
           onClick={(e) => {

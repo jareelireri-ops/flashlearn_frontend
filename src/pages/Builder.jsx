@@ -282,7 +282,7 @@ function Builder() {
             onSelectDeck={handleSelectDeck}
           />
 
-          {/* ── Right panel: deck editor or new deck form ── */}
+          {/* The Right panel for deck editor or new deck form */}
           <div className="flex-1 min-w-0">
 
             {/* No selection and not creating new */}
@@ -294,7 +294,7 @@ function Builder() {
               </div>
             )}
 
-            {/* Deck form (create or edit) */}
+            {/* Deck form */}
             {deckForm && (
               <DeckForm
                 deckForm={deckForm}
@@ -308,7 +308,7 @@ function Builder() {
               />
             )}
 
-            {/* Selected deck view (not in edit mode) */}
+            {/* Selected deck view not in editting mode */}
             {selectedDeck && !deckForm && (
               <div className="space-y-4">
                 <DeckHeaderCard

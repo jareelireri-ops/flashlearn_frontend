@@ -1,6 +1,6 @@
 import { Globe, Lock, Archive, ArchiveRestore, Pencil, Trash2 } from 'lucide-react'
 
-// Selected deck card (contain info + Edit/Archive/Delete actions) 
+// Selected deck card (contain info and Edit/Archive/Delete actions) 
 function DeckHeaderCard({ deck, onEdit, onArchive, onDeleteRequest }) {
   return (
     <div className={`bg-white rounded-2xl border shadow-sm p-6 ${deck.is_archived ? 'border-amber-200 bg-amber-50/40' : 'border-slate-200'}`}>

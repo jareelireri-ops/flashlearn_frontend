@@ -66,8 +66,7 @@ function Library() {
   }, [activeCategory, activeDifficulty, search])
 
   useEffect(() => {
-    // Admins never had a collection tab to be routed into - ignore any stray
-    // navigation state asking for it.
+    
     if (location.state?.category) {
       setActiveCategory(location.state.category)
       window.scrollTo({ top: 0, behavior: 'smooth' })

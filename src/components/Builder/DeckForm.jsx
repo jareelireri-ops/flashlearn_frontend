@@ -1,7 +1,7 @@
 import { Check, Globe, Lock } from 'lucide-react'
 import { CATEGORIES, DIFFICULTIES } from '../ReusableComponents/constants'
 
-//function of creating and editting a form 
+//function of creating and editting a deck 
 function DeckForm({ deckForm, setDeckForm, deckErrors, setDeckErrors, deckSaving, isEditing, onSave, onCancel }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
@@ -69,7 +69,7 @@ function DeckForm({ deckForm, setDeckForm, deckErrors, setDeckErrors, deckSaving
           <p className="text-xs text-slate-400 mt-1">Separate tags with commas</p>
         </div>
 
-        {/* Visibility toggle */}
+        {/* Visibility of deck */}
         <div
           onClick={() => setDeckForm({ ...deckForm, is_public: !deckForm.is_public })}
           className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition select-none ${
@@ -93,7 +93,7 @@ function DeckForm({ deckForm, setDeckForm, deckErrors, setDeckErrors, deckSaving
                 : 'Click to make this deck public'}
             </p>
           </div>
-          {/* Toggle pill */}
+          {/* private/public  toggle */}
           <div className={`ml-auto w-11 h-6 rounded-full transition shrink-0 relative ${deckForm.is_public ? 'bg-emerald-500' : 'bg-slate-300'}`}>
             <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${deckForm.is_public ? 'left-6' : 'left-1'}`} />
           </div>

@@ -56,7 +56,7 @@ function DeckDrawer({ deck, completion, isOwner, onClose }) {
   }
 
   function handleReportClick() {
-    // Guest: open auth modal instead
+    // For A Guest: open auth modal instead
     if (!user) {
       onClose()
       openAuthModal('login')
@@ -188,7 +188,7 @@ function DeckDrawer({ deck, completion, isOwner, onClose }) {
           </button>
         )}
 
-        {/* Report Deck — visible to everyone except owners AND admins */}
+        {/* Report Deck which is visible to everyone except owners AND admins */}
         {!isOwner && !isAdmin && (
           <div className="mt-6 border-t border-slate-100 pt-4">
             {!showReportForm ? (

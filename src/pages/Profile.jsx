@@ -7,7 +7,7 @@ import Breadcrumbs from '../components/ReusableComponents/Breadcrumbs'
 import Skeleton from '../components/ReusableComponents/Skeleton'
 
 function Profile() {
-  const { user, logout, updateUser } = useContext(AuthContext)
+  const { user, updateUser } = useContext(AuthContext)
   const navigate = useNavigate()
 
   const [name, setName] = useState('')
@@ -40,7 +40,7 @@ function Profile() {
       return
     }
 
-    // Keep the encoded payload reasonable in size for a TEXT/DB column
+    // Keep it reasonable in size for a text colum data type in our backend
     const MAX_BYTES = 2 * 1024 * 1024 // 2MB
     if (file.size > MAX_BYTES) {
       setError('Image is too large. Please choose a file under 2MB.')

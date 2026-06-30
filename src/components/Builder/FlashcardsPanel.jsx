@@ -2,7 +2,7 @@ import { Plus } from 'lucide-react'
 import NewCardForm from './NewCardForm'
 import FlashcardRow from './FlashcardRow'
 
-//  Flashcards section: header, Add Card, new-card form, list
+//  Flashcards section having: the header, Add Card, new-card and list of cards made
 function FlashcardsPanel({
   flashcards,
   loadingCards,

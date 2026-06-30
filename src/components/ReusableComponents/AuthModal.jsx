@@ -43,6 +43,7 @@ function AuthModal() {
 
       // Admin accounts must sign in exclusively through the Admin Portal.
       // If valid admin credentials are entered here, reject and sign them back out.
+
       if (loggedInUser?.role === 'admin') {
         await logout()
         setServerError('Admin accounts must sign in through the Admin Portal.')
@@ -74,6 +75,7 @@ function AuthModal() {
     }
   }
 
+    // Using a fake link generator for  for the time being as its in development
   async function handleForgotPassword(e) {
     e.preventDefault()
     if (isEmailInvalid(forgotEmail)) return
@@ -172,6 +174,8 @@ function AuthModal() {
             <h2 className="text-xl font-bold text-gray-900 mb-2">Reset your password</h2>
             <p className="text-sm text-gray-500 mb-4">Enter your email and we'll send reset instructions.</p>
 
+
+          
             {forgotSuccess ? (
               <div className="space-y-3">
                 <div className="text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
@@ -179,7 +183,7 @@ function AuthModal() {
                 </div>
                 {resetToken && (
                   <div className="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-3 space-y-2">
-                    <p className="text-slate-600">Development mode — use this link to reset:</p>
+                    <p className="text-slate-600"> Use this link to reset:</p>
                     <Link
                       to={`/reset-password?token=${resetToken}`}
                       onClick={closeAuthModal}
