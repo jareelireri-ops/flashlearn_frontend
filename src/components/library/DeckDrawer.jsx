@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { X, Lock, Flag, AlertTriangle } from 'lucide-react'
 import { AuthContext } from '../../context/AuthContext'
 import { UIContext } from '../../context/UIContext'
-import { startStudySession, addToCollection, getDeckPreview, submitReport } from '../../api/client'
+import { addToCollection, getDeckPreview, submitReport } from '../../api/client'
 
 function DeckDrawer({ deck, completion, isOwner, onClose }) {
   const { user } = useContext(AuthContext)
@@ -45,10 +45,10 @@ function DeckDrawer({ deck, completion, isOwner, onClose }) {
       if (!isOwner) {
         await addToCollection(deck.id).catch(() => {})
       }
-      const data = await startStudySession(deck.id)
-      navigate(`/study/${deck.id}`, { state: { session: data.session } })
+      onClose()
+      navigate(`/study/${deck.id}`)
     } catch (err) {
-      console.error('Failed to start session', err)
+      console.error('Failed to start studying', err)
     }
   }
 

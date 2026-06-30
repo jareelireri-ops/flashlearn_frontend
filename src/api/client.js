@@ -26,6 +26,30 @@ client.interceptors.response.use(
 
 export default client
 
+// AUTH
+export async function forgotPassword(email) {
+  const response = await client.post('/auth/forgot-password', { email })
+  return response.data
+}
+
+export async function resetPassword(token, newPassword) {
+  const response = await client.post('/auth/reset-password', {
+    token,
+    new_password: newPassword,
+  })
+  return response.data
+}
+
+export async function getProfile() {
+  const response = await client.get('/auth/profile')
+  return response.data
+}
+
+export async function updateProfile(data) {
+  const response = await client.put('/auth/profile', data)
+  return response.data
+}
+
 // PUBLIC (no auth required)
 export async function getPublicCategories() {
   const response = await client.get('/public/categories')
@@ -72,19 +96,19 @@ export async function getActiveSession(deckId) {
 }
 
 export async function pauseSession(sessionId, currentCardIndex) {
-  const response = await client.patch(`/study/sessions/${sessionId}/pause`, {
+  const response = await client.put(`/study/sessions/${sessionId}/pause`, {
     current_card_index: currentCardIndex,
   })
   return response.data
 }
 
 export async function resumeSession(sessionId) {
-  const response = await client.patch(`/study/sessions/${sessionId}/resume`)
+  const response = await client.put(`/study/sessions/${sessionId}/resume`)
   return response.data
 }
 
 export async function completeSession(sessionId) {
-  const response = await client.patch(`/study/sessions/${sessionId}/complete`)
+  const response = await client.put(`/study/sessions/${sessionId}/complete`)
   return response.data
 }
 
@@ -92,6 +116,13 @@ export async function submitRating(sessionId, flashcardId, rating) {
   const response = await client.post(`/study/sessions/${sessionId}/review`, {
     flashcard_id: flashcardId,
     rating,
+  })
+  return response.data
+}
+
+export async function listSessions(status) {
+  const response = await client.get('/study/sessions', {
+    params: status ? { status } : {},
   })
   return response.data
 }
@@ -118,13 +149,7 @@ export async function getCompletionStats() {
 }
 
 export async function checkDueCards() {
-  const response = await client.get('/reviews/due')
-  return response.data
-}
-
-// PROFILE
-export async function updateProfile(data) {
-  const response = await client.put('/profile', data)
+  const response = await client.post('/notifications/check-due')
   return response.data
 }
 
@@ -209,7 +234,7 @@ export async function deleteFlashcard(cardId) {
 
 export async function getAllUsers() {
   const response = await client.get('/admin/users')
-  return response.data // [{ id, email, name, role, is_active, created_at }]
+  return response.data
 }
 
 export async function updateUserStatus(userId, isActive) {
@@ -221,7 +246,7 @@ export async function getAdminReports(status = null) {
   const response = await client.get('/admin/reports', {
     params: status ? { status } : {},
   })
-  return response.data // [{ id, reporter_id, deck_id, flashcard_id, reason, status, created_at }]
+  return response.data
 }
 
 export async function resolveReport(reportId, status) {

@@ -5,13 +5,11 @@ import { AuthContext } from '../../context/AuthContext'
 
 const MARQUEE_ITEMS = [
   'Track progress',
-  'Spaced repetition',
-  'Active recall',
-  'Custom decks',
-  'Community decks',
-  'Confidence rating',
-  'Smart intervals',
-  'Study streaks',
+  'Use of spaced repetition',
+  'Customize personal decks',
+  'Browse community decks',
+  'Difficulty rating',
+  'View study streaks and more.',
 ]
 
 function Hero() {
@@ -27,14 +25,13 @@ function Hero() {
       {/* Main hero grid */}
       <div className="grid border-b border-gray-900" style={{ gridTemplateColumns: '1fr 240px' }}>
 
-        {/* Left — headline + copy + CTAs */}
+        {/* HEADLINER */}
         <div className="border-r border-gray-900 px-10 pt-12 pb-10 flex flex-col justify-between gap-8">
           <div>
             <h1
               className="leading-none text-gray-900 font-black uppercase"
               style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: 'clamp(72px, 12vw, 108px)', letterSpacing: '0.02em' }}
-            >
-              FLASH<br />
+            >FLASH<br />
               <span className="text-red-600">LEARN</span>
             </h1>
 
@@ -66,7 +63,7 @@ function Hero() {
         <div className="flex flex-col divide-y divide-gray-900">
           <div className="flex-1 px-6 py-7 flex flex-col justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">Active users</p>
-            <p className="font-black text-gray-900 leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: '44px' }}>12K</p>
+            <p className="font-black text-gray-900 leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: '44px' }}>404</p>
           </div>
 
           <div className="flex-1 px-6 py-7 flex flex-col justify-between">
@@ -76,8 +73,8 @@ function Hero() {
 
           <div className="flex-1 px-6 py-7 flex flex-col justify-between bg-gray-900">
             <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">Public decks</p>
-            <p className="font-black text-white leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: '44px' }}>3.2K</p>
-            <p className="text-xs text-gray-600 mt-3 italic leading-snug">Beats passive reading.<br />Every time.</p>
+            <p className="font-black text-white leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: '44px' }}>1000+</p>
+            <p className="text-xs text-gray-600 mt-3 italic leading-snug">Beats traditional reading.<br />Every time.</p>
           </div>
         </div>
       </div>

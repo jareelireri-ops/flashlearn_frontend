@@ -5,6 +5,8 @@ import { NotificationProvider } from './context/NotificationContext'
 import AppRoutes from './Routes/AppRoutes'
 import AuthModal from './components/ReusableComponents/AuthModal'
 import AccessDeniedGate from './components/ReusableComponents/AccessDeniedGate'
+import AdminModal from './components/ReusableComponents/AdminModal'
+
 import './index.css'
 
 function App() {
@@ -15,6 +17,7 @@ function App() {
           <UIProvider>
             <AppRoutes />
             <AuthModal />
+            <AdminModal />
             <AccessDeniedGate />
           </UIProvider>
         </NotificationProvider>

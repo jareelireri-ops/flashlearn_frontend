@@ -6,11 +6,9 @@ export const CATEGORIES = [
 
 export const DIFFICULTIES = ['easy', 'medium', 'hard']
 
-// Max image size before we warn (base64 inflates ~33%, and Postgres/JSON payloads
-// get fast — 1.5MB raw file keeps the resulting string reasonable) the image rarely surpasses that
 export const MAX_IMAGE_BYTES = 1.5 * 1024 * 1024
 
-// Using a Helper to convert a File to a base64 data URL 
+// Using a Helper to convert a File to a base64 data URL ,to allow uploading
 export function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()

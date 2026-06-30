@@ -7,12 +7,15 @@ import Library from '../pages/Library'
 import Builder from '../pages/Builder'
 import StudyArea from '../pages/StudyArea'
 import Notifications from '../pages/Notifications'
+import Profile from '../pages/Profile'
+import ResetPassword from '../pages/ResetPassword'
 import Admin from '../pages/Admin'
 
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* Public routes for guests, but logged-in users see full content */}
       <Route path="/library" element={<Library />} />
@@ -22,6 +25,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
           </ProtectedRoute>
         }
       />
@@ -42,13 +53,13 @@ function AppRoutes() {
         }
       />
 
-      <Route 
-        path="/notifications" 
+      <Route
+        path="/notifications"
         element={
           <ProtectedRoute>
             <Notifications />
           </ProtectedRoute>
-        } 
+        }
       />
 
       <Route

@@ -4,14 +4,15 @@ import { AuthContext } from '../context/AuthContext'
 import { getProfile, updateProfile } from '../api/client'
 import Navbar from '../components/ReusableComponents/Navbar'
 import Breadcrumbs from '../components/ReusableComponents/Breadcrumbs'
+import Skeleton from '../components/ReusableComponents/Skeleton'
 
 function Profile() {
-  const { user, logout } = useContext(AuthContext)
+  const { user, logout, updateUser } = useContext(AuthContext)
   const navigate = useNavigate()
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [profilePictureUrl, setProfilePictureUrl] = useState('')
+  const [profilePicture, setProfilePicture] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState(null)
@@ -24,11 +25,34 @@ function Profile() {
       .then((data) => {
         setName(data.name || '')
         setEmail(data.email || '')
-        setProfilePictureUrl(data.profile_picture_url || '')
+        setProfilePicture(data.profile_picture_url || '')
       })
       .catch(() => setError('Failed to load profile.'))
       .finally(() => setLoading(false))
   }, [user])
+
+  function handleFileChange(e) {
+    const file = e.target.files[0]
+    if (!file) return
+
+    if (!file.type.startsWith('image/')) {
+      setError('Please select an image file.')
+      return
+    }
+
+    // Keep the encoded payload reasonable in size for a TEXT/DB column
+    const MAX_BYTES = 2 * 1024 * 1024 // 2MB
+    if (file.size > MAX_BYTES) {
+      setError('Image is too large. Please choose a file under 2MB.')
+      return
+    }
+
+    setError(null)
+    const reader = new FileReader()
+    reader.onload = () => setProfilePicture(reader.result)
+    reader.onerror = () => setError('Failed to read image file.')
+    reader.readAsDataURL(file)
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -36,13 +60,12 @@ function Profile() {
     setMessage(null)
     setError(null)
     try {
+      const trimmedName = name.trim()
       await updateProfile({
-        name: name.trim(),
-        profile_picture_url: profilePictureUrl.trim() || null,
+        name: trimmedName,
+        profile_picture_url: profilePicture || null,
       })
-      const stored = JSON.parse(localStorage.getItem('user') || '{}')
-      const updated = { ...stored, name: name.trim() }
-      localStorage.setItem('user', JSON.stringify(updated))
+      updateUser({ name: trimmedName, profile_picture_url: profilePicture || null })
       setMessage('Profile updated successfully.')
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to update profile.')
@@ -60,7 +83,24 @@ function Profile() {
         <h1 className="text-2xl font-bold text-slate-900 mt-4 mb-6">Profile Settings</h1>
 
         {loading ? (
-          <div className="text-center py-20 text-slate-400">Loading profile...</div>
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5">
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-20" />
+              <Skeleton className="h-9 w-full" />
+            </div>
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-16" />
+              <Skeleton className="h-9 w-full" />
+            </div>
+            <div className="flex items-center gap-4">
+              <Skeleton className="h-16 w-16 rounded-full" />
+              <Skeleton className="h-9 flex-1" />
+            </div>
+            <div className="flex gap-3 pt-2">
+              <Skeleton className="h-10 w-32 rounded-lg" />
+              <Skeleton className="h-10 w-36 rounded-lg" />
+            </div>
+          </div>
         ) : (
           <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5">
             {message && (
@@ -97,14 +137,27 @@ function Profile() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-500 mb-1">PROFILE PICTURE URL</label>
-              <input
-                type="url"
-                placeholder="https://example.com/avatar.jpg"
-                value={profilePictureUrl}
-                onChange={(e) => setProfilePictureUrl(e.target.value)}
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
-              />
+              <label className="block text-xs font-semibold text-slate-500 mb-1">PROFILE PICTURE</label>
+
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-full bg-slate-100 border border-slate-200 overflow-hidden flex items-center justify-center shrink-0">
+                  {profilePicture ? (
+                    <img src={profilePicture} alt="Profile preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-slate-400 text-xs">No image</span>
+                  )}
+                </div>
+
+                <div className="flex-1">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-red-50 file:text-red-600 hover:file:bg-red-100 cursor-pointer"
+                  />
+                  <p className="text-xs text-slate-400 mt-1">PNG or JPG, up to 2MB.</p>
+                </div>
+              </div>
             </div>
 
             <div className="flex gap-3 pt-2">

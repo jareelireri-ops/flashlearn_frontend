@@ -3,7 +3,7 @@ import { Trash2, Pencil, Check, X } from 'lucide-react'
 import { DIFFICULTIES } from '../ReusableComponents/constants'
 import ImageUploadField from './ImageUploadField'
 
-//  Flashcard row (view + edit)
+//  Flashcard row (view and edit)
 function FlashcardRow({ card, onSave, onDelete }) {
   const [editing, setEditing] = useState(false)
   const [form, setForm] = useState({

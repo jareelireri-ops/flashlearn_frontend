@@ -88,7 +88,7 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, onExit }) => {
   }
 
   const getStats = () => {
-    const counts = { easy: 0, good: 0, hard: 0 }
+    const counts = { easy: 0, medium: 0, hard: 0 }
     Object.values(ratings).forEach((r) => {
       if (r in counts) counts[r]++
     })

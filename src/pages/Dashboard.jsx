@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { BookOpen, LayoutDashboard, PlusCircle, LogOut, Bell, Play, Settings } from 'lucide-react'
 import { AuthContext } from '../context/AuthContext'
 import { NotificationContext } from '../context/NotificationContext'
-import { getDashboardStats, getMyCollection, getCompletionStats, getDailyAnalytics, checkDueCards } from '../api/client'
+import { getDashboardStats, getMyCollection, getCompletionStats, getDailyAnalytics, getTopDecks, checkDueCards, listSessions } from '../api/client'
 import DashboardBanner from '../components/Dashboard/DashboardBanner'
 import MarqueeStrip from '../components/Dashboard/MarqueeStrip'
 import StatGrid from '../components/Dashboard/StatGrid'
@@ -11,8 +11,10 @@ import ContinueStudying from '../components/Dashboard/ContinueStudying'
 import ReviewSchedule from '../components/Dashboard/ReviewSchedule'
 import CategoryBreakdown from '../components/Dashboard/CategoryBreakdown'
 import WeeklyActivity from '../components/Dashboard/WeeklyActivity'
+import TopDecks from '../components/Dashboard/TopDecks'
 import NotificationBadge from '../components/ReusableComponents/NotificationBadge'
-
+import DashboardSkeleton from '../components/Dashboard/DashboardSkeleton'
+import Avatar from '../components/ReusableComponents/Avatar'
 
 function Dashboard() {
   const { user, logout } = useContext(AuthContext)
@@ -23,6 +25,8 @@ function Dashboard() {
   const [collection, setCollection] = useState([])
   const [completion, setCompletion] = useState([])
   const [dailyActivity, setDailyActivity] = useState([])
+  const [topDecks, setTopDecks] = useState([])
+  const [activeSessions, setActiveSessions] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -34,12 +38,16 @@ function Dashboard() {
       getMyCollection().catch(() => []),
       getCompletionStats().catch(() => []),
       getDailyAnalytics().catch(() => []),
+      getTopDecks().catch(() => []),
+      listSessions('paused').catch(() => []),
     ])
-      .then(([dashboardData, collectionData, completionData, dailyData]) => {
+      .then(([dashboardData, collectionData, completionData, dailyData, topDecksData, pausedSessions]) => {
         if (dashboardData) setStats(dashboardData)
         setCollection(collectionData)
         setCompletion(completionData)
         setDailyActivity(dailyData)
+        setTopDecks(topDecksData)
+        setActiveSessions(pausedSessions)
       })
       .finally(() => setLoading(false))
   }, [user])
@@ -83,6 +91,12 @@ function Dashboard() {
           <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2 px-4">Account</p>
           <nav className="space-y-1">
             <button
+              onClick={() => navigate('/profile')}
+              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white transition font-medium text-sm"
+            >
+              <Settings size={17} /> Profile
+            </button>
+            <button
               onClick={() => navigate('/notifications')}
               className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white transition font-medium text-sm"
             >
@@ -91,15 +105,12 @@ function Dashboard() {
               </span>
               <NotificationBadge count={unreadCount} />
             </button>
-          
           </nav>
         </div>
 
         <div className="mt-auto p-6">
           <div className="flex items-center gap-3 bg-slate-900 p-3 rounded-xl border border-slate-800">
-            <div className="w-9 h-9 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-sm shrink-0">
-              {user?.name?.[0] || 'U'}
-            </div>
+            <Avatar user={user} size={36} />
             <div className="flex-1 min-w-0">
               <div className="text-sm font-bold text-white truncate">{user?.name}</div>
               <div className="text-xs text-slate-500 truncate">Learner</div>
@@ -112,7 +123,6 @@ function Dashboard() {
       </div>
 
       <div className="flex-1 overflow-y-auto h-full bg-slate-50">
-        {/* Top bar */}
         <div className="flex items-center justify-between px-8 py-4 bg-white border-b border-slate-200">
           <h1 className="text-lg font-bold text-slate-900">Dashboard</h1>
           <button
@@ -123,7 +133,6 @@ function Dashboard() {
           </button>
         </div>
 
-        {/* Marquee strip */}
         <MarqueeStrip />
 
         <div className="p-8 max-w-6xl mx-auto space-y-8">
@@ -135,7 +144,7 @@ function Dashboard() {
           />
 
           {loading ? (
-            <div className="text-center py-20 text-slate-400">Loading your data...</div>
+            <DashboardSkeleton />
           ) : (
             <>
               <StatGrid
@@ -147,12 +156,13 @@ function Dashboard() {
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 space-y-6">
-                  <ContinueStudying completionStats={completion} />
+                  <ContinueStudying activeSessions={activeSessions} />
                   <WeeklyActivity dailyActivity={dailyActivity} />
                 </div>
 
                 <div className="space-y-6">
                   <ReviewSchedule cardsDue={stats?.cards_due_today || 0} />
+                  <TopDecks topDecks={topDecks} />
                   <CategoryBreakdown collection={collection} />
                 </div>
               </div>

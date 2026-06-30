@@ -5,32 +5,32 @@ const STEPS = [
     num: '01',
     icon: UserPlus,
     title: 'Create your account',
-    desc: 'Sign up free and get instant access to every public deck on FlashLearn.',
+    desc: 'Sign up for free and get instant access to every public deck on FlashLearn.',
   },
   {
     num: '02',
     icon: FolderOpen,
     title: 'Pick a category',
-    desc: 'Choose from Software Engineering, Philosophy, Biblical Studies, Business, or Hospitality.',
+    desc: 'Choose from Software Engineering, Philosophy, Biblical Studies, Business, or other categories you are interested in.',
   },
   {
     num: '03',
     icon: Layers,
     title: 'Open a deck',
-    desc: 'Each category holds curated decks, and every deck is a set of flashcards ready to study.',
+    desc: 'Each category holds different decks, and every deck has a set of Q/A flashcards ready to study.',
   },
   {
     num: '04',
     icon: TrendingUp,
     title: 'Study & track progress',
-    desc: 'Flip cards, rate your recall, and let spaced repetition resurface them at the right time.',
+    desc: 'Flip cards, rate your experience with the card, and spaced repetition resurfaces cards based on how you rated it.',
   },
 ]
 
 function CallToAction() {
   return (
     <section className="relative bg-slate-900 text-white px-6 py-20 overflow-hidden">
-      {/* Decorative texture */}
+      {/* Styling */}
       <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:24px_24px]" />
 
       <div className="relative max-w-6xl mx-auto">
@@ -55,9 +55,9 @@ function CallToAction() {
           })}
         </div>
 
-        {/* Scroll cue moved here */}
+        {/* Scroll-alert syling for next section*/}
         <div className="mt-16 flex flex-col items-center text-slate-500 text-xs gap-1 animate-bounce">
-          <span>Explore categories</span>
+          <span>Why use Flash Learn ?</span>
           <span>↓</span>
         </div>
       </div>

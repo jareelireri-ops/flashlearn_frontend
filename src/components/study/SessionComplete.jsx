@@ -3,7 +3,7 @@ import { RotateCcw, PartyPopper } from 'lucide-react'
 
 const SessionComplete = ({ stats, onRestart }) => {
   const navigate = useNavigate()
-  const total = (stats.easy || 0) + (stats.good || 0) + (stats.hard || 0)
+  const total = (stats.easy || 0) + (stats.medium || 0) + (stats.hard || 0)
 
   return (
     <div className="complete-overlay">
@@ -21,8 +21,8 @@ const SessionComplete = ({ stats, onRestart }) => {
             <span className="rating-label">Easy</span>
           </div>
           <div className="rating-pill good">
-            <span className="rating-count">{stats.good || 0}</span>
-            <span className="rating-label">Good</span>
+            <span className="rating-count">{stats.medium || 0}</span>
+            <span className="rating-label">Medium</span>
           </div>
           <div className="rating-pill hard">
             <span className="rating-count">{stats.hard || 0}</span>

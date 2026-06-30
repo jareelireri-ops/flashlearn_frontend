@@ -9,14 +9,16 @@ import {
   getMyCollection,
   getCompletionStats,
   addToCollection,
+  removeFromCollection,
 } from '../api/client'
 import Navbar from '../components/ReusableComponents/Navbar'
 import Breadcrumbs from '../components/ReusableComponents/Breadcrumbs'
 import DeckCard from '../components/library/DeckCard'
 import DeckDrawer from '../components/library/DeckDrawer'
+import DeckCardSkeleton from '../components/library/DeckCardSkeleton'
 
 // A deck is said to have new cards only if the user has already studied it before
-//  AND it was updated after their last review on the deck
+// AND it was updated after their last review on the deck
 function hasNewCardsSinceLastReview(deck, completion) {
   if (!completion || !completion.cards_reviewed || !completion.last_reviewed_at) return false
   if (!deck.updated_at) return false
@@ -113,6 +115,16 @@ function Library() {
     }
   }
 
+  async function handleRemoveDeck(deck) {
+    if (!window.confirm(`Remove "${deck.title}" from your collection?`)) return
+    try {
+      await removeFromCollection(deck.id)
+      fetchMyCollection()
+    } catch (error) {
+      alert(error.response?.data?.error || 'Failed to remove deck')
+    }
+  }
+
   const activeList = tab === 'collection' ? filteredCollection : discoverDecks
 
   const breadcrumbItems = [
@@ -206,7 +218,8 @@ function Library() {
         )}
 
         {loading && tab === 'discover' ? (
-          <div className="text-center py-20 text-slate-400">Loading decks...</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => <DeckCardSkeleton key={i} />)}</div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {tab === 'collection' && user && (
@@ -233,6 +246,7 @@ function Library() {
                   hasNewCards={tab === 'collection' && hasNewCardsSinceLastReview(deck, completion)}
                   onClick={() => handleDeckClick(deck, tab === 'collection' ? deck.is_owner : false)}
                   onSave={tab === 'discover' && !isSaved ? () => handleSaveDeck(deck) : null}
+                  onRemove={tab === 'collection' && !deck.is_owner ? () => handleRemoveDeck(deck) : null}
                 />
               )
             })}

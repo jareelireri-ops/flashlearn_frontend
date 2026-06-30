@@ -7,6 +7,8 @@ export function UIProvider({ children }) {
   const [authModalView, setAuthModalView] = useState('login') // 'login' | 'register'
   const [authModalOptions, setAuthModalOptions] = useState({})
 
+  const [adminModalOpen, setAdminModalOpen] = useState(false)
+
   const [accessDeniedMessage, setAccessDeniedMessage] = useState(null)
 
   function openAuthModal(view = 'login', options = {}) {
@@ -18,6 +20,14 @@ export function UIProvider({ children }) {
   function closeAuthModal() {
     setAuthModalOpen(false)
     setAuthModalOptions({})
+  }
+
+  function openAdminModal() {
+    setAdminModalOpen(true)
+  }
+
+  function closeAdminModal() {
+    setAdminModalOpen(false)
   }
 
   function showAccessDenied(message) {
@@ -32,6 +42,9 @@ export function UIProvider({ children }) {
     setAuthModalView,
     openAuthModal,
     closeAuthModal,
+    adminModalOpen,
+    openAdminModal,
+    closeAdminModal,
     accessDeniedMessage,
     setAccessDeniedMessage,
     showAccessDenied,

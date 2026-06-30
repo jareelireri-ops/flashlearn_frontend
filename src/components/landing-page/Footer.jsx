@@ -5,8 +5,18 @@ import { UIContext } from '../../context/UIContext'
 
 function Footer() {
   const { user, logout } = useContext(AuthContext)
-  const { openAuthModal } = useContext(UIContext)
+  const { openAuthModal, openAdminModal, showAccessDenied } = useContext(UIContext)
   const navigate = useNavigate()
+
+  function handleAdminPortalClick() {
+    if (!user) {
+      openAdminModal()
+    } else if (user.role === 'admin') {
+      navigate('/admin')
+    } else {
+      showAccessDenied('Admin access only. This account does not have administrator privileges.')
+    }
+  }
 
   return (
     <footer className="bg-slate-950 text-slate-400 px-6 py-14">
@@ -52,7 +62,7 @@ function Footer() {
             <li><button onClick={() => navigate('/library')} className="hover:text-white transition">Browse Categories</button></li>
             <li><a href="#" className="hover:text-white transition">About Us</a></li>
             <li>
-              <button onClick={() => openAuthModal('login', { redirectAdminTo: '/admin' })} className="hover:text-white transition">
+              <button onClick={handleAdminPortalClick} className="hover:text-white transition">
                 Admin Portal
               </button>
             </li>

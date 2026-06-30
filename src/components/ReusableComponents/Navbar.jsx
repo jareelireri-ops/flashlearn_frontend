@@ -5,6 +5,7 @@ import { AuthContext } from '../../context/AuthContext'
 import { UIContext } from '../../context/UIContext'
 import { NotificationContext } from '../../context/NotificationContext'
 import NotificationBadge from '../ReusableComponents/NotificationBadge'
+import Avatar from '../ReusableComponents/Avatar'
 
 function Navbar() {
   const { user, logout } = useContext(AuthContext)
@@ -43,8 +44,11 @@ function Navbar() {
             )}
           </button>
 
-          {/* Username */}
-          <span className="text-sm font-medium text-gray-900">{user.name}</span>
+          {/* Avatar + Username */}
+          <div className="flex items-center gap-2.5">
+            <Avatar user={user} size={32} />
+            <span className="text-sm font-medium text-gray-900">{user.name}</span>
+          </div>
 
           {/* Dashboard CTA */}
           <button
