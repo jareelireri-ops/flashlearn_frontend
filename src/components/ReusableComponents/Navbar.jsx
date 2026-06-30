@@ -13,6 +13,9 @@ function Navbar() {
   const { unreadCount } = useContext(NotificationContext)
   const navigate = useNavigate()
 
+  // Admins browsing outside /admin/* are guest-equivalent: no dashboard access.
+  const isLearner = user && user.role === 'learner'
+
   return (
     <nav className="flex items-center justify-between px-8 py-4 bg-white border-b-2 border-gray-900">
 
@@ -50,14 +53,16 @@ function Navbar() {
             <span className="text-sm font-medium text-gray-900">{user.name}</span>
           </div>
 
-          {/* Dashboard CTA */}
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="px-4 py-2 bg-gray-900 text-white text-sm font-semibold border border-gray-900 hover:bg-gray-800 transition-colors"
-            style={{ borderRadius: 0 }}
-          >
-            View Dashboard
-          </button>
+          {/* Dashboard CTA - learners only */}
+          {isLearner && (
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="px-4 py-2 bg-gray-900 text-white text-sm font-semibold border border-gray-900 hover:bg-gray-800 transition-colors"
+              style={{ borderRadius: 0 }}
+            >
+              View Dashboard
+            </button>
+          )}
 
           {/* Logout */}
           <button

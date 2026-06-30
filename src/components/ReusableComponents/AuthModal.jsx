@@ -6,7 +6,7 @@ import { UIContext } from '../../context/UIContext'
 import { forgotPassword } from '../../api/client'
 
 function AuthModal() {
-  const { login, register } = useContext(AuthContext)
+  const { login, register, logout } = useContext(AuthContext)
   const { authModalOpen, authModalView, authModalOptions, setAuthModalView, closeAuthModal } = useContext(UIContext)
   const navigate = useNavigate()
 
@@ -20,7 +20,6 @@ function AuthModal() {
   const [registerData, setRegisterData] = useState({ name: '', email: '', password: '' })
   const [forgotEmail, setForgotEmail] = useState('')
 
-  // Reset errors when switching tabs
   useEffect(() => {
     setServerError(null)
     setForgotSuccess(null)
@@ -29,7 +28,6 @@ function AuthModal() {
 
   if (!authModalOpen) return null
 
-  //  VALIDATION HELPERS
   const isNameInvalid = registerData.name.length > 0 && registerData.name.trim().length < 2
   const isEmailInvalid = (email) => email.length > 0 && (!email.includes('@') || !email.includes('.'))
   const isPasswordInvalid = (password) => password.length > 0 && password.length < 6
@@ -37,19 +35,21 @@ function AuthModal() {
   async function handleLogin(e) {
     e.preventDefault()
     if (isEmailInvalid(loginData.email) || loginData.password.length === 0) return
-    
+
     setServerError(null)
     setLoading(true)
     try {
       const loggedInUser = await login(loginData.email, loginData.password)
-      closeAuthModal()
 
-      // If this login was triggered from the Admin Portal link and the account
-      //  is an admin, allow access. A non-admin  using this same link just closes the modal like any user sign-in.
-      
-      if (authModalOptions?.redirectAdminTo && loggedInUser?.role === 'admin') {
-        navigate(authModalOptions.redirectAdminTo)
+      // Admin accounts must sign in exclusively through the Admin Portal.
+      // If valid admin credentials are entered here, reject and sign them back out.
+      if (loggedInUser?.role === 'admin') {
+        await logout()
+        setServerError('Admin accounts must sign in through the Admin Portal.')
+        return
       }
+
+      closeAuthModal()
     } catch (err) {
       setServerError(err.response?.data?.error || 'Failed to sign in. Please try again.')
     } finally {
@@ -60,7 +60,7 @@ function AuthModal() {
   async function handleRegister(e) {
     e.preventDefault()
     if (isNameInvalid || isEmailInvalid(registerData.email) || isPasswordInvalid(registerData.password)) return
-    
+
     setServerError(null)
     setLoading(true)
     try {
@@ -127,7 +127,7 @@ function AuthModal() {
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1">EMAIL</label>
                 <input
-                  type="email" required placeholder="xxxx@xxxx.com"
+                  type="email" required placeholder="XXXX@XXXX.com"
                   value={loginData.email} onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                   className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${isEmailInvalid(loginData.email) ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-red-400'}`}
                 />

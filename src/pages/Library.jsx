@@ -31,7 +31,11 @@ function Library() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const [tab, setTab] = useState(location.state?.tab || 'discover')
+  // Admins are guest-equivalent outside /admin/*: no collection, no saving,
+  // no deck creation. They only ever see Discover.
+  const isLearner = user && user.role === 'learner'
+
+  const [tab, setTab] = useState(isLearner ? (location.state?.tab || 'discover') : 'discover')
   const [categories, setCategories] = useState([])
   const [activeCategory, setActiveCategory] = useState(location.state?.category || 'All')
   const [activeDifficulty, setActiveDifficulty] = useState('All')
@@ -62,17 +66,21 @@ function Library() {
   }, [activeCategory, activeDifficulty, search])
 
   useEffect(() => {
+    // Admins never had a collection tab to be routed into - ignore any stray
+    // navigation state asking for it.
     if (location.state?.category) {
       setActiveCategory(location.state.category)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
-    if (location.state?.tab) {
+    if (location.state?.tab && isLearner) {
       setTab(location.state.tab)
     }
-  }, [location.state?.category, location.state?.tab])
+  }, [location.state?.category, location.state?.tab, isLearner])
 
   const fetchMyCollection = () => {
-    if (!user) return
+    // Only learners have a collection concept - admins should never trigger
+    // these calls just by landing on the Library page.
+    if (!isLearner) return
     getMyCollection().then(setCollectionDecks).catch(() => {})
     getCompletionStats()
       .then((stats) => {
@@ -167,12 +175,14 @@ function Library() {
             >
               Discover
             </button>
-            <button
-              onClick={() => setTab('collection')}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition ${tab === 'collection' ? 'bg-white shadow text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
-            >
-              My Collection
-            </button>
+            {isLearner && (
+              <button
+                onClick={() => setTab('collection')}
+                className={`px-6 py-2 rounded-md text-sm font-medium transition ${tab === 'collection' ? 'bg-white shadow text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                My Collection
+              </button>
+            )}
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
@@ -222,7 +232,7 @@ function Library() {
             {Array.from({ length: 8 }).map((_, i) => <DeckCardSkeleton key={i} />)}</div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {tab === 'collection' && user && (
+            {tab === 'collection' && isLearner && (
               <div
                 onClick={() => navigate('/decks/manage')}
                 className="bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl p-4 flex flex-col items-center justify-center text-slate-500 hover:text-slate-900 hover:border-slate-400 hover:bg-slate-100 transition-all cursor-pointer min-h-[180px]"
@@ -245,7 +255,7 @@ function Library() {
                   completion={completion}
                   hasNewCards={tab === 'collection' && hasNewCardsSinceLastReview(deck, completion)}
                   onClick={() => handleDeckClick(deck, tab === 'collection' ? deck.is_owner : false)}
-                  onSave={tab === 'discover' && !isSaved ? () => handleSaveDeck(deck) : null}
+                  onSave={tab === 'discover' && isLearner && !isSaved ? () => handleSaveDeck(deck) : null}
                   onRemove={tab === 'collection' && !deck.is_owner ? () => handleRemoveDeck(deck) : null}
                 />
               )

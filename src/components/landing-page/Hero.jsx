@@ -17,6 +17,10 @@ function Hero() {
   const { user } = useContext(AuthContext)
   const navigate = useNavigate()
 
+  // Admins are treated as guests outside /admin/*: they shouldn't see or be
+  // routed to learner-only destinations like the dashboard.
+  const isLearner = user && user.role === 'learner'
+
   const doubled = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS]
 
   return (
@@ -42,13 +46,15 @@ function Hero() {
           </div>
 
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => user ? navigate('/dashboard') : openAuthModal('register')}
-              className="px-5 py-2.5 bg-gray-900 text-white text-sm font-semibold border border-gray-900 hover:bg-gray-800 transition-colors"
-              style={{ borderRadius: 0 }}
-            >
-              {user ? 'Go to Dashboard' : 'Start for free'}
-            </button>
+            {(!user || isLearner) && (
+              <button
+                onClick={() => isLearner ? navigate('/dashboard') : openAuthModal('register')}
+                className="px-5 py-2.5 bg-gray-900 text-white text-sm font-semibold border border-gray-900 hover:bg-gray-800 transition-colors"
+                style={{ borderRadius: 0 }}
+              >
+                {isLearner ? 'Go to Dashboard' : 'Start for free'}
+              </button>
+            )}
             <button
               onClick={() => navigate('/library')}
               className="px-5 py-2.5 bg-white text-gray-900 text-sm font-semibold border border-gray-900 hover:bg-gray-50 transition-colors"

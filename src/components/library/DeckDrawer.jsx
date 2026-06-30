@@ -10,6 +10,9 @@ function DeckDrawer({ deck, completion, isOwner, onClose }) {
   const { openAuthModal } = useContext(UIContext)
   const navigate = useNavigate()
 
+  // Determine if the current user is an admin
+  const isAdmin = user?.role === 'admin'
+
   const [firstQuestion, setFirstQuestion] = useState(null)
   const [loadingPreview, setLoadingPreview] = useState(false)
 
@@ -159,9 +162,21 @@ function DeckDrawer({ deck, completion, isOwner, onClose }) {
 
         <button
           onClick={handleStartStudying}
-          className="w-full mt-6 bg-red-500 hover:bg-red-600 text-white font-medium py-3.5 rounded-xl transition flex items-center justify-center gap-2 shadow-sm"
+          disabled={isAdmin}
+          className={`w-full mt-6 py-3.5 rounded-xl transition flex items-center justify-center gap-2 shadow-sm font-medium
+            ${isAdmin 
+              ? 'bg-slate-200 text-slate-500 cursor-not-allowed border border-slate-300' 
+              : 'bg-red-500 hover:bg-red-600 text-white'
+            }`}
+          title={isAdmin ? "Administrators cannot study decks" : ""}
         >
-          {!user ? 'Sign in to Study' : '▷ Start Studying'}
+          {isAdmin ? (
+            'Study Restricted for Admins'
+          ) : !user ? (
+            'Sign in to Study'
+          ) : (
+            '▷ Start Studying'
+          )}
         </button>
 
         {isOwner && (
@@ -173,8 +188,8 @@ function DeckDrawer({ deck, completion, isOwner, onClose }) {
           </button>
         )}
 
-        {/* Report Deck — visible to everyone, guests get auth modal */}
-        {!isOwner && (
+        {/* Report Deck — visible to everyone except owners AND admins */}
+        {!isOwner && !isAdmin && (
           <div className="mt-6 border-t border-slate-100 pt-4">
             {!showReportForm ? (
               <button
