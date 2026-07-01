@@ -124,7 +124,7 @@ function AuthModal() {
 
         {authModalView === 'login' ? (
           <>
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Welcome back 👋</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Welcome to Flash Learn </h2>
             <form onSubmit={handleLogin} autoComplete="off" className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1">EMAIL</label>

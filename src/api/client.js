@@ -67,8 +67,8 @@ export async function getDeckPreview(deckId) {
 }
 
 // COLLECTION
-export async function getMyCollection() {
-  const response = await client.get('/collection')
+export async function getMyCollection(params = {}) {
+  const response = await client.get('/collection', { params })
   return response.data
 }
 
@@ -188,8 +188,13 @@ export async function submitReport(data) {
 }
 
 // DECK MANAGEMENT
-export async function getUserDecks() {
-  const response = await client.get('/decks')
+export async function getDeckDetails(deckId) {
+  const response = await client.get(`/decks/${deckId}`)
+  return response.data
+}
+
+export async function getUserDecks(params = {}) {
+  const response = await client.get('/decks', { params })
   return response.data
 }
 
@@ -209,8 +214,8 @@ export async function deleteDeck(deckId) {
 }
 
 // FLASHCARD MANAGEMENT
-export async function getDeckFlashcards(deckId) {
-  const response = await client.get(`/decks/${deckId}/flashcards`)
+export async function getDeckFlashcards(deckId, params = {}) {
+  const response = await client.get(`/decks/${deckId}/flashcards`, { params })
   return response.data
 }
 

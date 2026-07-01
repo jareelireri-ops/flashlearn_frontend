@@ -14,7 +14,8 @@ function FeaturedDecks() {
 
   useEffect(() => {
     getPublicDecks()
-      .then((data) => setDecks(data.slice(0, 4)))
+      // Extract decks array from paginated response
+      .then((data) => setDecks((data.decks || []).slice(0, 4)))
       .catch(() => setError('Could not load decks'))
       .finally(() => setLoading(false))
   }, [])

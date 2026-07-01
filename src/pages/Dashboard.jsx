@@ -35,7 +35,7 @@ function Dashboard() {
 
     Promise.all([
       getDashboardStats().catch(() => null),
-      getMyCollection().catch(() => []),
+      getMyCollection().catch(() => ({ collection: [] })),
       getCompletionStats().catch(() => []),
       getDailyAnalytics().catch(() => []),
       getTopDecks().catch(() => []),
@@ -43,7 +43,8 @@ function Dashboard() {
     ])
       .then(([dashboardData, collectionData, completionData, dailyData, topDecksData, pausedSessions]) => {
         if (dashboardData) setStats(dashboardData)
-        setCollection(collectionData)
+        // Extract collection array from paginated response
+        setCollection(collectionData.collection || [])
         setCompletion(completionData)
         setDailyActivity(dailyData)
         setTopDecks(topDecksData)

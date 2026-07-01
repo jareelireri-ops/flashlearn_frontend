@@ -61,7 +61,8 @@ function Library() {
     if (search) params.search = search
 
     getPublicDecks(params)
-      .then(setDiscoverDecks)
+      // Extract decks array from paginated response
+      .then((res) => setDiscoverDecks(res.decks || []))
       .finally(() => setLoading(false))
   }, [activeCategory, activeDifficulty, search])
 
@@ -80,7 +81,10 @@ function Library() {
     // Only learners have a collection concept - admins should never trigger
     // these calls just by landing on the Library page.
     if (!isLearner) return
-    getMyCollection().then(setCollectionDecks).catch(() => {})
+    getMyCollection()
+      // Extract collection array from paginated response
+      .then((res) => setCollectionDecks(res.collection || []))
+      .catch(() => {})
     getCompletionStats()
       .then((stats) => {
         const map = {}

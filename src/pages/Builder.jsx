@@ -68,8 +68,9 @@ function Builder() {
   async function fetchDecks() {
     setLoadingDecks(true)
     try {
-      const data = await getUserDecks()
-      setDecks(data)
+      // Request page size of 100 to list all decks in builder
+      const data = await getUserDecks({ per_page: 100 })
+      setDecks(data.decks || [])
     } catch {
       showToast('Failed to load decks', 'error')
     } finally {
@@ -83,8 +84,9 @@ function Builder() {
     setShowNewCardForm(false)
     setLoadingCards(true)
     try {
-      const cards = await getDeckFlashcards(deck.id)
-      setFlashcards(cards)
+      // Request page size of 100 to list all cards in panel
+      const cards = await getDeckFlashcards(deck.id, { per_page: 100 })
+      setFlashcards(cards.flashcards || [])
     } catch {
       setFlashcards([])
     } finally {
@@ -141,10 +143,10 @@ function Builder() {
         const res = await createDeck(payload)
         showToast('Deck created!')
         await fetchDecks()
-        // Select the newly created deck
-        const fresh = await getUserDecks()
-        setDecks(fresh)
-        const created = fresh.find((d) => d.id === res.deck.id)
+        // Select newly created deck from updated list
+        const fresh = await getUserDecks({ per_page: 100 })
+        setDecks(fresh.decks || [])
+        const created = (fresh.decks || []).find((d) => d.id === res.deck.id)
         if (created) handleSelectDeck(created)
       } else {
         // Editing existing
@@ -194,8 +196,9 @@ function Builder() {
   async function handleAddCard(form) {
     try {
       await addFlashcard(selectedDeck.id, form)
-      const updated = await getDeckFlashcards(selectedDeck.id)
-      setFlashcards(updated)
+      // Fetch updated list with page size of 100
+      const updated = await getDeckFlashcards(selectedDeck.id, { per_page: 100 })
+      setFlashcards(updated.flashcards || [])
       setShowNewCardForm(false)
       showToast('Card added!')
     } catch (err) {

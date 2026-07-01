@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { Loader2, AlertCircle } from 'lucide-react'
 import {
   getDeckFlashcards,
+  getDeckDetails,
   getActiveSession,
   startStudySession,
   resumeSession,
@@ -31,9 +32,16 @@ const StudyArea = () => {
     setError(null)
 
     try {
-      const deckRes = await getDeckFlashcards(deckId)
-      const flashcards = Array.isArray(deckRes) ? deckRes : deckRes.flashcards
-      const deckData = Array.isArray(deckRes) ? { title: 'Study Session' } : deckRes.deck
+      // Request page size of 1000 to fetch all cards for study session
+      const deckRes = await getDeckFlashcards(deckId, { per_page: 1000 })
+      const flashcards = deckRes.flashcards || []
+
+      // Fetch actual deck details to display correct title
+      let deckData = { title: 'Study Session' }
+      try {
+        const details = await getDeckDetails(deckId)
+        deckData = details
+      } catch (_) {}
 
       if (!flashcards || flashcards.length === 0) {
         setError('This deck has no flashcards yet. Add some cards first.')
