@@ -1,16 +1,75 @@
-# React + Vite
+# FlashLearn — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web-based flashcard learning platform built with React and Vite. Users can create decks, study with spaced repetition, track progress, and discover community content.
 
-Currently, two official plugins are available:
+**Live App:** https://flashlearn-frontend-ten.vercel.app  
+**Backend API:** https://flashlearn-backend-ocnv.onrender.com
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 18
+- Vite
+- React Router v6
+- Context API (Auth + UI state)
+- Tailwind CSS
+- Axios
+- Recharts (analytics charts)
+- Lucide React (icons)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Features
+
+- User registration and login (JWT-based)
+- Personal dashboard with study stats and analytics
+- Create, edit, and manage flashcard decks
+- Community library — browse and save public decks
+- Interactive study sessions with card flip and confidence rating
+- Spaced repetition review scheduling (Easy / Medium / Hard)
+- In-app notifications
+- Content reporting
+- Admin portal for user and content management
+- Fully responsive design
+
+---
+
+## Project Structure
+
+```
+src/
+├── api/          # Axios client and all API calls
+├── components/   # Reusable UI components
+├── context/      # AuthContext and UIContext
+├── pages/        # Route-level page components
+└── main.jsx      # App entry point
+```
+
+---
+
+## Getting Started
+
+```bash
+# Clone the repo
+git clone https://github.com/jareelireri-ops/flashlearn_frontend.git
+cd flashlearn_frontend
+
+# Install dependencies
+npm install
+
+# Set up environment
+echo "VITE_API_URL=http://127.0.0.1:5000/api" > .env
+
+# Start development server
+npm run dev
+```
+
+> Requires the [FlashLearn backend](https://github.com/jareelireri-ops/flashlearn_backend) running locally or pointed to the deployed API.
+
+---
+
+## Related
+
+- [Backend Repository](https://github.com/jareelireri-ops/flashlearn_backend)
+- [API Documentation](https://github.com/jareelireri-ops/flashlearn_backend/blob/main/API.md)
