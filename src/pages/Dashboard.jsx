@@ -31,104 +31,98 @@ function Dashboard() {
 
   useEffect(() => {
     if (!user) return
-    setLoading(true)
 
-    Promise.all([
-      getDashboardStats().catch(() => null),
-      getMyCollection().catch(() => ({ collection: [] })),
-      getCompletionStats().catch(() => []),
-      getDailyAnalytics().catch(() => []),
-      getTopDecks().catch(() => []),
-      listSessions('paused').catch(() => []),
-    ])
-      .then(([dashboardData, collectionData, completionData, dailyData, topDecksData, pausedSessions]) => {
-        if (dashboardData) setStats(dashboardData)
-        // Extract collection array from paginated response
-        setCollection(collectionData.collection || [])
-        setCompletion(completionData)
+    const loadData = async () => {
+      setLoading(true)
+      try {
+        await checkDueCards().catch(() => {})
+        refreshUnreadCount()
+
+        const [sData, colData, compData, dailyData, tdData, sessionsData] = await Promise.all([
+          getDashboardStats().catch(() => null),
+          getMyCollection().catch(() => []),
+          getCompletionStats().catch(() => []),
+          getDailyAnalytics(7).catch(() => []),
+          getTopDecks().catch(() => []),
+          listSessions('paused').catch(() => [])
+        ])
+
+        setStats(sData)
+        setCollection(colData)
+        setCompletion(compData)
         setDailyActivity(dailyData)
-        setTopDecks(topDecksData)
-        setActiveSessions(pausedSessions)
-      })
-      .finally(() => setLoading(false))
-  }, [user])
+        setTopDecks(tdData)
+        
+        // Only show up to 3 paused sessions
+        setActiveSessions((sessionsData || []).slice(0, 3))
+      } catch (err) {
+        console.error('Error loading dashboard:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
 
-  useEffect(() => {
-    if (!user) return
-    checkDueCards()
-      .then(() => refreshUnreadCount())
-      .catch(() => {})
-  }, [user])
+    loadData()
+  }, [user, refreshUnreadCount])
+
+  if (!user) return null
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
-
-      <div className="w-64 bg-slate-950 text-slate-400 flex flex-col h-full shrink-0 border-r border-slate-900 z-10">
-        <div className="p-6">
-          <Link to="/" className="flex items-center gap-2 mb-10 transition hover:opacity-80">
-            <div className="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center text-white text-sm font-bold shadow-sm">FL</div>
-            <span className="font-bold text-white tracking-tight text-lg">FlashLearn</span>
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      {/* Red Navbar */}
+      <nav className="bg-red-500 border-b border-red-600 sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2 text-white">
+            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
+              <span className="font-bebas text-red-500 text-xl tracking-wider leading-none mt-1">S</span>
+            </div>
+            <span className="font-bebas tracking-wide text-2xl mt-1">SAKANYA</span>
           </Link>
 
-          <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2 px-4">Main</p>
-          <nav className="space-y-1 mb-6">
-            <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-red-500/10 text-red-500 font-medium transition text-sm">
-              <LayoutDashboard size={17} /> Dashboard
-            </button>
-            <button
-              onClick={() => navigate('/library', { state: { tab: 'collection' } })}
-              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white transition font-medium text-sm"
-            >
-              <BookOpen size={17} /> My Collection
-            </button>
-            <button
-              onClick={() => navigate('/decks/manage')}
-              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white transition font-medium text-sm"
-            >
-              <PlusCircle size={17} /> Create Deck
-            </button>
-          </nav>
+          <div className="flex items-center gap-3 md:gap-5">
+            <Link to="/notifications" className="relative p-2 text-red-100 hover:text-white hover:bg-red-600 rounded-full transition">
+              <Bell size={20} />
+              {unreadCount > 0 && (
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-yellow-400 rounded-full border border-red-500"></span>
+              )}
+            </Link>
 
-          <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2 px-4">Account</p>
-          <nav className="space-y-1">
-            <button
-              onClick={() => navigate('/profile')}
-              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white transition font-medium text-sm"
-            >
-              <Settings size={17} /> Profile
-            </button>
-            <button
-              onClick={() => navigate('/notifications')}
-              className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl hover:bg-slate-900 hover:text-white transition font-medium text-sm"
-            >
-              <span className="flex items-center gap-3">
-                <Bell size={17} /> Notifications
-              </span>
-              <NotificationBadge count={unreadCount} />
-            </button>
-          </nav>
-        </div>
+            {user.role === 'admin' && (
+              <Link to="/admin" className="hidden md:flex p-2 text-red-100 hover:text-white hover:bg-red-600 rounded-full transition">
+                <Settings size={20} />
+              </Link>
+            )}
 
-        <div className="mt-auto p-6">
-          <div className="flex items-center gap-3 bg-slate-900 p-3 rounded-xl border border-slate-800">
-            <Avatar user={user} size={36} />
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-bold text-white truncate">{user?.name}</div>
-              <div className="text-xs text-slate-500 truncate">Learner</div>
+            <div className="h-6 w-px bg-red-400 mx-1 hidden md:block"></div>
+
+            <div className="flex items-center gap-3">
+              <Link to="/profile" className="flex items-center gap-2 hover:opacity-90 transition">
+                <Avatar url={user.profile_picture_url} name={user.name} size="sm" />
+                <span className="text-sm font-medium text-white hidden md:block">{user.name?.split(' ')[0]}</span>
+              </Link>
             </div>
-            <button onClick={logout} className="text-slate-500 hover:text-red-400 transition shrink-0" title="Logout">
-              <LogOut size={16} />
-            </button>
           </div>
         </div>
-      </div>
+      </nav>
 
-      <div className="flex-1 overflow-y-auto h-full bg-slate-50">
-        <div className="flex items-center justify-between px-8 py-4 bg-white border-b border-slate-200">
-          <h1 className="text-lg font-bold text-slate-900">Dashboard</h1>
-          <button
-            onClick={() => navigate('/library', { state: { tab: 'collection' } })}
-            className="px-4 py-2 border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-50 transition flex items-center gap-2"
+      <div className="flex-1 flex flex-col">
+        {/* Sub-nav */}
+        <div className="bg-white border-b border-slate-200 px-4 h-14 flex items-center justify-center gap-4 overflow-x-auto hide-scrollbar">
+          <Link to="/dashboard" className="px-4 py-1.5 bg-slate-100 text-slate-800 text-sm font-medium rounded-full flex items-center gap-2 whitespace-nowrap">
+            <LayoutDashboard size={15} /> Overview
+          </Link>
+          <Link to="/library" className="px-4 py-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-50 text-sm font-medium rounded-full transition flex items-center gap-2 whitespace-nowrap">
+            <BookOpen size={15} /> Library
+          </Link>
+          <Link to="/builder" className="px-4 py-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-50 text-sm font-medium rounded-full transition flex items-center gap-2 whitespace-nowrap">
+            <PlusCircle size={15} /> Create
+          </Link>
+          
+          <div className="h-4 w-px bg-slate-200 mx-2"></div>
+          
+          <button 
+            onClick={() => navigate('/library?tab=collection')}
+            className="px-4 py-1.5 border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-50 transition flex items-center gap-2"
           >
             <Play size={13} fill="currentColor" /> Review now
           </button>
@@ -136,7 +130,8 @@ function Dashboard() {
 
         <MarqueeStrip />
 
-        <div className="p-8 max-w-6xl mx-auto space-y-8">
+        {/* --- Adjusted Padding Here --- */}
+        <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8 w-full">
 
           <DashboardBanner
             user={user}
@@ -169,6 +164,7 @@ function Dashboard() {
               </div>
             </>
           )}
+
         </div>
       </div>
     </div>

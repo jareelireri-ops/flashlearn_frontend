@@ -34,131 +34,113 @@ function Builder() {
   const [loadingCards, setLoadingCards] = useState(false)
 
   // Deck form state
-  const [deckForm, setDeckForm] = useState(null) // null = not editing
-  const [deckSaving, setDeckSaving] = useState(false)
+  const [deckForm, setDeckForm] = useState(null) // null | { title, description, is_public, category_id }
   const [deckErrors, setDeckErrors] = useState({})
+  const [deckSaving, setDeckSaving] = useState(false)
 
-  // New card form
+  // Flashcard form state
   const [showNewCardForm, setShowNewCardForm] = useState(false)
 
-  // Confirm delete
-  const [confirmDelete, setConfirmDelete] = useState(null) // { type: 'deck'|'card', id }
+  // Delete confirmation
+  const [confirmDelete, setConfirmDelete] = useState(null) // { type: 'deck'|'card', id?: number }
 
-  // Toast
-  const [toast, setToast] = useState(null)
-
-  function showToast(msg, type = 'success') {
-    setToast({ msg, type })
-    setTimeout(() => setToast(null), 3000)
-  }
-
-  // Load decks on mount
   useEffect(() => {
-    fetchDecks()
-  }, [])
+    if (!user) return
+    loadDecks()
+  }, [user])
 
-  // If navigated here with a deckId (from DeckDrawer "Edit Deck"), auto-select it
+  // Handle URL parameters for selecting a deck on load
   useEffect(() => {
-    if (location.state?.deckId && decks.length > 0) {
-      const target = decks.find((d) => d.id === location.state.deckId)
-      if (target) handleSelectDeck(target)
+    if (!loadingDecks && decks.length > 0) {
+      const params = new URLSearchParams(location.search)
+      const deckIdFromUrl = params.get('deck')
+      
+      if (deckIdFromUrl) {
+        const deckToSelect = decks.find(d => d.id === parseInt(deckIdFromUrl))
+        if (deckToSelect && (!selectedDeck || selectedDeck.id !== deckToSelect.id)) {
+          handleSelectDeck(deckToSelect)
+        }
+      }
     }
-  }, [decks, location.state?.deckId])
+  }, [loadingDecks, location.search])
 
-  async function fetchDecks() {
+  async function loadDecks() {
     setLoadingDecks(true)
     try {
-      // Request page size of 100 to list all decks in builder
-      const data = await getUserDecks({ per_page: 100 })
-      setDecks(data.decks || [])
-    } catch {
-      showToast('Failed to load decks', 'error')
+      const data = await getUserDecks({ role: 'creator' })
+      setDecks(data)
+    } catch (err) {
+      console.error(err)
     } finally {
       setLoadingDecks(false)
     }
   }
 
   async function handleSelectDeck(deck) {
+    if (selectedDeck?.id === deck.id) return
     setSelectedDeck(deck)
     setDeckForm(null)
     setShowNewCardForm(false)
     setLoadingCards(true)
+    setFlashcards([])
+    
+    // Update URL without reloading page
+    navigate(`/builder?deck=${deck.id}`, { replace: true })
+    
     try {
-      // Request page size of 100 to list all cards in panel
-      const cards = await getDeckFlashcards(deck.id, { per_page: 100 })
-      setFlashcards(cards.flashcards || [])
-    } catch {
-      setFlashcards([])
+      const data = await getDeckFlashcards(deck.id)
+      setFlashcards(data.flashcards || [])
+    } catch (err) {
+      console.error(err)
     } finally {
       setLoadingCards(false)
     }
   }
 
-  // ── Deck CRUD ──────────────────────────────────────────────────────────────
-
-  function startNewDeck() {
+  function startCreateDeck() {
     setSelectedDeck(null)
     setFlashcards([])
-    setDeckForm({
-      title: '',
-      description: '',
-      category: '',
-      tags: '',
-      difficulty_level: '',
-      is_public: false,
-    })
     setDeckErrors({})
+    setDeckForm({ title: '', description: '', is_public: false, category_id: '' })
+    navigate('/builder', { replace: true })
   }
 
   function startEditDeck() {
+    if (!selectedDeck) return
+    setDeckErrors({})
     setDeckForm({
       title: selectedDeck.title,
       description: selectedDeck.description || '',
-      category: selectedDeck.category || '',
-      tags: selectedDeck.tags || '',
-      difficulty_level: selectedDeck.difficulty_level || '',
       is_public: selectedDeck.is_public,
+      category_id: selectedDeck.category_id || '',
     })
-    setDeckErrors({})
   }
 
   async function handleSaveDeck() {
-    const errors = {}
-    if (!deckForm.title.trim()) errors.title = 'Title is required'
-    if (Object.keys(errors).length) { setDeckErrors(errors); return }
+    setDeckErrors({})
+    if (!deckForm.title.trim()) {
+      setDeckErrors({ title: 'Title is required.' })
+      return
+    }
 
     setDeckSaving(true)
     try {
-      const payload = {
-        ...deckForm,
-        title: deckForm.title.trim(),
-        description: deckForm.description.trim(),
-        category: deckForm.category.trim(),
-        tags: deckForm.tags.trim(),
-        difficulty_level: deckForm.difficulty_level || null,
-      }
-
-      if (!selectedDeck) {
-        // Creating new
-        const res = await createDeck(payload)
-        showToast('Deck created!')
-        await fetchDecks()
-        // Select newly created deck from updated list
-        const fresh = await getUserDecks({ per_page: 100 })
-        setDecks(fresh.decks || [])
-        const created = (fresh.decks || []).find((d) => d.id === res.deck.id)
-        if (created) handleSelectDeck(created)
+      if (selectedDeck) {
+        // Update existing deck
+        const res = await updateDeck(selectedDeck.id, deckForm)
+        setDecks(decks.map((d) => (d.id === res.deck.id ? res.deck : d)))
+        setSelectedDeck(res.deck)
       } else {
-        // Editing existing
-        await updateDeck(selectedDeck.id, payload)
-        showToast('Deck updated!')
-        const updated = { ...selectedDeck, ...payload }
-        setSelectedDeck(updated)
-        setDecks((prev) => prev.map((d) => (d.id === selectedDeck.id ? updated : d)))
+        // Create new deck
+        const res = await createDeck(deckForm)
+        setDecks([res.deck, ...decks])
+        setSelectedDeck(res.deck)
+        navigate(`/builder?deck=${res.deck.id}`, { replace: true })
       }
       setDeckForm(null)
     } catch (err) {
-      showToast(err.response?.data?.error || 'Failed to save deck', 'error')
+      console.error(err)
+      setDeckErrors({ submit: 'Failed to save deck.' })
     } finally {
       setDeckSaving(false)
     }
@@ -167,133 +149,126 @@ function Builder() {
   async function handleArchiveDeck() {
     if (!selectedDeck) return
     try {
-      await updateDeck(selectedDeck.id, { is_archived: !selectedDeck.is_archived })
-      const updated = { ...selectedDeck, is_archived: !selectedDeck.is_archived }
+      const updated = { ...selectedDeck, is_archived: true }
+      await updateDeck(selectedDeck.id, { is_archived: true })
+      setDecks(decks.map(d => d.id === selectedDeck.id ? updated : d))
       setSelectedDeck(updated)
-      setDecks((prev) => prev.map((d) => (d.id === selectedDeck.id ? updated : d)))
-      showToast(updated.is_archived ? 'Deck archived' : 'Deck restored')
-    } catch {
-      showToast('Failed to update deck', 'error')
+    } catch (err) {
+      console.error('Failed to archive deck', err)
     }
   }
 
   async function handleDeleteDeck() {
+    if (!selectedDeck) return
     try {
       await deleteDeck(selectedDeck.id)
-      setDecks((prev) => prev.filter((d) => d.id !== selectedDeck.id))
+      setDecks(decks.filter((d) => d.id !== selectedDeck.id))
       setSelectedDeck(null)
       setFlashcards([])
-      showToast('Deck deleted')
-    } catch {
-      showToast('Failed to delete deck', 'error')
-    } finally {
-      setConfirmDelete(null)
-    }
-  }
-
-  // ── Flashcard CRUD ─────────────────────────────────────────────────────────
-
-  async function handleAddCard(form) {
-    try {
-      await addFlashcard(selectedDeck.id, form)
-      // Fetch updated list with page size of 100
-      const updated = await getDeckFlashcards(selectedDeck.id, { per_page: 100 })
-      setFlashcards(updated.flashcards || [])
-      setShowNewCardForm(false)
-      showToast('Card added!')
+      navigate('/builder', { replace: true })
     } catch (err) {
-      showToast(err.response?.data?.error || 'Failed to add card', 'error')
-    }
-  }
-
-  async function handleSaveCard(cardId, form) {
-    try {
-      await updateFlashcard(cardId, form)
-      setFlashcards((prev) => prev.map((c) => (c.id === cardId ? { ...c, ...form } : c)))
-      showToast('Card updated!')
-    } catch {
-      showToast('Failed to update card', 'error')
-    }
-  }
-
-  async function handleDeleteCard(cardId) {
-    try {
-      await deleteFlashcard(cardId)
-      setFlashcards((prev) => prev.filter((c) => c.id !== cardId))
-      showToast('Card deleted')
-    } catch {
-      showToast('Failed to delete card', 'error')
+      console.error(err)
     } finally {
       setConfirmDelete(null)
     }
   }
 
-  const breadcrumbItems = [
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'My Decks' },
-  ]
+  async function handleAddCard(formData) {
+    try {
+      const res = await addFlashcard(selectedDeck.id, formData)
+      setFlashcards([...flashcards, res.flashcard])
+      setShowNewCardForm(false)
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async function handleSaveCard(id, formData) {
+    try {
+      const res = await updateFlashcard(id, formData)
+      setFlashcards(flashcards.map((fc) => (fc.id === id ? res.flashcard : fc)))
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async function handleDeleteCard(id) {
+    try {
+      await deleteFlashcard(id)
+      setFlashcards(flashcards.filter((fc) => fc.id !== id))
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setConfirmDelete(null)
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
       <Navbar />
-
-      {/* Toast */}
-      {toast && (
-        <div className={`fixed top-5 right-5 z-50 px-4 py-3 rounded-xl shadow-lg text-sm font-medium transition ${
-          toast.type === 'error' ? 'bg-red-500 text-white' : 'bg-slate-900 text-white'
-        }`}>
-          {toast.msg}
-        </div>
-      )}
-
-      {/* Confirm dialog */}
+      
+      {/* Confirm Delete Modal */}
       {confirmDelete && (
         <ConfirmDialog
-          message={
-            confirmDelete.type === 'deck'
-              ? `Delete "${selectedDeck?.title}"? This will permanently remove all its flashcards.`
-              : 'Delete this flashcard? This cannot be undone.'
-          }
-          onConfirm={() =>
-            confirmDelete.type === 'deck'
-              ? handleDeleteDeck()
-              : handleDeleteCard(confirmDelete.id)
-          }
+          type={confirmDelete.type}
           onCancel={() => setConfirmDelete(null)}
+          onConfirm={
+            confirmDelete.type === 'deck'
+              ? handleDeleteDeck
+              : () => handleDeleteCard(confirmDelete.id)
+          }
         />
       )}
 
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        <Breadcrumbs items={breadcrumbItems} />
+      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8">
+        <Breadcrumbs items={[{ label: 'Deck Builder' }]} />
+        
+        <div className="flex flex-col lg:grid lg:grid-cols-12 lg:gap-8 gap-6 mt-6">
+          
+          {/* Left Sidebar: Deck List */}
+          <div className="w-full lg:col-span-3">
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm flex flex-col h-[calc(100vh-140px)] sticky top-24">
+              <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+                <h2 className="font-semibold text-slate-800">Your Decks</h2>
+                <button
+                  onClick={startCreateDeck}
+                  className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-md transition"
+                  title="New Deck"
+                >
+                  <Plus size={18} />
+                </button>
+              </div>
+              
+              <div className="flex-1 overflow-y-auto p-2">
+                <DeckListPanel
+                  decks={decks}
+                  selectedDeck={selectedDeck}
+                  loading={loadingDecks}
+                  onSelect={handleSelectDeck}
+                />
+              </div>
+            </div>
+          </div>
 
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-slate-900">My Decks</h1>
-          <button
-            onClick={startNewDeck}
-            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2.5 rounded-xl transition shadow-sm"
-          >
-            <Plus size={16} /> New Deck
-          </button>
-        </div>
-
-        <div className="flex gap-6">
-          {/* ── Left panel: deck list ── */}
-          <DeckListPanel
-            decks={decks}
-            loadingDecks={loadingDecks}
-            selectedDeck={selectedDeck}
-            onSelectDeck={handleSelectDeck}
-          />
-
-          {/* The Right panel for deck editor or new deck form */}
-          <div className="flex-1 min-w-0">
-
-            {/* No selection and not creating new */}
+          {/* Right Main Area */}
+          <div className="w-full lg:col-span-9">
+            
+            {/* Empty state */}
             {!selectedDeck && !deckForm && (
-              <div className="flex flex-col items-center justify-center h-80 bg-white rounded-2xl border border-dashed border-slate-200">
-                <ChevronRight size={28} className="text-slate-300 mb-3" />
-                <p className="text-slate-500 font-medium text-sm">Select a deck to edit</p>
-                <p className="text-slate-400 text-xs mt-1">or click "New Deck" to create one</p>
+              <div className="h-[calc(100vh-140px)] flex flex-col items-center justify-center text-center p-8 bg-white border border-slate-200 rounded-xl border-dashed">
+                <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                  <Plus size={24} className="text-slate-400" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-800 mb-2">No deck selected</h3>
+                <p className="text-slate-500 max-w-sm mb-6">
+                  Select a deck from the sidebar to view and edit its flashcards, or create a new one to get started.
+                </p>
+                <button
+                  onClick={startCreateDeck}
+                  className="px-6 py-2.5 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition"
+                >
+                  Create New Deck
+                </button>
               </div>
             )}
 

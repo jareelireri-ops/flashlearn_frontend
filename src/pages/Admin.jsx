@@ -38,95 +38,75 @@ function Admin() {
   async function handleToggleStatus(userId, isActive) {
     try {
       await updateUserStatus(userId, isActive)
-      setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, is_active: isActive } : u)))
+      setUsers(users.map(u => u.id === userId ? { ...u, is_active: isActive } : u))
     } catch (err) {
-      console.error('Failed to update user status', err)
+      console.error('Failed to update status', err)
     }
   }
 
-  async function handleResolve(reportId, status) {
+  async function handleResolveReport(reportId, status) {
     try {
       await resolveReport(reportId, status)
-      setReports((prev) => prev.map((r) => (r.id === reportId ? { ...r, status } : r)))
+      setReports(reports.map(r => r.id === reportId ? { ...r, status } : r))
     } catch (err) {
       console.error('Failed to resolve report', err)
     }
   }
 
-  async function handleRemoveContent(report) {
-    try {
-      await adminDeleteContent({ deckId: report.deck_id, flashcardId: report.flashcard_id })
-      await resolveReport(report.id, 'resolved')
-      setReports((prev) => prev.map((r) => (r.id === report.id ? { ...r, status: 'resolved' } : r)))
-    } catch (err) {
-      console.error('Failed to remove content', err)
-    }
-  }
-
-  function handleSignOut() {
-    logout()
-    navigate('/')
-  }
+  const pendingReports = reports.filter(r => r.status === 'pending').length
 
   if (!user || user.role !== 'admin') {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="text-center">
-          <ShieldAlert size={32} className="text-orange-500 mx-auto mb-3" />
-          <p className="text-zinc-400 font-mono text-sm">Admin access required.</p>
-        </div>
+      <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6">
+        <ShieldAlert size={48} className="text-red-500 mb-4" />
+        <h1 className="text-2xl font-bold text-white mb-2">Access Denied</h1>
+        <p className="text-zinc-400 mb-6">You don't have permission to view this page.</p>
+        <Link to="/" className="text-orange-500 hover:text-orange-400 underline">Return Home</Link>
       </div>
     )
   }
 
-  const pendingReports = reports.filter((r) => r.status === 'pending').length
-  const suspendedUsers = users.filter((u) => !u.is_active).length
-
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans">
-      <div className="border-b border-zinc-800 px-8 py-6">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition">
-            <div className="w-9 h-9 rounded-lg bg-orange-500 flex items-center justify-center text-zinc-950 font-bold text-sm">
-              FL
-            </div>
-            <div>
-              <h1 className="text-lg font-bold tracking-tight">Admin Console</h1>
-              <p className="text-xs text-zinc-500 font-mono">Platform moderation &amp; user management</p>
-            </div>
-          </Link>
-
+    <div className="min-h-screen bg-[#09090b] text-zinc-300 font-sans selection:bg-orange-500/30">
+      <nav className="border-b border-zinc-800 bg-zinc-950/50 backdrop-blur-md sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-xs font-mono text-zinc-500">{user.name}</span>
-            <Link
-              to="/"
-              className="flex items-center gap-1.5 text-xs font-semibold text-zinc-300 bg-zinc-900 border border-zinc-800 px-3 py-2 rounded-lg hover:bg-orange-500/10 hover:border-orange-500/40 hover:text-orange-400 transition"
-            >
-              <Home size={14} /> Back to App
+            <div className="w-8 h-8 bg-orange-500 rounded flex items-center justify-center">
+              <ShieldAlert size={18} className="text-zinc-950" />
+            </div>
+            <span className="font-bold text-white tracking-wide">ADMIN PORTAL</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link to="/dashboard" className="text-sm text-zinc-400 hover:text-white transition flex items-center gap-1.5">
+              <Home size={16} /> Exit to App
             </Link>
-            <button
-              onClick={handleSignOut}
-              className="flex items-center gap-1.5 text-xs font-semibold text-zinc-300 bg-zinc-900 border border-zinc-800 px-3 py-2 rounded-lg hover:bg-orange-500/10 hover:border-orange-500/40 hover:text-orange-400 transition"
-            >
-              <LogOut size={14} /> Sign Out
-            </button>
           </div>
         </div>
-      </div>
+      </nav>
 
-      <div className="max-w-6xl mx-auto px-8 py-8">
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
-            <div className="text-2xl font-bold text-zinc-100">{users.length}</div>
-            <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Total Users</div>
+      {/* --- Adjusted Padding Here --- */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+        
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">System Overview</h1>
+          <p className="text-zinc-400">Manage users, content, and review reports.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5">
+            <div className="text-zinc-500 text-sm font-medium mb-1">Total Users</div>
+            <div className="text-3xl font-bold text-white">{users.length}</div>
           </div>
-          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
-            <div className="text-2xl font-bold text-orange-400">{pendingReports}</div>
-            <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Pending Reports</div>
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5">
+            <div className="text-zinc-500 text-sm font-medium mb-1">Pending Reports</div>
+            <div className="text-3xl font-bold text-white flex items-center gap-2">
+              {pendingReports}
+              {pendingReports > 0 && <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>}
+            </div>
           </div>
-          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
-            <div className="text-2xl font-bold text-zinc-100">{suspendedUsers}</div>
-            <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Suspended Users</div>
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5">
+            <div className="text-zinc-500 text-sm font-medium mb-1">Suspended Accounts</div>
+            <div className="text-3xl font-bold text-white">{users.filter(u => !u.is_active).length}</div>
           </div>
         </div>
 
@@ -154,10 +134,11 @@ function Admin() {
 
         {loading ? (
           <div className="text-center py-20 text-zinc-500 font-mono text-sm">Loading admin data...</div>
-        ) : tab === 'users' ? (
-          <UserManagementTable users={users} onToggleStatus={handleToggleStatus} />
         ) : (
-          <ReportsTable reports={reports} onResolve={handleResolve} onRemoveContent={handleRemoveContent} />
+          <div className="bg-zinc-900/30 border border-zinc-800 rounded-xl overflow-hidden">
+            {tab === 'users' && <UserManagementTable users={users} onToggleStatus={handleToggleStatus} />}
+            {tab === 'reports' && <ReportsTable reports={reports} onResolve={handleResolveReport} />}
+          </div>
         )}
       </div>
     </div>
