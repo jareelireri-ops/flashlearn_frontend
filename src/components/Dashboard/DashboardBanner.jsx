@@ -1,7 +1,8 @@
 import { Flame } from 'lucide-react'
 
 function DashboardBanner({ user, streak, cardsDue }) {
-  const firstName = (user?.name?.split(' ')[0] || 'there').toUpperCase()
+  // Bulletproof check: If user or user.name doesn't exist yet, default to "THERE"
+  const firstName = user?.name ? user.name.split(' ')[0].toUpperCase() : 'THERE'
 
   return (
     <div className="bg-slate-900 rounded-2xl px-6 py-5 text-white shadow-xl relative overflow-hidden">
