@@ -165,7 +165,7 @@ function Library() {
               placeholder="Search decks..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
+              className="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none"
             />
           </div>
         </div>
@@ -196,7 +196,7 @@ function Library() {
               <select
                 value={activeCategory}
                 onChange={(e) => setActiveCategory(e.target.value)}
-                className="w-full pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-red-300 appearance-none cursor-pointer hover:bg-slate-100 transition"
+                className="w-full pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 focus:outline-none appearance-none cursor-pointer hover:bg-slate-100 transition"
               >
                 <option value="All">All Categories</option>
                 {categories.map((cat) => (
@@ -212,7 +212,7 @@ function Library() {
               <select
                 value={activeDifficulty}
                 onChange={(e) => setActiveDifficulty(e.target.value)}
-                className="w-full pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-red-300 appearance-none cursor-pointer hover:bg-slate-100 transition"
+                className="w-full pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 focus:outline-none appearance-none cursor-pointer hover:bg-slate-100 transition"
               >
                 <option value="All">Any Difficulty</option>
                 <option value="easy">Easy</option>

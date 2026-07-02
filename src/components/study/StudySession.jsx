@@ -1,5 +1,5 @@
-﻿import { useState, useEffect, useCallback, useRef } from 'react'
-import { ChevronRight } from 'lucide-react'
+﻿import { useState, useEffect, useCallback } from 'react'
+import { ChevronRight, ChevronLeft } from 'lucide-react'
 import {
   pauseSession,
   completeSession,
@@ -8,19 +8,18 @@ import {
 import SessionHeader from './SessionHeader'
 import SessionComplete from './SessionComplete'
 
-const AUTOSAVE_INTERVAL = 15000
-
-const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, onExit }) => {
+const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, initialRatings = {}, onExit }) => {
   const [currentIndex, setCurrentIndex] = useState(resumeIndex)
   const [isFlipped, setIsFlipped] = useState(false)
-  const [hasRated, setHasRated] = useState(false)
-  const [ratings, setRatings] = useState({})
+  const [ratings, setRatings] = useState(initialRatings)
   const [isComplete, setIsComplete] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const autosaveRef = useRef(null)
 
   const currentCard = cards[currentIndex]
   const totalCards = cards.length
+  
+  // Check if the current card has already been rated (either in this sitting or historically)
+  const hasRatedCurrent = !!ratings[currentCard?.id] || currentIndex < resumeIndex
 
   const autosave = useCallback(async () => {
     try {
@@ -28,45 +27,36 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, onExit }) => {
     } catch (_) {}
   }, [sessionId, currentIndex])
 
+  // Only trigger autosave if the user tries to close the tab or refresh
   useEffect(() => {
-    autosaveRef.current = setInterval(autosave, AUTOSAVE_INTERVAL)
-    return () => clearInterval(autosaveRef.current)
-  }, [autosave])
-
-  useEffect(() => {
-    const onHide = () => { if (document.visibilityState === 'hidden') autosave() }
     const onUnload = () => autosave()
-    document.addEventListener('visibilitychange', onHide)
     window.addEventListener('beforeunload', onUnload)
     return () => {
-      document.removeEventListener('visibilitychange', onHide)
       window.removeEventListener('beforeunload', onUnload)
     }
   }, [autosave])
-
-  useEffect(() => {
-    setIsFlipped(false)
-    setHasRated(false)
-  }, [currentIndex])
 
   const handleFlip = () => {
     if (!isFlipped) setIsFlipped(true)
   }
 
   const handleRate = async (rating) => {
-    if (hasRated || isSubmitting) return
+    if (hasRatedCurrent || isSubmitting) return
     setIsSubmitting(true)
     try {
       await submitRating(sessionId, currentCard.id, rating)
-    } catch (_) {}
-    setRatings((prev) => ({ ...prev, [currentCard.id]: rating }))
-    setHasRated(true)
-    setIsSubmitting(false)
+      setRatings((prev) => ({ ...prev, [currentCard.id]: rating }))
+    } catch (_) {
+      console.error("Failed to submit rating")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleNext = async () => {
-    if (!hasRated) return
+    if (!hasRatedCurrent) return
     if (currentIndex < totalCards - 1) {
+      setIsFlipped(false) // FORCES the card to flip back BEFORE rendering the next one
       setCurrentIndex((i) => i + 1)
     } else {
       try { await completeSession(sessionId) } catch (_) {}
@@ -74,14 +64,28 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, onExit }) => {
     }
   }
 
+  const goPrev = () => {
+    if (currentIndex > 0) {
+      setIsFlipped(false)
+      setCurrentIndex(i => i - 1)
+    }
+  }
+
+  const goNext = () => {
+    if (currentIndex < totalCards - 1) {
+      setIsFlipped(false)
+      setCurrentIndex(i => i + 1)
+    }
+  }
+
   const handleRestart = () => {
     setCurrentIndex(0)
     setIsFlipped(false)
-    setHasRated(false)
     setRatings({})
     setIsComplete(false)
   }
 
+  // This handles the exit button clicked in the UI, safely triggering the autosave
   const handleExit = async () => {
     await autosave()
     onExit()
@@ -94,6 +98,12 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, onExit }) => {
     })
     return counts
   }
+
+  if (!currentCard) return null;
+
+  // Determine if the previous card was already rated
+  const prevCardIndex = currentIndex - 1
+  const prevCardRated = prevCardIndex >= 0 && (!!ratings[cards[prevCardIndex]?.id] || prevCardIndex < resumeIndex)
 
   return (
     <div className="study-session">
@@ -124,38 +134,54 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, onExit }) => {
             <div className="card-face card-back">
               <span className="card-label answer-label">ANSWER</span>
               <p className="card-text">{currentCard?.answer}</p>
-              {!hasRated && (
+              {!hasRatedCurrent && (
                 <span className="card-hint">Rate your confidence below</span>
               )}
             </div>
           </div>
 
           <div className="session-footer">
-            {!isFlipped ? (
-              <div className="footer-row">
-                <button className="reveal-btn" onClick={handleFlip}>
-                  Reveal Answer
-                </button>
-                <button className="nav-arrow" disabled>
-                  <ChevronRight size={18} />
-                </button>
+            <div className="footer-nav-container">
+              
+              {/* Left arrow is disabled if at the start, or if the previous card has already been rated */}
+              <button 
+                className="nav-arrow" 
+                onClick={goPrev} 
+                disabled={currentIndex === 0 || prevCardRated}
+              >
+                <ChevronLeft size={20} />
+              </button>
+
+              <div className="footer-center">
+                {!isFlipped ? (
+                  <button className="reveal-btn" onClick={handleFlip}>
+                    Reveal Answer
+                  </button>
+                ) : !hasRatedCurrent ? (
+                  <div className="rating-row">
+                    <p className="rating-prompt">How well did you know this?</p>
+                    <div className="rating-btns">
+                      <button className="rating-btn hard" onClick={() => handleRate("hard")} disabled={isSubmitting}>Hard</button>
+                      <button className="rating-btn good" onClick={() => handleRate("medium")} disabled={isSubmitting}>Medium</button>
+                      <button className="rating-btn easy" onClick={() => handleRate("easy")} disabled={isSubmitting}>Easy</button>
+                    </div>
+                  </div>
+                ) : (
+                  <button className="next-btn" onClick={handleNext}>
+                    {currentIndex === totalCards - 1 ? "Finish" : "Next Card"}
+                  </button>
+                )}
               </div>
-            ) : !hasRated ? (
-              <div className="rating-row">
-                <p className="rating-prompt">How well did you know this?</p>
-                <div className="rating-btns">
-                  <button className="rating-btn hard" onClick={() => handleRate("hard")} disabled={isSubmitting}>Hard</button>
-                  <button className="rating-btn good" onClick={() => handleRate("medium")} disabled={isSubmitting}>Medium</button>
-                  <button className="rating-btn easy" onClick={() => handleRate("easy")} disabled={isSubmitting}>Easy</button>
-                </div>
-              </div>
-            ) : (
-              <div className="footer-row">
-                <button className="next-btn" onClick={handleNext}>
-                  {currentIndex === totalCards - 1 ? "Finish" : "Next Card"}
-                </button>
-              </div>
-            )}
+
+              {/* Right arrow disabled if at the end, or if current card is NOT rated yet to prevent skipping */}
+              <button 
+                className="nav-arrow" 
+                onClick={goNext} 
+                disabled={currentIndex === totalCards - 1 || !hasRatedCurrent}
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -174,13 +200,20 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, onExit }) => {
         .card-text { font-size: 18px; font-weight: 500; line-height: 1.6; flex: 1; margin: 0; }
         .card-image { max-width: 100%; border-radius: 10px; max-height: 160px; object-fit: contain; }
         .card-hint { font-size: 12px; color: #94a3b8; margin-top: auto; }
+        
         .session-footer { position: fixed; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(to top, #0f1729 70%, transparent); display: flex; flex-direction: column; align-items: center; gap: 12px; }
-        .footer-row { display: flex; align-items: center; gap: 12px; }
-        .reveal-btn { padding: 13px 36px; background: #ef4444; color: #fff; border: none; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; }
+        .footer-nav-container { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 520px; gap: 16px; }
+        .footer-center { flex: 1; display: flex; justify-content: center; align-items: center; min-height: 50px; }
+        
+        .nav-arrow { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+        .nav-arrow:hover:not(:disabled) { background: rgba(255,255,255,0.12); color: #fff; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+        
+        .reveal-btn { padding: 13px 36px; background: #ef4444; color: #fff; border: none; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
         .reveal-btn:hover { background: #dc2626; }
-        .next-btn { padding: 13px 40px; background: #3b82f6; color: #fff; border: none; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; }
+        .next-btn { padding: 13px 40px; background: #3b82f6; color: #fff; border: none; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
         .next-btn:hover { background: #2563eb; }
-        .nav-arrow { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #475569; display: flex; align-items: center; justify-content: center; cursor: not-allowed; }
+        
         .rating-row { display: flex; flex-direction: column; align-items: center; gap: 14px; }
         .rating-prompt { font-size: 13px; color: #64748b; margin: 0; }
         .rating-btns { display: flex; gap: 12px; }
@@ -189,11 +222,13 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, onExit }) => {
         .rating-btn.hard { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
         .rating-btn.good { background: rgba(234,179,8,0.2); color: #facc15; border: 1px solid rgba(234,179,8,0.3); }
         .rating-btn.easy { background: rgba(34,197,94,0.2); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+        
         @media (max-width: 600px) {
           .flash-card { max-width: 100%; }
           .card-face { padding: 24px 20px; }
           .card-text { font-size: 16px; }
           .rating-btn { padding: 10px 18px; font-size: 13px; }
+          .nav-arrow { width: 38px; height: 38px; }
         }
       `}</style>
     </div>

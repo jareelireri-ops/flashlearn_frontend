@@ -18,6 +18,7 @@ const StudyArea = () => {
   const [cards, setCards] = useState([])
   const [sessionId, setSessionId] = useState(null)
   const [resumeIndex, setResumeIndex] = useState(0)
+  const [initialRatings, setInitialRatings] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [showResumePrompt, setShowResumePrompt] = useState(false)
@@ -36,7 +37,6 @@ const StudyArea = () => {
       const deckRes = await getDeckFlashcards(deckId, { per_page: 1000 })
       const flashcards = deckRes.flashcards || []
 
-      // Fetch actual deck details to display correct title
       let deckData = { title: 'Study Session' }
       try {
         const details = await getDeckDetails(deckId)
@@ -63,7 +63,6 @@ const StudyArea = () => {
           return
         }
       } catch (_) {
-        // no active session found, start fresh
       }
 
       await startFresh()
@@ -77,10 +76,12 @@ const StudyArea = () => {
     }
   }
 
-  const startFresh = async () => {
-    const res = await startStudySession(deckId)
+  // Accepts a force parameter and passes force_new to the backend
+  const startFresh = async (force = false) => {
+    const res = await startStudySession(deckId, { force_new: force })
     setSessionId(res.session.id)
-    setResumeIndex(0)
+    setResumeIndex(res.session?.current_card_index || 0)
+    setInitialRatings(res.session_ratings || {})
     setLoading(false)
   }
 
@@ -88,9 +89,10 @@ const StudyArea = () => {
     setShowResumePrompt(false)
     setLoading(true)
     try {
-      await resumeSession(pendingSession.id)
+      const res = await resumeSession(pendingSession.id)
       setSessionId(pendingSession.id)
-      setResumeIndex(pendingSession.current_card_index || 0)
+      setResumeIndex(res.current_card_index || pendingSession.current_card_index || 0)
+      setInitialRatings(res.session_ratings || {})
     } catch (_) {
       await startFresh()
     } finally {
@@ -98,10 +100,11 @@ const StudyArea = () => {
     }
   }
 
+  // Explicitly passes true to force a brand new session
   const handleStartFresh = async () => {
     setShowResumePrompt(false)
     setLoading(true)
-    await startFresh()
+    await startFresh(true)
   }
 
   if (loading) {
@@ -255,6 +258,7 @@ const StudyArea = () => {
       cards={cards}
       sessionId={sessionId}
       resumeIndex={resumeIndex}
+      initialRatings={initialRatings}
       onExit={() => navigate(-1)}
     />
   )

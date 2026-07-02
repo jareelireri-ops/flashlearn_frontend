@@ -83,8 +83,8 @@ export async function removeFromCollection(deckId) {
 }
 
 // STUDY SESSIONS
-export async function startStudySession(deckId) {
-  const response = await client.post(`/study/${deckId}/start`, {}, {
+export async function startStudySession(deckId, data = {}) {
+  const response = await client.post(`/study/${deckId}/start`, data, {
     headers: { 'Content-Type': 'application/json' }
   })
   return response.data
@@ -234,9 +234,7 @@ export async function deleteFlashcard(cardId) {
   return response.data
 }
 
-
 // ADMIN
-
 export async function getAllUsers() {
   const response = await client.get('/admin/users')
   return response.data
