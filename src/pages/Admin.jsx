@@ -70,7 +70,7 @@ function Admin() {
 
   if (!user || user.role !== 'admin') {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-6">
         <div className="text-center">
           <ShieldAlert size={32} className="text-orange-500 mx-auto mb-3" />
           <p className="text-zinc-400 font-mono text-sm">Admin access required.</p>
@@ -84,37 +84,39 @@ function Admin() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans">
-      <div className="border-b border-zinc-800 px-8 py-6">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+      <div className="border-b border-zinc-800 px-4 sm:px-8 py-4 sm:py-6">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition">
-            <div className="w-9 h-9 rounded-lg bg-orange-500 flex items-center justify-center text-zinc-950 font-bold text-sm">
+            <div className="w-9 h-9 rounded-lg bg-orange-500 flex items-center justify-center text-zinc-950 font-bold text-sm shrink-0">
               FL
             </div>
-            <div>
-              <h1 className="text-lg font-bold tracking-tight">Admin Console</h1>
-              <p className="text-xs text-zinc-500 font-mono">Platform moderation &amp; user management</p>
+            <div className="min-w-0">
+              <h1 className="text-lg font-bold tracking-tight truncate">Admin Console</h1>
+              <p className="text-xs text-zinc-500 font-mono truncate">Platform moderation &amp; user management</p>
             </div>
           </Link>
 
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-mono text-zinc-500">{user.name}</span>
-            <Link
-              to="/"
-              className="flex items-center gap-1.5 text-xs font-semibold text-zinc-300 bg-zinc-900 border border-zinc-800 px-3 py-2 rounded-lg hover:bg-orange-500/10 hover:border-orange-500/40 hover:text-orange-400 transition"
-            >
-              <Home size={14} /> Back to App
-            </Link>
-            <button
-              onClick={handleSignOut}
-              className="flex items-center gap-1.5 text-xs font-semibold text-zinc-300 bg-zinc-900 border border-zinc-800 px-3 py-2 rounded-lg hover:bg-orange-500/10 hover:border-orange-500/40 hover:text-orange-400 transition"
-            >
-              <LogOut size={14} /> Sign Out
-            </button>
+          <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3">
+            <span className="text-xs font-mono text-zinc-500 truncate max-w-[120px] sm:max-w-none">{user.name}</span>
+            <div className="flex items-center gap-2 shrink-0">
+              <Link
+                to="/"
+                className="flex items-center gap-1.5 text-xs font-semibold text-zinc-300 bg-zinc-900 border border-zinc-800 px-2.5 sm:px-3 py-2 rounded-lg hover:bg-orange-500/10 hover:border-orange-500/40 hover:text-orange-400 transition"
+              >
+                <Home size={14} /> <span className="hidden sm:inline">Back to App</span>
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-1.5 text-xs font-semibold text-zinc-300 bg-zinc-900 border border-zinc-800 px-2.5 sm:px-3 py-2 rounded-lg hover:bg-orange-500/10 hover:border-orange-500/40 hover:text-orange-400 transition"
+              >
+                <LogOut size={14} /> <span className="hidden sm:inline">Sign Out</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-8 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-8 py-6 sm:py-8">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
             <div className="text-2xl font-bold text-zinc-100">{users.length}</div>
@@ -130,10 +132,10 @@ function Admin() {
           </div>
         </div>
 
-        <div className="flex gap-1 bg-zinc-900 border border-zinc-800 rounded-lg p-1 w-fit mb-6">
+        <div className="flex gap-1 bg-zinc-900 border border-zinc-800 rounded-lg p-1 w-full sm:w-fit mb-6 overflow-x-auto">
           <button
             onClick={() => setTab('users')}
-            className={`flex items-center gap-2 px-5 py-2 rounded-md text-sm font-semibold transition ${
+            className={`flex items-center justify-center gap-2 px-4 sm:px-5 py-2 rounded-md text-sm font-semibold transition whitespace-nowrap flex-1 sm:flex-none ${
               tab === 'users' ? 'bg-orange-500 text-zinc-950' : 'text-zinc-400 hover:text-zinc-100'
             }`}
           >
@@ -141,7 +143,7 @@ function Admin() {
           </button>
           <button
             onClick={() => setTab('reports')}
-            className={`flex items-center gap-2 px-5 py-2 rounded-md text-sm font-semibold transition ${
+            className={`flex items-center justify-center gap-2 px-4 sm:px-5 py-2 rounded-md text-sm font-semibold transition whitespace-nowrap flex-1 sm:flex-none ${
               tab === 'reports' ? 'bg-orange-500 text-zinc-950' : 'text-zinc-400 hover:text-zinc-100'
             }`}
           >

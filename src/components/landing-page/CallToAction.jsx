@@ -34,7 +34,7 @@ const PENCIL_FIELD = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/20
 function CallToAction() {
   return (
     <section className="relative bg-slate-900 text-white px-6 py-20 overflow-hidden border-t-4 border-red-500">
-      {/* Pencil texture, replaces the old dot grid.  */}
+      {/* Pencil texture.  */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ backgroundImage: PENCIL_FIELD, backgroundRepeat: 'repeat', backgroundSize: '380px 380px' }}
@@ -46,7 +46,7 @@ function CallToAction() {
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight mt-3 leading-none">
             How To Begin <span className="text-red-500">Studying</span>
           </h2>
-          <p className="text-slate-500 text-sm mt-3">Four steps. Every card, ready to study.</p>
+        
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
