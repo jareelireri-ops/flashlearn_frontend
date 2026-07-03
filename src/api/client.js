@@ -12,14 +12,45 @@ client.interceptors.request.use((config) => {
   return config
 })
 
+// Endpoints where a 401 means "bad credentials on this attempt",
+// NOT "your session expired" — these must never trigger a logout/redirect.
+const AUTH_ATTEMPT_PATHS = [
+  '/auth/login',
+  '/auth/register',
+  '/auth/forgot-password',
+  '/auth/reset-password',
+]
+
+function isAuthAttempt(url = '') {
+  return AUTH_ATTEMPT_PATHS.some((path) => url.includes(path))
+}
+
+// Client-side redirect to "/" without a full page reload.
+// Works with react-router's BrowserRouter, which listens for
+// popstate to re-render on URL changes.
+function redirectToHome() {
+  if (window.location.pathname !== '/') {
+    window.history.pushState({}, '', '/')
+    window.dispatchEvent(new PopStateEvent('popstate'))
+  }
+}
+
 client.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
+    const status = error.response?.status
+    const url = error.config?.url || ''
+
+    // Only treat 401s from already-authenticated routes as an expired
+    // session. 401s from login/register/forgot-password/reset-password
+    // just mean "that attempt failed" and should be handled by the
+    // calling component (e.g. shown as a form error), not logged out.
+    if (status === 401 && !isAuthAttempt(url)) {
       localStorage.removeItem('access_token')
       localStorage.removeItem('user')
-      window.location.href = '/'
+      redirectToHome()
     }
+
     return Promise.reject(error)
   }
 )
@@ -263,3 +294,4 @@ export async function adminDeleteContent({ deckId, flashcardId }) {
   })
   return response.data
 }
+

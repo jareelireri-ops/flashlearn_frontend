@@ -115,7 +115,7 @@ function Admin() {
       </div>
 
       <div className="max-w-6xl mx-auto px-8 py-8">
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
             <div className="text-2xl font-bold text-zinc-100">{users.length}</div>
             <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Total Users</div>

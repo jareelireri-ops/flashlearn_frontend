@@ -98,8 +98,14 @@ function AuthModal() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
-      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-xl p-6">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+      onClick={closeAuthModal}
+    >
+      <div
+        className="relative w-full max-w-md bg-white rounded-2xl shadow-xl p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button onClick={closeAuthModal} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
           <X size={20} />
         </button>

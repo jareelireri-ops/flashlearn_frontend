@@ -1,16 +1,21 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
+import { Eye, EyeOff } from 'lucide-react'
 import { resetPassword } from '../api/client'
+import { UIContext } from '../context/UIContext'
 import Navbar from '../components/ReusableComponents/Navbar'
 
 function ResetPassword() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const tokenFromUrl = searchParams.get('token') || ''
+  const { openAuthModal } = useContext(UIContext)
 
   const [token, setToken] = useState(tokenFromUrl)
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(false)
@@ -36,7 +41,10 @@ function ResetPassword() {
     try {
       await resetPassword(token.trim(), password)
       setSuccess(true)
-      setTimeout(() => navigate('/'), 2500)
+      setTimeout(() => {
+        navigate('/')
+        openAuthModal('login')
+      }, 2500)
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to reset password.')
     } finally {
@@ -78,24 +86,42 @@ function ResetPassword() {
 
               <div>
                 <label className="block text-xs font-semibold text-slate-500 mb-1">NEW PASSWORD</label>
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300 pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-slate-500 mb-1">CONFIRM PASSWORD</label>
-                <input
-                  type="password"
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
-                />
+                <div className="relative">
+                  <input
+                    type={showConfirm ? 'text' : 'password'}
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300 pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirm(!showConfirm)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  >
+                    {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
 
               <button

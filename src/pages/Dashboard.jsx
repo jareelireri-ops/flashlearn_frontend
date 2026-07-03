@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { BookOpen, LayoutDashboard, PlusCircle, LogOut, Bell, Play, Settings } from 'lucide-react'
+import { BookOpen, LayoutDashboard, PlusCircle, LogOut, Bell, Play, Settings, Menu, X } from 'lucide-react'
 import { AuthContext } from '../context/AuthContext'
 import { NotificationContext } from '../context/NotificationContext'
 import { getDashboardStats, getMyCollection, getCompletionStats, getDailyAnalytics, getTopDecks, checkDueCards, listSessions } from '../api/client'
@@ -18,6 +18,7 @@ import Avatar from '../components/ReusableComponents/Avatar'
 
 function Dashboard() {
   const { user, logout } = useContext(AuthContext)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const { unreadCount, refreshUnreadCount } = useContext(NotificationContext)
   const navigate = useNavigate()
 
@@ -63,7 +64,25 @@ function Dashboard() {
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
 
-      <div className="w-64 bg-slate-950 text-slate-400 flex flex-col h-full shrink-0 border-r border-slate-900 z-10">
+      {/* Mobile sidebar overlay backdrop */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-black/50 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar — hidden on mobile, visible on md+. On mobile renders as a slide-in drawer */}
+      <div className={`fixed md:static inset-y-0 left-0 z-30 w-64 bg-slate-950 text-slate-400 flex flex-col h-full shrink-0 border-r border-slate-900 transition-transform duration-300 ${
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+      }`}>
+        {/* Close button — mobile only */}
+        <div className="flex justify-end p-4 md:hidden">
+          <button onClick={() => setSidebarOpen(false)} className="text-slate-500 hover:text-white transition" aria-label="Close menu">
+            <X size={22} />
+          </button>
+        </div>
+
         <div className="p-6">
           <Link to="/" className="flex items-center gap-2 mb-10 transition hover:opacity-80">
             <div className="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center text-white text-sm font-bold shadow-sm">FL</div>
@@ -124,8 +143,17 @@ function Dashboard() {
       </div>
 
       <div className="flex-1 overflow-y-auto h-full bg-slate-50">
-        <div className="flex items-center justify-between px-8 py-4 bg-white border-b border-slate-200">
-          <h1 className="text-lg font-bold text-slate-900">Dashboard</h1>
+        <div className="flex items-center justify-between px-4 md:px-8 py-4 bg-white border-b border-slate-200">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="md:hidden text-slate-500 hover:text-slate-800 transition"
+              aria-label="Open menu"
+            >
+              <Menu size={22} />
+            </button>
+            <h1 className="text-lg font-bold text-slate-900">Dashboard</h1>
+          </div>
           <button
             onClick={() => navigate('/library', { state: { tab: 'collection' } })}
             className="px-4 py-2 border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-50 transition flex items-center gap-2"
