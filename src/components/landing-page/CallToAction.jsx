@@ -17,7 +17,7 @@ const STEPS = [
     num: '03',
     icon: Layers,
     title: 'Open a deck',
-    desc: 'Each category holds different decks, and every deck has a set of Q/A flashcards ready to study.',
+    desc: 'Each category holds different decks, and every deck has a set of Q/A flashcards ready to use for your deeper study.',
   },
   {
     num: '04',
