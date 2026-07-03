@@ -71,7 +71,7 @@ function Hero() {
             {(!user || isLearner) && (
               <button
                 onClick={() => isLearner ? navigate('/dashboard') : openAuthModal('register')}
-                className="flex-1 sm:flex-none justify-center px-3 sm:px-5 py-2 sm:py-2.5 bg-gray-900 text-white text-xs sm:text-sm font-semibold border border-gray-900 hover:bg-gray-800 transition-colors whitespace-nowrap"
+                className="flex-1 sm:flex-none min-w-0 justify-center px-3 sm:px-5 py-2 sm:py-2.5 bg-gray-900 text-white text-xs sm:text-sm font-semibold border border-gray-900 hover:bg-gray-800 transition-colors leading-tight"
                 style={{ borderRadius: 0 }}
               >
                 {isLearner ? 'Go to Dashboard' : 'Start for free'}
@@ -79,7 +79,7 @@ function Hero() {
             )}
             <button
               onClick={() => navigate('/library')}
-              className="flex-1 sm:flex-none justify-center px-3 sm:px-5 py-2 sm:py-2.5 bg-gray-300 text-gray-900 text-xs sm:text-sm font-semibold border border-gray-900 hover:bg-gray-50 transition-colors whitespace-nowrap"
+              className="flex-1 sm:flex-none min-w-0 justify-center px-3 sm:px-5 py-2 sm:py-2.5 bg-gray-300 text-gray-900 text-xs sm:text-sm font-semibold border border-gray-900 hover:bg-gray-50 transition-colors leading-tight"
               style={{ borderRadius: 0 }}
             >
               Browse decks →
