@@ -101,10 +101,6 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, initialRatings 
 
   if (!currentCard) return null;
 
-  // Determine if the previous card was already rated
-  const prevCardIndex = currentIndex - 1
-  const prevCardRated = prevCardIndex >= 0 && (!!ratings[cards[prevCardIndex]?.id] || prevCardIndex < resumeIndex)
-
   return (
     <div className="study-session">
       <SessionHeader
@@ -143,11 +139,11 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, initialRatings 
           <div className="session-footer">
             <div className="footer-nav-container">
               
-              {/* Left arrow is disabled if at the start, or if the previous card has already been rated */}
+              {/* Left arrow: only disabled at the start, or if current card is flipped+unrated (locked) */}
               <button 
                 className="nav-arrow" 
                 onClick={goPrev} 
-                disabled={currentIndex === 0 || prevCardRated}
+                disabled={currentIndex === 0 || (isFlipped && !hasRatedCurrent)}
               >
                 <ChevronLeft size={20} />
               </button>
@@ -173,11 +169,11 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, initialRatings 
                 )}
               </div>
 
-              {/* Right arrow disabled if at the end, or if current card is NOT rated yet to prevent skipping */}
+              {/* Right arrow: only disabled at the end, or if current card is flipped+unrated (locked) */}
               <button 
                 className="nav-arrow" 
                 onClick={goNext} 
-                disabled={currentIndex === totalCards - 1 || !hasRatedCurrent}
+                disabled={currentIndex === totalCards - 1 || (isFlipped && !hasRatedCurrent)}
               >
                 <ChevronRight size={20} />
               </button>
