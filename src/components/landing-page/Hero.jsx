@@ -14,9 +14,9 @@ const MARQUEE_ITEMS = [
 ]
 
 const PENCILS = [
-  { top: '10%', left: '88%', rotate: -18, size: 60, opacity: 0.06 },
-  { top: '55%', left: '94%', rotate: 20, size: 80, opacity: 0.05 },
-  { top: '85%', left: '85%', rotate: -30, size: 50, opacity: 0.06 },
+  { top: '10%', left: '88%', rotate: -18, size: 60, opacity: 0.11 },
+  { top: '55%', left: '94%', rotate: 20, size: 80, opacity: 0.13 },
+  { top: '85%', left: '85%', rotate: -30, size: 50, opacity: 0.12 },
 ]
 
 function Hero() {
@@ -62,11 +62,11 @@ function Hero() {
 
             <p className="mt-4 sm:mt-5 text-xs sm:text-sm text-gray-500 leading-relaxed max-w-sm">
               The flashcard app built around how your brain actually works.
-              Q&A cards designed to guide you in your roadmap to continuous knowledge and mastery.
+              Q&A cards designed to guide you in your roadmap to excellence
             </p>
           </div>
 
-          {/* Buttons — always horizontal, this is the one row that stays a row */}
+          {/* Buttons — horizontal in mobile, vertical in wider screens*/}
           <div className="flex flex-row items-center gap-2 sm:gap-3">
             {(!user || isLearner) && (
               <button
