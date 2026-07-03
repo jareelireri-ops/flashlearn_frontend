@@ -13,8 +13,6 @@ const MARQUEE_ITEMS = [
   'View study streaks and more.',
 ]
 
-// Positioned relative to the headliner box only — overflow-hidden 
-// box clips anything that would cross into the stats column
 const PENCILS = [
   { top: '10%', left: '88%', rotate: -18, size: 60, opacity: 0.06 },
   { top: '55%', left: '94%', rotate: 20, size: 80, opacity: 0.05 },
@@ -33,11 +31,11 @@ function Hero() {
   return (
     <section className="bg-white border-b border-gray-900 overflow-hidden">
 
-      {/* Main hero grid -considering on mobile */}
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_240px] border-b border-gray-900">
+      {/* Main hero grid — two columns at EVERY breakpoint, right column just narrows on mobile */}
+      <div className="grid grid-cols-[1fr_100px] xs:grid-cols-[1fr_130px] sm:grid-cols-[1fr_180px] md:grid-cols-[1fr_240px] border-b border-gray-900">
 
         {/* HEADLINER */}
-        <div className="relative overflow-hidden md:border-r border-gray-900 px-6 sm:px-10 pt-10 pb-8 md:pt-12 md:pb-10 flex flex-col justify-between gap-8">
+        <div className="relative overflow-hidden border-r border-gray-900 px-4 sm:px-6 md:px-10 pt-8 sm:pt-10 md:pt-12 pb-6 sm:pb-8 md:pb-10 flex flex-col justify-between gap-6 sm:gap-8">
           {PENCILS.map((p, i) => (
             <Pencil
               key={i}
@@ -57,22 +55,23 @@ function Hero() {
           <div>
             <h1
               className="leading-none text-gray-900 font-black uppercase"
-              style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: 'clamp(56px, 14vw, 108px)', letterSpacing: '0.02em' }}
+              style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: 'clamp(44px, 13vw, 108px)', letterSpacing: '0.02em' }}
             >FLASH<br />
               <span className="text-red-600">LEARN</span>
             </h1>
 
-            <p className="mt-5 text-sm text-gray-500 leading-relaxed max-w-sm">
+            <p className="mt-4 sm:mt-5 text-xs sm:text-sm text-gray-500 leading-relaxed max-w-sm">
               The flashcard app built around how your brain actually works.
               Q&A cards designed to guide you in your roadmap to continuous knowledge and mastery.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          {/* Buttons — always horizontal, this is the one row that stays a row */}
+          <div className="flex flex-row items-center gap-2 sm:gap-3">
             {(!user || isLearner) && (
               <button
                 onClick={() => isLearner ? navigate('/dashboard') : openAuthModal('register')}
-                className="px-5 py-2.5 bg-gray-900 text-white text-sm font-semibold border border-gray-900 hover:bg-gray-800 transition-colors"
+                className="flex-1 sm:flex-none justify-center px-3 sm:px-5 py-2 sm:py-2.5 bg-gray-900 text-white text-xs sm:text-sm font-semibold border border-gray-900 hover:bg-gray-800 transition-colors whitespace-nowrap"
                 style={{ borderRadius: 0 }}
               >
                 {isLearner ? 'Go to Dashboard' : 'Start for free'}
@@ -80,7 +79,7 @@ function Hero() {
             )}
             <button
               onClick={() => navigate('/library')}
-              className="px-5 py-2.5 bg-gray-300 text-gray-900 text-sm font-semibold border border-gray-900 hover:bg-gray-50 transition-colors"
+              className="flex-1 sm:flex-none justify-center px-3 sm:px-5 py-2 sm:py-2.5 bg-gray-300 text-gray-900 text-xs sm:text-sm font-semibold border border-gray-900 hover:bg-gray-50 transition-colors whitespace-nowrap"
               style={{ borderRadius: 0 }}
             >
               Browse decks →
@@ -88,30 +87,23 @@ function Hero() {
           </div>
         </div>
 
-        {/* Rightstats column: horizontal row on mobile, stacked column from md up */}
-        <div className="flex flex-row md:flex-col divide-x md:divide-x-0 divide-y-0 md:divide-y divide-gray-900 border-t md:border-t-0 border-gray-900">
-          <div className="flex-1 px-4 sm:px-6 py-5 md:py-7 flex flex-col justify-between">
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">Active users</p>
-            <p className="font-black text-gray-900 leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: '32px' }}>342+</p>
+        {/* Right stats column — always stacked vertically, on the right side at every breakpoint */}
+        <div className="flex flex-col divide-y divide-gray-900">
+          <div className="flex-1 px-2 sm:px-4 md:px-6 py-3 sm:py-5 md:py-7 flex flex-col justify-between">
+            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-gray-400">Active users</p>
+            <p className="font-black text-gray-900 leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: 'clamp(20px, 6vw, 32px)' }}>342+</p>
           </div>
 
-          <div className="flex-1 px-4 sm:px-6 py-5 md:py-7 flex flex-col justify-between">
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">Retention rate</p>
-            <p className="font-black text-gray-900 leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: '32px' }}>87%</p>
+          <div className="flex-1 px-2 sm:px-4 md:px-6 py-3 sm:py-5 md:py-7 flex flex-col justify-between">
+            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-gray-400">Retention rate</p>
+            <p className="font-black text-gray-900 leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: 'clamp(20px, 6vw, 32px)' }}>87%</p>
           </div>
 
-          <div className="hidden md:flex flex-1 px-6 py-7 flex-col justify-between bg-gray-900">
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">Public decks</p>
-            <p className="font-black text-white leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: '44px' }}>1101+</p>
-            <p className="text-xs text-gray-600 mt-3 italic leading-snug">Join the community.<br />Educate as you get educated.</p>
+          <div className="flex-1 px-2 sm:px-4 md:px-6 py-3 sm:py-5 md:py-7 flex flex-col justify-between bg-gray-900">
+            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-gray-500">Public decks</p>
+            <p className="font-black text-white leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: 'clamp(24px, 7vw, 44px)' }}>1101+</p>
+            <p className="hidden sm:block text-xs text-gray-600 mt-3 italic leading-snug">Join the community.<br />Educate as you get educated.</p>
           </div>
-        </div>
-
-        {/* Public decks stat —its own full-width row on mobile only */}
-        <div className="md:hidden flex flex-col justify-between px-4 sm:px-6 py-5 bg-gray-900 border-t border-gray-900">
-          <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">Public decks</p>
-          <p className="font-black text-white leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: '36px' }}>1101+</p>
-          <p className="text-xs text-gray-600 mt-2 italic leading-snug">Beats traditional reading. Every time.</p>
         </div>
       </div>
 
