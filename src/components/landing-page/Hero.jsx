@@ -13,7 +13,7 @@ const MARQUEE_ITEMS = [
   'View study streaks and more.',
 ]
 
-// Positioned relative to the headliner box only — overflow-hidden on that
+// Positioned relative to the headliner box only — overflow-hidden 
 // box clips anything that would cross into the stats column
 const PENCILS = [
   { top: '10%', left: '88%', rotate: -18, size: 60, opacity: 0.06 },
@@ -80,7 +80,7 @@ function Hero() {
             )}
             <button
               onClick={() => navigate('/library')}
-              className="px-5 py-2.5 bg-white text-gray-900 text-sm font-semibold border border-gray-900 hover:bg-gray-50 transition-colors"
+              className="px-5 py-2.5 bg-gray-300 text-gray-900 text-sm font-semibold border border-gray-900 hover:bg-gray-50 transition-colors"
               style={{ borderRadius: 0 }}
             >
               Browse decks →
