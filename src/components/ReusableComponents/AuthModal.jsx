@@ -25,15 +25,17 @@ function RequirementItem({ met, label }) {
   )
 }
 
-// live count shown under an input — turns red once the value is outside min/max
-function CharCounter({ length, min, max, showError }) {
-  const tooShort = min != null && length < min
-  const tooLong = length > max
+// live count shown under a limited input.
+// - turns red the instant the field hits its max (informational, live —
+//   doesn't wait for blur, since "you've hit the limit" isn't an error)
+// - if a minLength + showMinError is passed, that takes over on blur to
+//   show the one message that actually applies instead of stacking both
+function CharCounter({ length, max, minLength, showMinError }) {
+  const atLimit = length >= max
+  const isRed = atLimit || showMinError
   return (
-    <p className={`text-xs mt-1 text-right ${showError ? 'text-red-500' : 'text-gray-400'}`}>
-      {length}/{max}
-      {showError && tooShort && ` — needs at least ${min}`}
-      {showError && tooLong && ` — over the limit`}
+    <p className={`text-xs mt-1 text-right ${isRed ? 'text-red-500' : 'text-gray-400'}`}>
+      {showMinError ? `Min ${minLength} characters` : `${length}/${max}`}
     </p>
   )
 }
@@ -93,7 +95,9 @@ function AuthModal() {
 
   if (!authModalOpen) return null
 
-  const isNameInvalid = registerData.name.length > 0 && (registerData.name.trim().length < requirements.name.min_length || registerData.name.length > requirements.name.max_length)
+  // maxLength on the input already makes "too long" impossible to type,
+  // so this only ever needs to check the lower bound
+  const isNameInvalid = registerData.name.length > 0 && registerData.name.trim().length < requirements.name.min_length
   const isEmailInvalid = (email) => email.length > 0 && (!email.includes('@') || !email.includes('.') || email.length > requirements.email.max_length)
 
   // individual pass/fail checks, reused both for the checklist ticks and
@@ -227,6 +231,7 @@ function AuthModal() {
                   className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${loginEmailShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
                 />
                 {loginEmailShowError && <p className="text-xs text-red-500 mt-1">Please enter a valid email address with an '@'.</p>}
+                <CharCounter length={loginData.email.length} max={requirements.email.max_length} />
               </div>
               <div>
                 <div className="flex justify-between items-center mb-1">
@@ -302,6 +307,7 @@ function AuthModal() {
                     onBlur={() => setForgotEmailShowError(isEmailInvalid(forgotEmail))}
                     className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${forgotEmailShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
                   />
+                  <CharCounter length={forgotEmail.length} max={requirements.email.max_length} />
                 </div>
                 <button
                   type="submit"
@@ -320,14 +326,18 @@ function AuthModal() {
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1">Full Name</label>
                 <input
-                  type="text" required placeholder="Jareel Ireri"
+                  type="text" required placeholder="Jareel Ireri" maxLength={requirements.name.max_length}
                   value={registerData.name} onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
                   onFocus={() => setRegisterNameShowError(false)}
                   onBlur={() => setRegisterNameShowError(isNameInvalid)}
                   className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${registerNameShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
                 />
-                {registerNameShowError && <p className="text-xs text-red-500 mt-1">Name must be at least 2 characters.</p>}
-                <CharCounter length={registerData.name.length} min={requirements.name.min_length} max={requirements.name.max_length} showError={registerNameShowError} />
+                <CharCounter
+                  length={registerData.name.length}
+                  max={requirements.name.max_length}
+                  minLength={requirements.name.min_length}
+                  showMinError={registerNameShowError}
+                />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1">EMAIL</label>
@@ -339,17 +349,13 @@ function AuthModal() {
                   className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${registerEmailShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
                 />
                 {registerEmailShowError && <p className="text-xs text-red-500 mt-1">Please enter a valid email address with an '@'.</p>}
+                <CharCounter length={registerData.email.length} max={requirements.email.max_length} />
               </div>
               <div>
-                <div className="flex justify-between items-baseline mb-1">
-                  <label className="block text-xs font-semibold text-gray-500">PASSWORD</label>
-                  <span className={`text-xs ${registerPasswordShowError ? 'text-red-500' : 'text-gray-400'}`}>
-                    {registerData.password.length}/{requirements.password.max_length}
-                  </span>
-                </div>
+                <label className="block text-xs font-semibold text-gray-500 mb-1">PASSWORD</label>
                 <div className="relative">
                   <input
-                    type={showPassword ? 'text' : 'password'} required placeholder="••••••••"
+                    type={showPassword ? 'text' : 'password'} required placeholder="••••••••" maxLength={requirements.password.max_length}
                     value={registerData.password} onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
                     onFocus={() => setRegisterPasswordShowError(false)}
                     onBlur={() => setRegisterPasswordShowError(registerData.password.length > 0 && isPasswordInvalid(registerData.password))}
@@ -359,6 +365,7 @@ function AuthModal() {
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
+                <CharCounter length={registerData.password.length} max={requirements.password.max_length} />
 
                 {/* pre-listed requirements — always visible, tick green as each is met */}
                 <ul className="mt-2 space-y-1">
@@ -381,7 +388,7 @@ function AuthModal() {
                 <label className="block text-xs font-semibold text-gray-500 mb-1">CONFIRM PASSWORD</label>
                 <div className="relative">
                   <input
-                    type={showConfirmPassword ? 'text' : 'password'} required placeholder="••••••••"
+                    type={showConfirmPassword ? 'text' : 'password'} required placeholder="••••••••" maxLength={requirements.password.max_length}
                     value={registerData.confirmPassword} onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
                     onFocus={() => setRegisterConfirmShowError(false)}
                     onBlur={() => setRegisterConfirmShowError(isConfirmInvalid)}
@@ -391,6 +398,7 @@ function AuthModal() {
                     {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
+                <CharCounter length={registerData.confirmPassword.length} max={requirements.password.max_length} />
                 <ul className="mt-2 space-y-1">
                   <RequirementItem
                     met={registerData.confirmPassword.length > 0 && !isConfirmInvalid}
