@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import { Plus, Minus, Sparkles, Users } from 'lucide-react'
 
 const DIFFICULTY_STYLES = {
@@ -6,14 +7,48 @@ const DIFFICULTY_STYLES = {
   hard: 'bg-red-50 text-red-600',
 }
 
+const MAX_TILT = 8 // degrees
+
 function DeckCard({ deck, completion, onClick, onSave, onRemove, hasNewCards }) {
   const pct = completion?.completion_pct ?? null
   const isDone = pct === 100
 
+  const cardRef = useRef(null)
+  const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 })
+
+  const handleMouseMove = (e) => {
+    const card = cardRef.current
+    if (!card) return
+
+    const rect = card.getBoundingClientRect()
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+
+    // Normalize cursor offset from center to a -1 → 1 range
+    const offsetX = (e.clientX - centerX) / (rect.width / 2)
+    const offsetY = (e.clientY - centerY) / (rect.height / 2)
+
+    setTilt({
+      rotateY: offsetX * MAX_TILT,
+      rotateX: -offsetY * MAX_TILT,
+    })
+  }
+
+  const handleMouseLeave = () => {
+    setTilt({ rotateX: 0, rotateY: 0 })
+  }
+
   return (
     <div
+      ref={cardRef}
       onClick={onClick}
-      className="relative bg-white border border-slate-200 rounded-2xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer group"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        transform: `perspective(800px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)`,
+        transition: 'transform 150ms ease',
+      }}
+      className="relative bg-white border border-slate-200 rounded-2xl p-4 hover:shadow-lg transition-all cursor-pointer group"
     >
       {/* Quick Save Button Shows as a plus on hover) */}
       {onSave && (

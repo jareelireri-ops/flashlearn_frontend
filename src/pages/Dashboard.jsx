@@ -25,6 +25,8 @@ const MESSAGES = [
   ' FL ',
 ]
 
+const PENCIL_FIELD = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='380' height='380' viewBox='0 0 380 380'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.045'%3E%3Cg transform='translate(30,40) rotate(24)'%3E%3Crect x='0' y='-6' width='96' height='12' rx='2'/%3E%3Crect x='96' y='-6' width='10' height='12'/%3E%3Cpolygon points='0,-6 0,6 -18,0'/%3E%3C/g%3E%3Cg transform='translate(240,70) rotate(-18)'%3E%3Crect x='0' y='-6' width='80' height='12' rx='2'/%3E%3Crect x='80' y='-6' width='9' height='12'/%3E%3Cpolygon points='0,-6 0,6 -16,0'/%3E%3C/g%3E%3Cg transform='translate(70,200) rotate(68)'%3E%3Crect x='0' y='-6' width='88' height='12' rx='2'/%3E%3Crect x='88' y='-6' width='9' height='12'/%3E%3Cpolygon points='0,-6 0,6 -16,0'/%3E%3C/g%3E%3Cg transform='translate(270,240) rotate(-52)'%3E%3Crect x='0' y='-6' width='92' height='12' rx='2'/%3E%3Crect x='92' y='-6' width='10' height='12'/%3E%3Cpolygon points='0,-6 0,6 -17,0'/%3E%3C/g%3E%3Cg transform='translate(150,310) rotate(10)'%3E%3Crect x='0' y='-6' width='76' height='12' rx='2'/%3E%3Crect x='76' y='-6' width='9' height='12'/%3E%3Cpolygon points='0,-6 0,6 -15,0'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+
 function Dashboard() {
   const { user, logout } = useContext(AuthContext)
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -82,17 +84,22 @@ function Dashboard() {
       )}
 
       {/* Sidebar — hidden on mobile, visible on md+. On mobile renders as a slide-in drawer */}
-      <div className={`fixed md:static inset-y-0 left-0 z-30 w-64 bg-slate-950 text-slate-400 flex flex-col h-full shrink-0 border-r border-slate-900 transition-transform duration-300 ${
+      <div className={`fixed md:static inset-y-0 left-0 z-30 w-64 bg-slate-950 text-slate-400 flex flex-col h-full shrink-0 border-r border-slate-900 transition-transform duration-300 relative overflow-hidden ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
       }`}>
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ backgroundImage: PENCIL_FIELD, backgroundRepeat: 'repeat', backgroundSize: '380px 380px' }}
+        />
+
         {/* Close button — mobile only */}
-        <div className="flex justify-end p-4 md:hidden">
+        <div className="relative flex justify-end p-4 md:hidden">
           <button onClick={() => setSidebarOpen(false)} className="text-slate-500 hover:text-white transition" aria-label="Close menu">
             <X size={22} />
           </button>
         </div>
 
-        <div className="p-6">
+        <div className="relative p-6">
           <Link to="/" className="flex items-center gap-2 mb-10 transition hover:opacity-80">
             <div className="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center text-white text-sm font-bold shadow-sm">FL</div>
             <span className="font-bold text-white tracking-tight text-lg">FlashLearn</span>
@@ -137,7 +144,7 @@ function Dashboard() {
           </nav>
         </div>
 
-        <div className="mt-auto p-6">
+        <div className="relative mt-auto p-6">
           <div className="flex items-center gap-3 bg-slate-900 p-3 rounded-xl border border-slate-800">
             <Avatar user={user} size={36} />
             <div className="flex-1 min-w-0">

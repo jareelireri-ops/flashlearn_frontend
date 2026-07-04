@@ -64,7 +64,7 @@ function CallToAction() {
                 <h3 className="font-bold text-lg uppercase tracking-tight">{step.title}</h3>
                 <p className="text-slate-400 text-sm mt-2 leading-relaxed">{step.desc}</p>
 
-                {/* Connects steps like the ticker bar, hidden on the last card */}
+              
                 {i < STEPS.length - 1 && (
                   <span className="hidden md:block absolute top-[52px] -right-5 w-4 h-[2px] bg-red-500/30" />
                 )}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getPublicCategories } from '../../api/client'
 import { Code2, BookOpen, Brain, Briefcase, UtensilsCrossed, Layers, Pencil } from 'lucide-react'
+import { ScanningSkeletonGrid } from '../ReusableComponents/Skeleton' // adjust path to wherever this component lives
 
 const ICONS = {
   'Software Engineering': Code2,
@@ -28,7 +29,13 @@ function Categories() {
       .finally(() => setLoading(false))
   }, [])
 
-  if (loading) return <div className="py-16 text-center text-slate-400">Loading categories...</div>
+  if (loading) return (
+    <section className="py-20 px-6 bg-slate-100">
+      <div className="max-w-6xl mx-auto">
+        <ScanningSkeletonGrid count={5} />
+      </div>
+    </section>
+  )
   if (error) return <div className="py-16 text-center text-red-500">{error}</div>
 
   return (
