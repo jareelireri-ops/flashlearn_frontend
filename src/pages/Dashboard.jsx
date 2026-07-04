@@ -1,11 +1,12 @@
 import { useEffect, useState, useContext } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { BookOpen, LayoutDashboard, PlusCircle, LogOut, Bell, Play, Settings, Menu, X } from 'lucide-react'
+import { BookOpen, LayoutDashboard, PlusCircle, LogOut, Bell, Play, Settings, Menu, X, Sparkles } from 'lucide-react'
 import { AuthContext } from '../context/AuthContext'
 import { NotificationContext } from '../context/NotificationContext'
 import { getDashboardStats, getMyCollection, getCompletionStats, getDailyAnalytics, getTopDecks, checkDueCards, listSessions } from '../api/client'
 import DashboardBanner from '../components/Dashboard/DashboardBanner'
-import MarqueeStrip from '../components/Dashboard/MarqueeStrip'
+// shared marquee strip now lives in ReusableComponents
+import MarqueeStrip from '../components/ReusableComponents/MarqueeStrip'
 import StatGrid from '../components/Dashboard/StatGrid'
 import ContinueStudying from '../components/Dashboard/ContinueStudying'
 import ReviewSchedule from '../components/Dashboard/ReviewSchedule'
@@ -15,6 +16,13 @@ import TopDecks from '../components/Dashboard/TopDecks'
 import NotificationBadge from '../components/ReusableComponents/NotificationBadge'
 import DashboardSkeleton from '../components/Dashboard/DashboardSkeleton'
 import Avatar from '../components/ReusableComponents/Avatar'
+
+const MESSAGES = [
+  ' Consistency beats intensity — even 5 cards a day are impactful ',
+  ' FL',
+  ' Cards pop up as notifications based on the difficulty you gave them ',
+  ' FL ',
+]
 
 function Dashboard() {
   const { user, logout } = useContext(AuthContext)
@@ -162,7 +170,7 @@ function Dashboard() {
           </button>
         </div>
 
-        <MarqueeStrip />
+        <MarqueeStrip items={MESSAGES} variant="default" icon={<Sparkles size={14} className="shrink-0" />} />
 
         <div className="p-8 max-w-6xl mx-auto space-y-8">
 

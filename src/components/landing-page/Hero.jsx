@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Pencil } from 'lucide-react'
 import { UIContext } from '../../context/UIContext'
 import { AuthContext } from '../../context/AuthContext'
+import MarqueeStrip from '../ReusableComponents/MarqueeStrip'
 
 const MARQUEE_ITEMS = [
   'Track progress',
@@ -25,8 +26,6 @@ function Hero() {
   const navigate = useNavigate()
 
   const isLearner = user && user.role === 'learner'
-
-  const doubled = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS]
 
   return (
     <section className="bg-white border-b border-gray-900 overflow-hidden">
@@ -108,31 +107,7 @@ function Hero() {
       </div>
 
       {/* Marquee strip */}
-      <div className="bg-red-600 py-3 overflow-hidden border-b border-gray-900">
-        <div
-          className="flex gap-8 sm:gap-12 whitespace-nowrap text-white"
-          style={{
-            fontFamily: '"Bebas Neue", "Impact", sans-serif',
-            fontSize: '15px',
-            letterSpacing: '0.1em',
-            animation: 'fl-marquee 22s linear infinite',
-          }}
-        >
-          {doubled.map((item, i) => (
-            <span key={i} className="flex items-center gap-8 sm:gap-12">
-              <span className="text-red-300 text-sm">✦</span>
-              <span>{item.toUpperCase()}</span>
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <style>{`
-        @keyframes fl-marquee {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
-      `}</style>
+      <MarqueeStrip items={MARQUEE_ITEMS} variant="brand" />
     </section>
   )
 }
