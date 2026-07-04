@@ -16,6 +16,7 @@ import Breadcrumbs from '../components/ReusableComponents/Breadcrumbs'
 import DeckCard from '../components/library/DeckCard'
 import DeckDrawer from '../components/library/DeckDrawer'
 import DeckCardSkeleton from '../components/library/DeckCardSkeleton'
+import { ScanLens } from '../components/ReusableComponents/Skeleton'
 
 const PAGE_SIZE = 6
 
@@ -265,8 +266,12 @@ function Library() {
         )}
 
         {loading && tab === 'discover' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {Array.from({ length: 8 }).map((_, i) => <DeckCardSkeleton key={i} />)}</div>
+          <div className="relative">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {Array.from({ length: 8 }).map((_, i) => <DeckCardSkeleton key={i} />)}
+            </div>
+            <ScanLens />
+          </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {tab === 'collection' && isLearner && (

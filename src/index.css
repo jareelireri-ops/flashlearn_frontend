@@ -42,7 +42,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Optional: Make scrollbars subtle for the side-scrolling cards */
+/*  Make scrollbars subtle for the side-scrolling cards */
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
@@ -109,7 +109,7 @@ html {
   margin-bottom: 1em;
 }
 
-/* --- MOBILE RESCUE PACK --- */
+/* MOBILE layout */
 html, body {
   overflow-x: hidden;
   width: 100%;
@@ -123,5 +123,63 @@ html, body {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     white-space: nowrap;
+  }
+}
+
+/* Shimmer skeleton loader */
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: #e2e8f0; /* same as slate-200 */
+}
+
+.skeleton-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer::after {
+    animation: none;
+  }
+}
+
+/* Scanning magnifier overlay for skeleton grids */
+@keyframes scan-move {
+  0%   { top: 18%; left: 22%; }
+  20%  { top: 18%; left: 22%; }
+  25%  { top: 18%; left: 74%; }
+  45%  { top: 18%; left: 74%; }
+  50%  { top: 68%; left: 74%; }
+  70%  { top: 68%; left: 74%; }
+  75%  { top: 68%; left: 22%; }
+  95%  { top: 68%; left: 22%; }
+  100% { top: 18%; left: 22%; }
+}
+
+.scan-lens {
+  animation: scan-move 8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan-lens {
+    animation: none;
+    top: 40%;
+    left: 50%;
   }
 }

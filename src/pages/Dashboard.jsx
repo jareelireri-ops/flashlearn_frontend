@@ -5,7 +5,7 @@ import { AuthContext } from '../context/AuthContext'
 import { NotificationContext } from '../context/NotificationContext'
 import { getDashboardStats, getMyCollection, getCompletionStats, getDailyAnalytics, getTopDecks, checkDueCards, listSessions } from '../api/client'
 import DashboardBanner from '../components/Dashboard/DashboardBanner'
-// shared marquee strip now lives in ReusableComponents
+// shared marquee strip now  in ReusableComponents
 import MarqueeStrip from '../components/ReusableComponents/MarqueeStrip'
 import StatGrid from '../components/Dashboard/StatGrid'
 import ContinueStudying from '../components/Dashboard/ContinueStudying'
@@ -16,6 +16,7 @@ import TopDecks from '../components/Dashboard/TopDecks'
 import NotificationBadge from '../components/ReusableComponents/NotificationBadge'
 import DashboardSkeleton from '../components/Dashboard/DashboardSkeleton'
 import Avatar from '../components/ReusableComponents/Avatar'
+import { ScanLens } from '../components/ReusableComponents/Skeleton'
 
 const MESSAGES = [
   ' Consistency beats intensity — even 5 cards a day are impactful ',
@@ -181,7 +182,10 @@ function Dashboard() {
           />
 
           {loading ? (
-            <DashboardSkeleton />
+            <div className="relative">
+              <DashboardSkeleton />
+              <ScanLens />
+            </div>
           ) : (
             <>
               <StatGrid
