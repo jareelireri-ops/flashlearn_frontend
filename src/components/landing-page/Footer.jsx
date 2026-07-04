@@ -8,6 +8,8 @@ function Footer() {
   const { openAuthModal, openAdminModal, showAccessDenied } = useContext(UIContext)
   const navigate = useNavigate()
 
+  const isLearner = user && user.role === 'learner'
+
   function handleAdminPortalClick() {
     if (!user) {
       openAdminModal()
@@ -47,12 +49,14 @@ function Footer() {
         <div>
           <h5 className="text-white text-xs font-semibold uppercase tracking-wide mb-4">Platform</h5>
           <ul className="space-y-2.5 text-sm">
-            {user ? (
+            {isLearner && (
               <>
                 <li><button onClick={() => navigate('/dashboard')} className="hover:text-white transition">Dashboard</button></li>
                 <li><button onClick={() => navigate('/decks/manage')} className="hover:text-white transition">Create a Deck</button></li>
-                <li><button onClick={logout} className="hover:text-white transition">Logout</button></li>
               </>
+            )}
+            {user ? (
+              <li><button onClick={logout} className="hover:text-white transition">Logout</button></li>
             ) : (
               <>
                 <li><button onClick={() => openAuthModal('register')} className="hover:text-white transition">Register</button></li>

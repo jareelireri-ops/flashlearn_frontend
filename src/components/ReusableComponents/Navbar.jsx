@@ -32,19 +32,21 @@ function Navbar() {
       {/* Auth-aware right side */}
       {user ? (
         <div className="flex items-center gap-2 sm:gap-5">
-          {/* Notifications */}
-          <button
-            onClick={() => navigate('/notifications')}
-            className="relative text-gray-400 hover:text-gray-900 transition-colors"
-            title="Notifications"
-          >
-            <Bell size={18} />
-            {unreadCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5">
-                <NotificationBadge count={unreadCount} />
-              </span>
-            )}
-          </button>
+          {/* Notifications - learners only */}
+          {isLearner && (
+            <button
+              onClick={() => navigate('/notifications')}
+              className="relative text-gray-400 hover:text-gray-900 transition-colors"
+              title="Notifications"
+            >
+              <Bell size={18} />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5">
+                  <NotificationBadge count={unreadCount} />
+                </span>
+              )}
+            </button>
+          )}
 
           {/* Avatar + Username (name hidden on very small screens) */}
           <div className="flex items-center gap-2 sm:gap-2.5">
