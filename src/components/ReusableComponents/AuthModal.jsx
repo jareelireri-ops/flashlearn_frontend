@@ -1,9 +1,42 @@
 import { useState, useContext, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { X, Eye, EyeOff } from 'lucide-react'
+import { X, Eye, EyeOff, Check } from 'lucide-react'
 import { AuthContext } from '../../context/AuthContext'
 import { UIContext } from '../../context/UIContext'
-import { forgotPassword } from '../../api/client'
+import { forgotPassword, getAuthRequirements } from '../../api/client'
+
+// fallback in case /auth/requirements can't be reached — kept at least as
+// strict as the backend default so we never validate weaker than the server
+const DEFAULT_REQUIREMENTS = {
+  password: { min_length: 8, max_length: 128, requires_letter: true, requires_lowercase: true, requires_number: true, requires_symbol: true },
+  name: { min_length: 2, max_length: 100 },
+  email: { max_length: 254 },
+}
+
+// one row in the password checklist — greys out until met, then ticks green
+function RequirementItem({ met, label }) {
+  return (
+    <li className={`flex items-center gap-1.5 text-xs transition-colors ${met ? 'text-emerald-600' : 'text-gray-400'}`}>
+      <span className={`flex items-center justify-center w-3.5 h-3.5 rounded-full border shrink-0 ${met ? 'bg-emerald-500 border-emerald-500' : 'border-gray-300'}`}>
+        {met && <Check size={9} className="text-white" strokeWidth={3} />}
+      </span>
+      {label}
+    </li>
+  )
+}
+
+// live count shown under an input — turns red once the value is outside min/max
+function CharCounter({ length, min, max, showError }) {
+  const tooShort = min != null && length < min
+  const tooLong = length > max
+  return (
+    <p className={`text-xs mt-1 text-right ${showError ? 'text-red-500' : 'text-gray-400'}`}>
+      {length}/{max}
+      {showError && tooShort && ` — needs at least ${min}`}
+      {showError && tooLong && ` — over the limit`}
+    </p>
+  )
+}
 
 function AuthModal() {
   const { login, register, logout } = useContext(AuthContext)
@@ -11,26 +44,78 @@ function AuthModal() {
   const navigate = useNavigate()
 
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [serverError, setServerError] = useState(null)
   const [forgotSuccess, setForgotSuccess] = useState(null)
   const [resetToken, setResetToken] = useState(null)
+  const [requirements, setRequirements] = useState(DEFAULT_REQUIREMENTS)
 
   const [loginData, setLoginData] = useState({ email: '', password: '' })
-  const [registerData, setRegisterData] = useState({ name: '', email: '', password: '' })
+  const [registerData, setRegisterData] = useState({ name: '', email: '', password: '', confirmPassword: '' })
   const [forgotEmail, setForgotEmail] = useState('')
+
+  // shows a field's red "invalid" state only once the user leaves it with
+  // bad input — cleared again the moment they click back in to fix it, so
+  // no field ever highlights red while it's actively being typed into
+  const [loginEmailShowError, setLoginEmailShowError] = useState(false)
+  const [registerEmailShowError, setRegisterEmailShowError] = useState(false)
+  const [forgotEmailShowError, setForgotEmailShowError] = useState(false)
+  const [registerNameShowError, setRegisterNameShowError] = useState(false)
+  const [registerPasswordShowError, setRegisterPasswordShowError] = useState(false)
+  const [registerConfirmShowError, setRegisterConfirmShowError] = useState(false)
+
+  // pull the live password rules from the backend once, on mount, so this
+  // form never drifts out of sync with what the server actually enforces.
+  // merged with defaults per-section so an old/partial server response
+  // (e.g. missing the newer "name" block) can't leave a field undefined
+  useEffect(() => {
+    getAuthRequirements()
+      .then((data) => setRequirements({
+        password: { ...DEFAULT_REQUIREMENTS.password, ...data.password },
+        name: { ...DEFAULT_REQUIREMENTS.name, ...data.name },
+        email: { ...DEFAULT_REQUIREMENTS.email, ...data.email },
+      }))
+      .catch(() => setRequirements(DEFAULT_REQUIREMENTS))
+  }, [])
 
   useEffect(() => {
     setServerError(null)
     setForgotSuccess(null)
     setResetToken(null)
+    setLoginEmailShowError(false)
+    setRegisterEmailShowError(false)
+    setForgotEmailShowError(false)
+    setRegisterNameShowError(false)
+    setRegisterPasswordShowError(false)
+    setRegisterConfirmShowError(false)
   }, [authModalView])
 
   if (!authModalOpen) return null
 
-  const isNameInvalid = registerData.name.length > 0 && registerData.name.trim().length < 2
-  const isEmailInvalid = (email) => email.length > 0 && (!email.includes('@') || !email.includes('.'))
-  const isPasswordInvalid = (password) => password.length > 0 && password.length < 6
+  const isNameInvalid = registerData.name.length > 0 && (registerData.name.trim().length < requirements.name.min_length || registerData.name.length > requirements.name.max_length)
+  const isEmailInvalid = (email) => email.length > 0 && (!email.includes('@') || !email.includes('.') || email.length > requirements.email.max_length)
+
+  // individual pass/fail checks, reused both for the checklist ticks and
+  // for the overall validity boolean below
+  function getPasswordChecks(password) {
+    const { min_length, max_length, requires_letter, requires_lowercase, requires_number, requires_symbol } = requirements.password
+    return {
+      length: password.length >= min_length && password.length <= max_length,
+      letter: !requires_letter || /[A-Z]/.test(password),
+      lowercase: !requires_lowercase || /[a-z]/.test(password),
+      number: !requires_number || /[0-9]/.test(password),
+      symbol: !requires_symbol || /[^A-Za-z0-9]/.test(password),
+    }
+  }
+
+  function isPasswordInvalid(password) {
+    const checks = getPasswordChecks(password)
+    return password.length === 0 || Object.values(checks).some((met) => !met)
+  }
+
+  const isConfirmInvalid = registerData.confirmPassword.length > 0 && registerData.confirmPassword !== registerData.password
+  const passwordChecks = getPasswordChecks(registerData.password)
 
   async function handleLogin(e) {
     e.preventDefault()
@@ -60,7 +145,7 @@ function AuthModal() {
 
   async function handleRegister(e) {
     e.preventDefault()
-    if (isNameInvalid || isEmailInvalid(registerData.email) || isPasswordInvalid(registerData.password)) return
+    if (isNameInvalid || isEmailInvalid(registerData.email) || isPasswordInvalid(registerData.password) || isConfirmInvalid) return
 
     setServerError(null)
     setLoading(true)
@@ -131,15 +216,17 @@ function AuthModal() {
         {authModalView === 'login' ? (
           <>
             <h2 className="text-xl font-bold text-gray-900 mb-4">Welcome to Flash Learn </h2>
-            <form onSubmit={handleLogin} autoComplete="off" className="space-y-4">
+            <form onSubmit={handleLogin} autoComplete="off" noValidate className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1">EMAIL</label>
                 <input
-                  type="email" required placeholder="XXXX@XXXX.com"
+                  type="email" required placeholder="XXXX@XXXX.com" maxLength={requirements.email.max_length}
                   value={loginData.email} onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${isEmailInvalid(loginData.email) ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-red-400'}`}
+                  onFocus={() => setLoginEmailShowError(false)}
+                  onBlur={() => setLoginEmailShowError(isEmailInvalid(loginData.email))}
+                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${loginEmailShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
                 />
-                {isEmailInvalid(loginData.email) && <p className="text-xs text-red-500 mt-1">Please enter a valid email address with an '@'.</p>}
+                {loginEmailShowError && <p className="text-xs text-red-500 mt-1">Please enter a valid email address with an '@'.</p>}
               </div>
               <div>
                 <div className="flex justify-between items-center mb-1">
@@ -156,7 +243,7 @@ function AuthModal() {
                   <input
                     type={showPassword ? 'text' : 'password'} required placeholder="••••••••"
                     value={loginData.password} onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-300"
                   />
                   <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -201,16 +288,19 @@ function AuthModal() {
                 )}
               </div>
             ) : (
-              <form onSubmit={handleForgotPassword} className="space-y-4">
+              <form onSubmit={handleForgotPassword} noValidate className="space-y-4">
                 <div>
                   <label className="block text-xs font-semibold text-gray-500 mb-1">EMAIL</label>
                   <input
                     type="email"
                     required
                     placeholder="you@example.com"
+                    maxLength={requirements.email.max_length}
                     value={forgotEmail}
                     onChange={(e) => setForgotEmail(e.target.value)}
-                    className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${isEmailInvalid(forgotEmail) ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-red-400'}`}
+                    onFocus={() => setForgotEmailShowError(false)}
+                    onBlur={() => setForgotEmailShowError(isEmailInvalid(forgotEmail))}
+                    className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${forgotEmailShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
                   />
                 </div>
                 <button
@@ -226,40 +316,93 @@ function AuthModal() {
         ) : (
           <>
             <h2 className="text-xl font-bold text-gray-900 mb-4">Create your Flash Learn account</h2>
-            <form onSubmit={handleRegister} autoComplete="off" className="space-y-4">
+            <form onSubmit={handleRegister} autoComplete="off" noValidate className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1">Full Name</label>
                 <input
                   type="text" required placeholder="Jareel Ireri"
                   value={registerData.name} onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
-                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${isNameInvalid ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-red-400'}`}
+                  onFocus={() => setRegisterNameShowError(false)}
+                  onBlur={() => setRegisterNameShowError(isNameInvalid)}
+                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${registerNameShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
                 />
-                {isNameInvalid && <p className="text-xs text-red-500 mt-1">Name must be at least 2 characters.</p>}
+                {registerNameShowError && <p className="text-xs text-red-500 mt-1">Name must be at least 2 characters.</p>}
+                <CharCounter length={registerData.name.length} min={requirements.name.min_length} max={requirements.name.max_length} showError={registerNameShowError} />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1">EMAIL</label>
                 <input
-                  type="email" required placeholder="you@example.com"
+                  type="email" required placeholder="you@example.com" maxLength={requirements.email.max_length}
                   value={registerData.email} onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
-                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${isEmailInvalid(registerData.email) ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-red-400'}`}
+                  onFocus={() => setRegisterEmailShowError(false)}
+                  onBlur={() => setRegisterEmailShowError(isEmailInvalid(registerData.email))}
+                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${registerEmailShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
                 />
-                {isEmailInvalid(registerData.email) && <p className="text-xs text-red-500 mt-1">Please enter a valid email address with an '@'.</p>}
+                {registerEmailShowError && <p className="text-xs text-red-500 mt-1">Please enter a valid email address with an '@'.</p>}
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-500 mb-1">PASSWORD</label>
+                <div className="flex justify-between items-baseline mb-1">
+                  <label className="block text-xs font-semibold text-gray-500">PASSWORD</label>
+                  <span className={`text-xs ${registerPasswordShowError ? 'text-red-500' : 'text-gray-400'}`}>
+                    {registerData.password.length}/{requirements.password.max_length}
+                  </span>
+                </div>
                 <div className="relative">
                   <input
                     type={showPassword ? 'text' : 'password'} required placeholder="••••••••"
                     value={registerData.password} onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
-                    className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${isPasswordInvalid(registerData.password) ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-red-400'}`}
+                    onFocus={() => setRegisterPasswordShowError(false)}
+                    onBlur={() => setRegisterPasswordShowError(registerData.password.length > 0 && isPasswordInvalid(registerData.password))}
+                    className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${registerPasswordShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
                   />
                   <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
-                {isPasswordInvalid(registerData.password) && <p className="text-xs text-red-500 mt-1">Password must be at least 6 characters.</p>}
+
+                {/* pre-listed requirements — always visible, tick green as each is met */}
+                <ul className="mt-2 space-y-1">
+                  <RequirementItem met={passwordChecks.length} label={`${requirements.password.min_length}-${requirements.password.max_length} characters`} />
+                  {requirements.password.requires_letter && (
+                    <RequirementItem met={passwordChecks.letter} label="Contains an uppercase letter" />
+                  )}
+                  {requirements.password.requires_lowercase && (
+                    <RequirementItem met={passwordChecks.lowercase} label="Contains a lowercase letter" />
+                  )}
+                  {requirements.password.requires_number && (
+                    <RequirementItem met={passwordChecks.number} label="Contains a number" />
+                  )}
+                  {requirements.password.requires_symbol && (
+                    <RequirementItem met={passwordChecks.symbol} label="Contains a symbol (e.g. ! @ # $)" />
+                  )}
+                </ul>
               </div>
-              <button type="submit" disabled={loading || isNameInvalid || isEmailInvalid(registerData.email) || isPasswordInvalid(registerData.password)} className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2.5 rounded-lg transition disabled:opacity-60">
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 mb-1">CONFIRM PASSWORD</label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'} required placeholder="••••••••"
+                    value={registerData.confirmPassword} onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
+                    onFocus={() => setRegisterConfirmShowError(false)}
+                    onBlur={() => setRegisterConfirmShowError(isConfirmInvalid)}
+                    className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${registerConfirmShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
+                  />
+                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                    {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+                <ul className="mt-2 space-y-1">
+                  <RequirementItem
+                    met={registerData.confirmPassword.length > 0 && !isConfirmInvalid}
+                    label="Passwords match"
+                  />
+                </ul>
+              </div>
+              <button
+                type="submit"
+                disabled={loading || isNameInvalid || isEmailInvalid(registerData.email) || isPasswordInvalid(registerData.password) || isConfirmInvalid}
+                className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2.5 rounded-lg transition disabled:opacity-60"
+              >
                 {loading ? 'Creating account...' : 'Create Account'}
               </button>
             </form>

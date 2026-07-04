@@ -31,7 +31,7 @@ function Hero() {
   return (
     <section className="bg-white border-b border-gray-900 overflow-hidden">
 
-      {/* Main hero grid — two columns at EVERY breakpoint, right column just narrows on mobile */}
+      {/* Main hero grid  */}
       <div className="grid grid-cols-[1fr_100px] xs:grid-cols-[1fr_130px] sm:grid-cols-[1fr_180px] md:grid-cols-[1fr_240px] border-b border-gray-900">
 
         {/* HEADLINER */}
@@ -62,7 +62,7 @@ function Hero() {
 
             <p className="mt-4 sm:mt-5 text-xs sm:text-sm text-gray-500 leading-relaxed max-w-sm">
               The flashcard app built around how your brain actually works.
-              Q&A cards designed to guide you in your roadmap to excellence
+              Q&A cards designed to guide you to excellence
             </p>
           </div>
 

@@ -58,6 +58,11 @@ client.interceptors.response.use(
 export default client
 
 // AUTH
+export async function getAuthRequirements() {
+  const response = await client.get('/auth/requirements')
+  return response.data
+}
+
 export async function forgotPassword(email) {
   const response = await client.post('/auth/forgot-password', { email })
   return response.data
@@ -294,4 +299,3 @@ export async function adminDeleteContent({ deckId, flashcardId }) {
   })
   return response.data
 }
-
