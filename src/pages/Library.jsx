@@ -17,6 +17,8 @@ import DeckCard from '../components/library/DeckCard'
 import DeckDrawer from '../components/library/DeckDrawer'
 import DeckCardSkeleton from '../components/library/DeckCardSkeleton'
 
+const PAGE_SIZE = 6
+
 // A deck is said to have new cards only if the user has already studied it before
 // AND it was updated after their last review on the deck
 function hasNewCardsSinceLastReview(deck, completion) {
@@ -46,6 +48,10 @@ function Library() {
   const [completionMap, setCompletionMap] = useState({})
   const [loading, setLoading] = useState(true)
 
+  const [discoverPage, setDiscoverPage] = useState(1)
+  const [discoverMeta, setDiscoverMeta] = useState({ pages: 1, total: 0, has_next: false, has_prev: false })
+  const [collectionPage, setCollectionPage] = useState(1)
+
   const [selectedDeck, setSelectedDeck] = useState(null)
   const [selectedIsOwner, setSelectedIsOwner] = useState(false)
 
@@ -54,17 +60,33 @@ function Library() {
   }, [])
 
   useEffect(() => {
+    setDiscoverPage(1)
+  }, [activeCategory, activeDifficulty, search])
+
+  useEffect(() => {
+    setCollectionPage(1)
+  }, [activeCategory, activeDifficulty, search, tab])
+
+  useEffect(() => {
     setLoading(true)
-    const params = {}
+    const params = { page: discoverPage, per_page: PAGE_SIZE }
     if (activeCategory !== 'All') params.category = activeCategory
     if (activeDifficulty !== 'All') params.difficulty = activeDifficulty
     if (search) params.search = search
 
     getPublicDecks(params)
       // Extract decks array from paginated response
-      .then((res) => setDiscoverDecks(res.decks || []))
+      .then((res) => {
+        setDiscoverDecks(res.decks || [])
+        setDiscoverMeta({
+          pages: res.pages || 1,
+          total: res.total || 0,
+          has_next: res.has_next,
+          has_prev: res.has_prev,
+        })
+      })
       .finally(() => setLoading(false))
-  }, [activeCategory, activeDifficulty, search])
+  }, [activeCategory, activeDifficulty, search, discoverPage])
 
   useEffect(() => {
     
@@ -81,7 +103,7 @@ function Library() {
     // Only learners have a collection concept - admins should never trigger
     // these calls just by landing on the Library page.
     if (!isLearner) return
-    getMyCollection()
+    getMyCollection({ per_page: 100 })
       // Extract collection array from paginated response
       .then((res) => setCollectionDecks(res.collection || []))
       .catch(() => {})
@@ -106,6 +128,12 @@ function Library() {
       return matchesCategory && matchesDifficulty && matchesSearch
     })
   }, [collectionDecks, activeCategory, activeDifficulty, search])
+
+  const collectionTotalPages = Math.max(1, Math.ceil(filteredCollection.length / PAGE_SIZE))
+  const paginatedCollection = filteredCollection.slice(
+    (collectionPage - 1) * PAGE_SIZE,
+    collectionPage * PAGE_SIZE
+  )
 
   function handleDeckClick(deck, isOwner) {
     setSelectedDeck(deck)
@@ -136,7 +164,13 @@ function Library() {
     }
   }
 
-  const activeList = tab === 'collection' ? filteredCollection : discoverDecks
+  const activeList = tab === 'collection' ? paginatedCollection : discoverDecks
+
+  const currentPage = tab === 'collection' ? collectionPage : discoverPage
+  const totalPages = tab === 'collection' ? collectionTotalPages : discoverMeta.pages
+  const hasPrev = tab === 'collection' ? collectionPage > 1 : discoverMeta.has_prev
+  const hasNext = tab === 'collection' ? collectionPage < collectionTotalPages : discoverMeta.has_next
+  const setPage = tab === 'collection' ? setCollectionPage : setDiscoverPage
 
   const breadcrumbItems = [
     { label: 'Library', path: '/library' },
@@ -154,7 +188,7 @@ function Library() {
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold text-slate-900">Library</h1>
             <span className="text-xs font-medium bg-slate-100 text-slate-500 px-2 py-1 rounded-full">
-              {tab === 'collection' ? filteredCollection.length : discoverDecks.length} decks
+              {tab === 'collection' ? filteredCollection.length : discoverMeta.total} decks
             </span>
           </div>
 
@@ -263,6 +297,36 @@ function Library() {
                 />
               )
             })}
+          </div>
+        )}
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-8">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={!hasPrev}
+              className="px-4 py-2 rounded-lg border border-slate-200 text-sm font-medium text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 transition"
+            >
+              Previous
+            </button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+              <button
+                key={num}
+                onClick={() => setPage(num)}
+                className={`w-9 h-9 rounded-lg text-sm font-medium transition ${currentPage === num ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'}`}
+              >
+                {num}
+              </button>
+            ))}
+
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={!hasNext}
+              className="px-4 py-2 rounded-lg border border-slate-200 text-sm font-medium text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 transition"
+            >
+              Next
+            </button>
           </div>
         )}
       </div>
