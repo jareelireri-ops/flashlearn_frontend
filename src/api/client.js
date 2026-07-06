@@ -160,6 +160,13 @@ export async function listSessions(status) {
   return response.data
 }
 
+export async function getReviewQueue(deckId) {
+  const response = await client.get('/study/review-queue', {
+    params: deckId ? { deck_id: deckId } : {},
+  })
+  return response.data
+}
+
 // DASHBOARD & ANALYTICS
 export async function getDashboardStats() {
   const response = await client.get('/study/dashboard')

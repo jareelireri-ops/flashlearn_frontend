@@ -10,7 +10,7 @@ import {
   getCompletionStats,
   addToCollection,
   removeFromCollection,
-  listNotifications,
+  getReviewQueue,
 } from '../api/client'
 import Navbar from '../components/ReusableComponents/Navbar'
 import Breadcrumbs from '../components/ReusableComponents/Breadcrumbs'
@@ -55,6 +55,7 @@ function Library() {
   const [collectionDecks, setCollectionDecks] = useState([])
   const [completionMap, setCompletionMap] = useState({})
   const [dueMap, setDueMap] = useState({})
+  const [dueDifficultyMap, setDueDifficultyMap] = useState({})
   const [loading, setLoading] = useState(true)
 
   const [discoverPage, setDiscoverPage] = useState(1)
@@ -127,17 +128,23 @@ function Library() {
       })
       .catch(() => {})
       
-    listNotifications(true)
-      .then((notifications) => {
-        const map = {}
-        notifications.forEach((n) => {
-          if (n.notification_type === 'review_due' && n.related_deck_id) {
-            const countStr = n.message.match(/\d+/)
-            const count = countStr ? parseInt(countStr[0], 10) : 1
-            map[n.related_deck_id] = count
+    getReviewQueue()
+      .then((queue) => {
+        const counts = {}
+        const difficulties = {}
+        const levelScore = { hard: 3, medium: 2, easy: 1 }
+
+        queue.forEach((card) => {
+          const deckId = card.deck_id
+          counts[deckId] = (counts[deckId] || 0) + 1
+          
+          const rating = card.last_rating || 'easy'
+          if (!difficulties[deckId] || levelScore[rating] > levelScore[difficulties[deckId]]) {
+            difficulties[deckId] = rating
           }
         })
-        setDueMap(map)
+        setDueMap(counts)
+        setDueDifficultyMap(difficulties)
       })
       .catch(() => {})
   }
@@ -154,15 +161,24 @@ function Library() {
       return matchesCategory && matchesDifficulty && matchesSearch
     })
 
-    // Sort by due count descending
+    // Sort by due difficulty first (hard > medium > easy > none), then due count
     filtered.sort((a, b) => {
       const dueA = dueMap[a.id] || 0
       const dueB = dueMap[b.id] || 0
+      
+      const diffA = dueDifficultyMap[a.id] || 'none'
+      const diffB = dueDifficultyMap[b.id] || 'none'
+      
+      const score = { hard: 4, medium: 3, easy: 2, none: 1 }
+      
+      if (score[diffA] !== score[diffB]) {
+        return score[diffB] - score[diffA]
+      }
       return dueB - dueA
     })
 
     return filtered
-  }, [collectionDecks, activeCategory, activeDifficulty, search, dueMap])
+  }, [collectionDecks, activeCategory, activeDifficulty, search, dueMap, dueDifficultyMap])
 
   const collectionTotalPages = Math.max(1, Math.ceil(filteredCollection.length / PAGE_SIZE))
   const paginatedCollection = filteredCollection.slice(

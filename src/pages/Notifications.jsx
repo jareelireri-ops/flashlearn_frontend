@@ -77,13 +77,7 @@ function Notifications() {
 
   function handleNotificationClick(notification) {
     handleMarkRead(notification)
-    if (notification.related_deck_id) {
-      if (notification.notification_type === 'review_due') {
-        navigate(`/study/${notification.related_deck_id}`)
-      } else {
-        navigate('/library', { state: { tab: 'collection' } })
-      }
-    }
+    navigate('/library', { state: { tab: 'collection' } })
   }
 
   const hasUnread = notifications.some((n) => !n.is_read)
