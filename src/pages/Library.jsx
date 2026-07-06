@@ -10,6 +10,7 @@ import {
   getCompletionStats,
   addToCollection,
   removeFromCollection,
+  listNotifications,
 } from '../api/client'
 import Navbar from '../components/ReusableComponents/Navbar'
 import Breadcrumbs from '../components/ReusableComponents/Breadcrumbs'
@@ -53,6 +54,7 @@ function Library() {
   const [discoverDecks, setDiscoverDecks] = useState([])
   const [collectionDecks, setCollectionDecks] = useState([])
   const [completionMap, setCompletionMap] = useState({})
+  const [dueMap, setDueMap] = useState({})
   const [loading, setLoading] = useState(true)
 
   const [discoverPage, setDiscoverPage] = useState(1)
@@ -104,7 +106,10 @@ function Library() {
     if (location.state?.tab && isLearner) {
       setTab(location.state.tab)
     }
-  }, [location.state?.category, location.state?.tab, isLearner])
+    if (location.state?.filter === 'due') {
+      // Optional: automatically switch to due tab or handle scrolling if needed
+    }
+  }, [location.state?.category, location.state?.tab, location.state?.filter, isLearner])
 
   const fetchMyCollection = () => {
     // Only learners have a collection concept - admins should never trigger
@@ -121,6 +126,20 @@ function Library() {
         setCompletionMap(map)
       })
       .catch(() => {})
+      
+    listNotifications(true)
+      .then((notifications) => {
+        const map = {}
+        notifications.forEach((n) => {
+          if (n.notification_type === 'review_due' && n.related_deck_id) {
+            const countStr = n.message.match(/\d+/)
+            const count = countStr ? parseInt(countStr[0], 10) : 1
+            map[n.related_deck_id] = count
+          }
+        })
+        setDueMap(map)
+      })
+      .catch(() => {})
   }
 
   useEffect(() => {
@@ -128,13 +147,22 @@ function Library() {
   }, [user])
 
   const filteredCollection = useMemo(() => {
-    return collectionDecks.filter((deck) => {
+    const filtered = collectionDecks.filter((deck) => {
       const matchesCategory = activeCategory === 'All' || deck.category === activeCategory
       const matchesDifficulty = activeDifficulty === 'All' || deck.difficulty_level === activeDifficulty
       const matchesSearch = !search || deck.title.toLowerCase().includes(search.toLowerCase())
       return matchesCategory && matchesDifficulty && matchesSearch
     })
-  }, [collectionDecks, activeCategory, activeDifficulty, search])
+
+    // Sort by due count descending
+    filtered.sort((a, b) => {
+      const dueA = dueMap[a.id] || 0
+      const dueB = dueMap[b.id] || 0
+      return dueB - dueA
+    })
+
+    return filtered
+  }, [collectionDecks, activeCategory, activeDifficulty, search, dueMap])
 
   const collectionTotalPages = Math.max(1, Math.ceil(filteredCollection.length / PAGE_SIZE))
   const paginatedCollection = filteredCollection.slice(
@@ -311,16 +339,25 @@ function Library() {
               )}
 
               {activeList.map((deck) => {
-                const isSaved = collectionDecks.some((c) => c.id === deck.id)
+                const isInCollection = collectionDecks.some((c) => c.id === deck.id)
                 const completion = tab === 'collection' ? completionMap[deck.id] : null
+                const isOwner = tab === 'collection' ? deck.is_owner : false
+                const isStudying = tab === 'collection' ? (!deck.is_owner && completion && completion.cards_reviewed > 0) : false
+                const isSaved = tab === 'collection' ? (!deck.is_owner && (!completion || !completion.cards_reviewed)) : false
+                const dueCount = tab === 'collection' ? (dueMap[deck.id] || 0) : 0
+
                 return (
                   <DeckCard
                     key={deck.id}
                     deck={deck}
                     completion={completion}
                     hasNewCards={tab === 'collection' && hasNewCardsSinceLastReview(deck, completion)}
+                    isOwner={isOwner}
+                    isSaved={isSaved}
+                    isStudying={isStudying}
+                    dueCount={dueCount}
                     onClick={() => handleDeckClick(deck, tab === 'collection' ? deck.is_owner : false)}
-                    onSave={tab === 'discover' && isLearner && !isSaved ? () => handleSaveDeck(deck) : null}
+                    onSave={tab === 'discover' && isLearner && !isInCollection ? () => handleSaveDeck(deck) : null}
                     onRemove={tab === 'collection' && !deck.is_owner ? () => handleRemoveDeck(deck) : null}
                   />
                 )

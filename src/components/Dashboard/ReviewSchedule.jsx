@@ -20,7 +20,7 @@ function ReviewSchedule({ cardsDue }) {
       </div>
 
       <button
-        onClick={() => navigate('/library', { state: { tab: 'collection' } })}
+        onClick={() => navigate('/library', { state: { tab: 'collection', filter: 'due' } })}
         className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white text-sm font-bold rounded-xl transition flex items-center justify-center gap-2"
       >
         <Play size={14} fill="currentColor" /> Start {cardsDue} Due Cards
