@@ -4,7 +4,7 @@ const PENCIL_FIELD = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/20
 function Testimonials() {
   return (
     <section className="relative py-20 bg-slate-900 text-white overflow-hidden">
-      {/* Pencil texture, matches CallToAction */}
+      {/* Pencil texture. */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ backgroundImage: PENCIL_FIELD, backgroundRepeat: 'repeat', backgroundSize: '380px 380px' }}
@@ -24,7 +24,7 @@ function Testimonials() {
             <div className="text-sm text-red-400">Youth Pastor</div>
           </div>
           <div className="bg-slate-800 p-8 rounded-2xl text-left border border-slate-700">
-            <p className="text-slate-300 italic mb-6">"The website's interface is quite orderly and easy to use. It genuinely makes me want to log in every day to keep my streak going!"</p>
+            <p className="text-slate-300 italic mb-6">"The website's interface is quite orderly and easy to use. It makes me want to log in every day to keep my streak going."</p>
             <div className="font-bold text-lg text-white">Dennis K.</div>
             <div className="text-sm text-red-400">Technical Mentor</div>
           </div>

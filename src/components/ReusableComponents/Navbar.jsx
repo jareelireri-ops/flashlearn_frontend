@@ -29,7 +29,7 @@ function Navbar() {
         <span className="font-semibold text-gray-900 text-sm tracking-tight">FlashLearn</span>
       </Link>
 
-      {/* Auth-aware right side */}
+      {/* Auth right side that reflects based on authstate */}
       {user ? (
         <div className="flex items-center gap-2 sm:gap-5">
           {/* Notifications - learners only */}
@@ -48,7 +48,7 @@ function Navbar() {
             </button>
           )}
 
-          {/* Avatar + Username (name hidden on very small screens) */}
+          {/* Avatar + Username (the fullname hidden on very small screens) */}
           <div className="flex items-center gap-2 sm:gap-2.5">
             <Avatar user={user} size={32} />
             <span className="hidden sm:inline text-sm font-medium text-gray-900">{user.name}</span>

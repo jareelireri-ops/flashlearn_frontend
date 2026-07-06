@@ -18,7 +18,7 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, initialRatings 
   const currentCard = cards[currentIndex]
   const totalCards = cards.length
   
-  // Check if the current card has already been rated (either in this sitting or historically)
+  // Check if the current card has already been rated, or if the user is revisiting a card they've already rated
   const hasRatedCurrent = !!ratings[currentCard?.id] || currentIndex < resumeIndex
 
   const autosave = useCallback(async () => {
@@ -56,7 +56,7 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, initialRatings 
   const handleNext = async () => {
     if (!hasRatedCurrent) return
     if (currentIndex < totalCards - 1) {
-      setIsFlipped(false) // FORCES the card to flip back BEFORE rendering the next one
+      setIsFlipped(false) // this ensures the next card starts unflipped
       setCurrentIndex((i) => i + 1)
     } else {
       try { await completeSession(sessionId) } catch (_) {}
@@ -85,7 +85,7 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, initialRatings 
     setIsComplete(false)
   }
 
-  // This handles the exit button clicked in the UI, safely triggering the autosave
+  // This handles the exit button click, safely triggering the autosave
   const handleExit = async () => {
     await autosave()
     onExit()
@@ -139,7 +139,7 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, initialRatings 
           <div className="session-footer">
             <div className="footer-nav-container">
               
-              {/* Left arrow: only disabled at the start, or if current card is flipped+unrated (locked) */}
+              {/* Left arrow: only disabled at the start, or current card is unrated */}
               <button 
                 className="nav-arrow" 
                 onClick={goPrev} 
@@ -169,7 +169,7 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, initialRatings 
                 )}
               </div>
 
-              {/* Right arrow: only disabled at the end, or if current card is flipped+unrated (locked) */}
+              {/* Right arrow.. only disabled at the end or current card is unrated*/}
               <button 
                 className="nav-arrow" 
                 onClick={goNext} 

@@ -17,3 +17,6 @@ export function fileToBase64(file) {
     reader.readAsDataURL(file)
   })
 }
+
+// js file for constants that are reused across multiple components, 
+// to avoid typos and make it easier to update in one place.

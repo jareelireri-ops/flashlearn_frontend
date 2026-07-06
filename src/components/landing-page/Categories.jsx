@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { getPublicCategories } from '../../api/client'
 import { Code2, BookOpen, Brain, Briefcase, UtensilsCrossed, Layers, Pencil } from 'lucide-react'
-import { ScanningSkeletonGrid } from '../ReusableComponents/Skeleton' // adjust path to wherever this component lives
+import { ScanningSkeletonGrid } from '../ReusableComponents/Skeleton'
+import TiltWrapper from '../ReusableComponents/3DTiltWrapper'
 
 const ICONS = {
   'Software Engineering': Code2,
@@ -67,18 +68,19 @@ function Categories() {
           {categories.map((cat) => {
             const Icon = ICONS[cat.category] || Layers
             return (
-              <div
-                key={cat.category}
-                role="button"
-                tabIndex={0}
-                className="group relative bg-white border border-slate-200 rounded-2xl p-5 hover:shadow-xl hover:-translate-y-1 hover:border-red-200 transition-all cursor-pointer"
-              >
-                <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center mb-3 group-hover:bg-red-500 transition-colors">
-                  <Icon size={20} className="text-red-500 group-hover:text-white transition-colors" />
+              <TiltWrapper key={cat.category} className="cursor-pointer">
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className="group relative h-full bg-white border border-slate-200 rounded-2xl p-5 hover:shadow-xl hover:border-red-200 transition-all"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center mb-3 group-hover:bg-red-500 transition-colors">
+                    <Icon size={20} className="text-red-500 group-hover:text-white transition-colors" />
+                  </div>
+                  <h3 className="font-semibold text-slate-900">{cat.category}</h3>
+                  <p className="text-sm text-slate-400">{cat.deck_count} decks</p>
                 </div>
-                <h3 className="font-semibold text-slate-900">{cat.category}</h3>
-                <p className="text-sm text-slate-400">{cat.deck_count} decks</p>
-              </div>
+              </TiltWrapper>
             )
           })}
         </div>

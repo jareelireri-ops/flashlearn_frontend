@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Pencil } from 'lucide-react'
 import { getPublicDecks } from '../../api/client'
-import { ScanningSkeletonGrid } from '../ReusableComponents/Skeleton' // adjust path to wherever this component lives
+import { ScanningSkeletonGrid } from '../ReusableComponents/Skeleton' 
+import TiltWrapper from '../ReusableComponents/3DTiltWrapper'
 
 const DIFFICULTY_STYLES = {
   easy: 'bg-emerald-50 text-emerald-600',
@@ -63,28 +64,29 @@ function FeaturedDecks() {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {decks.map((deck) => (
-            <div
-              key={deck.id}
-              role="button"
-              tabIndex={0}
-              className="group relative bg-white border border-slate-200 rounded-2xl p-5 hover:shadow-xl hover:-translate-y-1 transition-all"
-            >
-              <span
-                className={`inline-block text-xs font-medium px-2.5 py-1 rounded-full ${
-                  DIFFICULTY_STYLES[deck.difficulty_level] || 'bg-slate-100 text-slate-500'
-                }`}
+            <TiltWrapper key={deck.id} className="cursor-pointer">
+              <div
+                role="button"
+                tabIndex={0}
+                className="group relative h-full bg-white border border-slate-200 rounded-2xl p-5 hover:shadow-xl transition-all"
               >
-                {deck.difficulty_level}
-              </span>
-              <h3 className="font-semibold text-slate-900 mt-3">{deck.title}</h3>
-              <p className="text-sm text-slate-400">{deck.category}</p>
-              <p className="text-xs text-slate-400 mt-2">{deck.num_flashcards} cards</p>
+                <span
+                  className={`inline-block text-xs font-medium px-2.5 py-1 rounded-full ${
+                    DIFFICULTY_STYLES[deck.difficulty_level] || 'bg-slate-100 text-slate-500'
+                  }`}
+                >
+                  {deck.difficulty_level}
+                </span>
+                <h3 className="font-semibold text-slate-900 mt-3">{deck.title}</h3>
+                <p className="text-sm text-slate-400">{deck.category}</p>
+                <p className="text-xs text-slate-400 mt-2">{deck.num_flashcards} cards</p>
 
-              <Pencil
-                size={14}
-                className="absolute top-4 right-4 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity"
-              />
-            </div>
+                <Pencil
+                  size={14}
+                  className="absolute top-4 right-4 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity"
+                />
+              </div>
+            </TiltWrapper>
           ))}
         </div>
       </div>
