@@ -30,7 +30,7 @@ function Footer() {
           <h4 className="text-white text-lg font-bold mt-2">FlashLearn</h4>
           <p className="text-sm mt-3">
             A flashcard study platform covering Software Engineering, Philosophy,
-            Biblical Studies, Business, and Hospitality.
+            Biblical Studies, Business,Hospitality and other categories.
           </p>
         </div>
 
