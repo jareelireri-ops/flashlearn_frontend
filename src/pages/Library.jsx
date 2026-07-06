@@ -41,7 +41,7 @@ function Library() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  // Admins are guest-equivalent outside /admin/*: no collection, no saving,
+  // Admins are guest-equivalent : no collection, no saving,
   // no deck creation. They only ever see Discover.
   const isLearner = user && user.role === 'learner'
 
@@ -113,11 +113,11 @@ function Library() {
   }, [location.state?.category, location.state?.tab, location.state?.filter, isLearner])
 
   const fetchMyCollection = () => {
-    // Only learners have a collection concept - admins should never trigger
+    // Only learners have my collection, admins should never trigger
     // these calls just by landing on the Library page.
     if (!isLearner) return
     getMyCollection({ per_page: 100 })
-      // Extract collection array from paginated response
+      // to avoid pagination issues, fetch all decks in one go (max 100)
       .then((res) => setCollectionDecks(res.collection || []))
       .catch(() => {})
     getCompletionStats()
