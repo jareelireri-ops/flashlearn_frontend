@@ -94,7 +94,9 @@ function Builder() {
     }
   }
 
-  // ── Deck CRUD ──────────────────────────────────────────────────────────────
+  // this handles starting a new deck creation, by resetting the selected deck, flashcards,
+  //  and initializing the deck form with empty values. I
+  // it also clears any previous deck errors.
 
   function startNewDeck() {
     setSelectedDeck(null)
@@ -191,7 +193,10 @@ function Builder() {
     }
   }
 
-  // ── Flashcard CRUD ─────────────────────────────────────────────────────────
+
+  // this handles adding a new flashcard to the selected deck, 
+  // and then refreshes the list of flashcards to include the newly added one. 
+  // It also shows a toast notification for success or failure.
 
   async function handleAddCard(form) {
     try {
@@ -277,7 +282,7 @@ function Builder() {
         </div>
 
         <div className="flex flex-col md:flex-row gap-6">
-          {/* ── Left panel: deck list ── */}
+          {/* ── Left panel..the deck list  */}
           <DeckListPanel
             decks={decks}
             loadingDecks={loadingDecks}

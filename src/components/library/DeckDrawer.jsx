@@ -188,7 +188,7 @@ function DeckDrawer({ deck, completion, isOwner, onClose }) {
           </button>
         )}
 
-        {/* Report Deck which is visible to everyone except owners AND admins */}
+        {/* Report Deck which is visible to everyone except owners and admins */}
         {!isOwner && !isAdmin && (
           <div className="mt-6 border-t border-slate-100 pt-4">
             {!showReportForm ? (

@@ -5,7 +5,6 @@ import { AuthContext } from '../context/AuthContext'
 import { NotificationContext } from '../context/NotificationContext'
 import { getDashboardStats, getMyCollection, getCompletionStats, getDailyAnalytics, getTopDecks, checkDueCards, listSessions } from '../api/client'
 import DashboardBanner from '../components/Dashboard/DashboardBanner'
-// shared marquee strip now  in ReusableComponents
 import MarqueeStrip from '../components/ReusableComponents/MarqueeStrip'
 import StatGrid from '../components/Dashboard/StatGrid'
 import ContinueStudying from '../components/Dashboard/ContinueStudying'

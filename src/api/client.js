@@ -13,7 +13,7 @@ client.interceptors.request.use((config) => {
 })
 
 // Endpoints where a 401 means "bad credentials on this attempt",
-// NOT "your session expired" — these must never trigger a logout/redirect.
+// not "your session expired" , so we don't log the user out on 401s from these endpoints.
 const AUTH_ATTEMPT_PATHS = [
   '/auth/login',
   '/auth/register',
@@ -25,9 +25,8 @@ function isAuthAttempt(url = '') {
   return AUTH_ATTEMPT_PATHS.some((path) => url.includes(path))
 }
 
-// Client-side redirect to "/" without a full page reload.
-// Works with react-router's BrowserRouter, which listens for
-// popstate to re-render on URL changes.
+// Client-side redirect to "/" without a full page reload, to avoid losing React state.
+//  This is used when the backend returns a 401 on an authenticated route, indicating the session has expired.
 function redirectToHome() {
   if (window.location.pathname !== '/') {
     window.history.pushState({}, '', '/')
@@ -41,10 +40,8 @@ client.interceptors.response.use(
     const status = error.response?.status
     const url = error.config?.url || ''
 
-    // Only treat 401s from already-authenticated routes as an expired
-    // session. 401s from login/register/forgot-password/reset-password
-    // just mean "that attempt failed" and should be handled by the
-    // calling component (e.g. shown as a form error), not logged out.
+    // Only treat 401s from already-authenticated routes as an expiredsession.
+    //  401s from login/register/forgot-password/reset-password are treated as "bad credentials" and do not log the user out.
     if (status === 401 && !isAuthAttempt(url)) {
       localStorage.removeItem('access_token')
       localStorage.removeItem('user')
