@@ -3,7 +3,7 @@ import { ChevronRight, Home } from 'lucide-react'
 
 export default function Breadcrumbs({ items }) {
   const location = useLocation()
-  
+  // we can either accept a custom items array or generate breadcrumbs from the current path
   const pathnames = location.pathname.split('/').filter((x) => x)
   
   if (!items && pathnames.length === 0) return null
