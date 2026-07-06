@@ -8,6 +8,7 @@ FlashLearn is a web-based learning platform designed to help users improve knowl
 ---
 
 ## Architecture & System Design
+
 This application is intentionally engineered to move beyond basic CRUD operations, satisfying the advanced architectural requirements outlined in the Product Requirements Document (PRD):
 
 ### 1. State Visibility Logic
@@ -17,23 +18,23 @@ To separate "presentation access" from "lifecycle activity", the system manages 
 
 Archiving a public resource shifts its status without destroying its base configuration. When unarchived, the resource resumes its previous public standing instantly, preserving structural memory in the user interface.
 
-### 2. Multi- Shared Collections 
-To prevent database duplication and asset bloat, saved public resources utilize a discrete mapping layer (`user_collection` join table). 
+### 2. Multi-User Shared Collections
+To prevent database duplication and asset bloat, saved public resources utilize a discrete mapping layer (`user_collection` join table).
 * Multiple consumers point securely to a single source record.
 * Central author updates or corrections propagate instantly to all active learners downstream.
-* Data Integrity Shield: Refuses to silently delete a shared deck if its original creator deletes their account, protecting shared data for existing learners.
+* **Data Integrity Shield:** Refuses to silently delete a shared deck if its original creator deletes their account, protecting shared data for existing learners.
 
 ### 3. Separating the Flashcards from User Scores
-No Data Overlaps: The flashcard itself only holds the question, answer, and optional image. It does not track when a user needs to review it.
-Personal Review Timers: All user scores and study countdowns are saved in a completely separate table (ReviewHistory). This means 1,000 different students can study the exact same public JavaScript deck at the same time, and they will all have their own personal study schedules without messing up anyone else's data.
-The Spaced Repetition Rules: Based on how easy or hard a card is, the app calculates when the user needs to see it again:
-Click Easy ➔ See it again in 7 days.
-Click Medium ➔ See it again in 3 days.
-Click Hard ➔ See it again tomorrow.
+* **No Data Overlaps:** The flashcard itself only holds the question, answer, and optional image. It does not track when a user needs to review it.
+* **Personal Review Timers:** All user scores and study countdowns are saved in a completely separate table (`ReviewHistory`). This means 1,000 different students can study the exact same public JavaScript deck at the same time, and they will all have their own personal study schedules without messing up anyone else's data.
+* **The Spaced Repetition Rules:** Based on how easy or hard a card is, the app calculates when the user needs to see it again:
+  * Click **Easy** ➔ See it again in 7 days.
+  * Click **Medium** ➔ See it again in 3 days.
+  * Click **Hard** ➔ See it again tomorrow.
 
 ### 4. User Identity Validation & Security Guards
-* Ownership Validation & UX Gates:** Protected routes use explicit middleware wrappers. Components like `AccessDeniedGate` and `AccessDeniedBanner` cross-check user identities and view contexts before giving read-only consumers modification access to structural content.
-* Hierarchical Role Control:** System uses Role-Based Access Control (RBAC) to restrict sensitive administrative operations (User suspension, flag reviews) exclusively to authorized admin accounts via designated administration data layouts.
+* **Ownership Validation & UX Gates:** Protected routes use explicit middleware wrappers. Components like `AccessDeniedGate` and `AccessDeniedBanner` cross-check user identities and view contexts before giving read-only consumers modification access to structural content.
+* **Hierarchical Role Control:** System uses Role-Based Access Control (RBAC) to restrict sensitive administrative operations (user suspension, flag reviews) exclusively to authorized admin accounts via designated administration data layouts.
 
 ---
 
@@ -135,29 +136,42 @@ src/
 │   └── ProtectedRoute.jsx
 ├── App.jsx                       # Master Component Shell
 └── main.jsx                      # Client Hydration Initialization
+```
 
-1. Getting Started
-Prerequisites
+---
+
+## Getting Started
+
+### 1. Prerequisites
 Requires the FlashLearn Backend running locally or pointed to the deployed production API.
 
-2. Installation Steps
-Clone the repository
+### 2. Installation Steps
 
-Bash
-git clone [https://github.com/jareelireri-ops/flashlearn_frontend.git](https://github.com/jareelireri-ops/flashlearn_frontend.git)
+**Clone the repository**
+```bash
+git clone https://github.com/jareelireri-ops/flashlearn_frontend.git
 cd flashlearn_frontend
-Install dependencies
+```
 
-Bash
+**Install dependencies**
+```bash
 npm install
-3. Set up your environment variables
-Create a .env file in the root directory and specify your API URL:
+```
 
-Code snippet
-VITE_API_URL=[https://flashlearn-backend-ocnv.onrender.com/api](https://flashlearn-backend-ocnv.onrender.com/api)
-(For local testing, change this to http://127.0.0.1:5000/api)
+### 3. Set up your environment variables
+Create a `.env` file in the root directory and specify your API URL:
 
-4. Start the development server
+```
+VITE_API_URL=https://flashlearn-backend-ocnv.onrender.com/api
+```
+(For local testing, change this to `http://127.0.0.1:5000/api`)
 
-Bash
+### 4. Start the development server
+```bash
 npm run dev
+```
+
+---
+
+## Related Repositories
+* [Backend API Repository](https://flashlearn-backend-ocnv.onrender.com)
