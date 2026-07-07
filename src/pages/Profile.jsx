@@ -4,7 +4,7 @@ import { AuthContext } from '../context/AuthContext'
 import { getProfile, updateProfile } from '../api/client'
 import Navbar from '../components/ReusableComponents/Navbar'
 import Breadcrumbs from '../components/ReusableComponents/Breadcrumbs'
-import Skeleton from '../components/ReusableComponents/Skeleton'
+import MechLoader from '../components/ReusableComponents/MechLoader'
 
 function Profile() {
   const { user, updateUser } = useContext(AuthContext)
@@ -83,23 +83,8 @@ function Profile() {
         <h1 className="text-2xl font-bold text-slate-900 mt-4 mb-6">Profile Settings</h1>
 
         {loading ? (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5">
-            <div className="space-y-1">
-              <Skeleton className="h-3 w-20" />
-              <Skeleton className="h-9 w-full" />
-            </div>
-            <div className="space-y-1">
-              <Skeleton className="h-3 w-16" />
-              <Skeleton className="h-9 w-full" />
-            </div>
-            <div className="flex items-center gap-4">
-              <Skeleton className="h-16 w-16 rounded-full" />
-              <Skeleton className="h-9 flex-1" />
-            </div>
-            <div className="flex gap-3 pt-2">
-              <Skeleton className="h-10 w-32 rounded-lg" />
-              <Skeleton className="h-10 w-36 rounded-lg" />
-            </div>
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex items-center justify-center">
+            <MechLoader />
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5">
