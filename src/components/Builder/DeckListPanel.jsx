@@ -4,8 +4,36 @@ import { Globe, Lock, Archive, BookOpen } from 'lucide-react'
 function DeckListPanel({ decks, loadingDecks, selectedDeck, onSelectDeck }) {
   return (
     <div className="w-72 shrink-0 space-y-2">
+      <style>{`
+        .deck-loader {
+          display: inline-grid;
+          width: 70px;
+          aspect-ratio: 1;
+          animation: deck-loader-0 3s linear infinite;
+        }
+        .deck-loader:before,
+        .deck-loader:after {
+          content: "";
+          grid-area: 1/1;
+        }
+        .deck-loader:before {
+          clip-path: polygon(100% 50%,83.81% 59.06%,93.3% 75%,74.75% 74.75%,75% 93.3%,59.06% 83.81%,50% 100%,40.94% 83.81%,25% 93.3%,25.25% 74.75%,6.7% 75%,16.19% 59.06%,0% 50%,16.19% 40.94%,6.7% 25%,25.25% 25.25%,25% 6.7%,40.94% 16.19%,50% 0%,59.06% 16.19%,75% 6.7%,74.75% 25.25%,93.3% 25%,83.81% 40.94%);
+          background: #1e3a8a;
+          transform: rotate(0turn) translate(-12.5%) rotate(0turn);
+          animation: deck-loader-1 2s linear infinite;
+        }
+        .deck-loader:after {
+          margin: 12.5%;
+          clip-path: polygon(100% 50%,78.19% 60.26%,88.3% 82.14%,65% 75.98%,58.68% 99.24%,44.79% 79.54%,25% 93.3%,27.02% 69.28%,3.02% 67.1%,20% 50%,3.02% 32.9%,27.02% 30.72%,25% 6.7%,44.79% 20.46%,58.68% 0.76%,65% 24.02%,88.3% 17.86%,78.19% 39.74%);
+          background: #ef4444;
+        }
+        @keyframes deck-loader-0 { to { rotate: 1turn; } }
+        @keyframes deck-loader-1 { to { transform: rotate(-1turn) translate(-12.5%) rotate(.75turn); } }
+      `}</style>
       {loadingDecks ? (
-        <p className="text-sm text-slate-400 text-center py-10">Loading decks...</p>
+        <div className="flex justify-center py-10">
+          <div className="deck-loader" />
+        </div>
       ) : decks.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-slate-200">
           <BookOpen size={28} className="mx-auto text-slate-300 mb-3" />
