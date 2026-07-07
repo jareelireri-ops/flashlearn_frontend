@@ -304,3 +304,7 @@ export async function adminDeleteContent({ deckId, flashcardId }) {
   return response.data
 }
 
+export async function getAdminStats() {
+  const response = await client.get('/admin/stats')
+  return response.data
+}

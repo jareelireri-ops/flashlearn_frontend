@@ -8,6 +8,7 @@ import {
   getAdminReports,
   resolveReport,
   adminDeleteContent,
+  getAdminStats,
 } from '../api/client'
 import UserManagementTable from '../components/Admin/UserManagementTable'
 import ReportsTable from '../components/Admin/ReportsTable'
@@ -19,6 +20,7 @@ function Admin() {
   const [tab, setTab] = useState('users')
   const [users, setUsers] = useState([])
   const [reports, setReports] = useState([])
+  const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -27,10 +29,12 @@ function Admin() {
     Promise.all([
       getAllUsers().catch(() => []),
       getAdminReports().catch(() => []),
+      getAdminStats().catch(() => null),
     ])
-      .then(([usersData, reportsData]) => {
+      .then(([usersData, reportsData, statsData]) => {
         setUsers(usersData)
         setReports(reportsData)
+        setStats(statsData)
       })
       .finally(() => setLoading(false))
   }, [user])
@@ -117,7 +121,7 @@ function Admin() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-8 py-6 sm:py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
             <div className="text-2xl font-bold text-zinc-100">{users.length}</div>
             <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Total Users</div>
@@ -131,6 +135,27 @@ function Admin() {
             <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Suspended Users</div>
           </div>
         </div>
+
+        {stats && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+              <div className="text-2xl font-bold text-zinc-100">{stats.total_decks}</div>
+              <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Total Decks</div>
+            </div>
+            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+              <div className="text-2xl font-bold text-zinc-100">{stats.total_flashcards}</div>
+              <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Total Flashcards</div>
+            </div>
+            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+              <div className="text-2xl font-bold text-orange-400">{stats.sessions_7d}</div>
+              <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Sessions (This week)</div>
+            </div>
+            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+              <div className="text-2xl font-bold text-orange-400">{stats.active_users_7d}</div>
+              <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Active Users (This week)</div>
+            </div>
+          </div>
+        )}
 
         <div className="flex gap-1 bg-zinc-900 border border-zinc-800 rounded-lg p-1 w-full sm:w-fit mb-6 overflow-x-auto">
           <button
