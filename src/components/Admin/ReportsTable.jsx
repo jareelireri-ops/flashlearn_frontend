@@ -44,7 +44,11 @@ function ReportsTable({ reports, onResolve, onRemoveContent }) {
               <p className="text-sm text-zinc-200">{report.reason}</p>
               <div className="flex items-center gap-3 mt-1.5 text-xs font-mono text-zinc-500">
                 <span>
-                  {report.deck_id ? `Deck #${report.deck_id}` : `Flashcard #${report.flashcard_id}`}
+                  {report.deck_id
+                    ? `Deck #${report.deck_id}`
+                    : report.flashcard_id
+                    ? `Flashcard #${report.flashcard_id}`
+                    : 'Content removed'}
                 </span>
                 <span>·</span>
                 <span>Reported {formatDate(report.created_at)}</span>
