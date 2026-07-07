@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getPublicCategories } from '../../api/client'
 import { Code2, BookOpen, Brain, Briefcase, UtensilsCrossed, Layers, Pencil } from 'lucide-react'
-import { ScanningSkeletonGrid } from '../ReusableComponents/Skeleton'
+import MechLoader from '../ReusableComponents/MechLoader'
 import TiltWrapper from '../ReusableComponents/3DTiltWrapper'
 
 const ICONS = {
@@ -33,7 +33,7 @@ function Categories() {
   if (loading) return (
     <section className="py-20 px-6 bg-slate-100">
       <div className="max-w-6xl mx-auto">
-        <ScanningSkeletonGrid count={5} />
+        <MechLoader />
       </div>
     </section>
   )

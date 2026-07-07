@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Pencil } from 'lucide-react'
 import { getPublicDecks } from '../../api/client'
-import { ScanningSkeletonGrid } from '../ReusableComponents/Skeleton' 
+import MechLoader from '../ReusableComponents/MechLoader'
 import TiltWrapper from '../ReusableComponents/3DTiltWrapper'
 
 const DIFFICULTY_STYLES = {
@@ -32,7 +32,7 @@ function FeaturedDecks() {
   if (loading) return (
     <section className="py-20 px-6 bg-slate-100">
       <div className="max-w-6xl mx-auto">
-        <ScanningSkeletonGrid count={4} />
+        <MechLoader />
       </div>
     </section>
   )
