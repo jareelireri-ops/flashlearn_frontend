@@ -28,7 +28,7 @@ const PENCILS = [
 ]
 
 // A deck is said to have new cards only if the user has already studied it before
-// AND it was updated after their last review on the deck
+// and it was updated after their last review on the deck
 function hasNewCardsSinceLastReview(deck, completion) {
   if (!completion || !completion.cards_reviewed || !completion.last_reviewed_at) return false
   if (!deck.updated_at) return false
@@ -41,7 +41,7 @@ function Library() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  // Admins are guest-equivalent : no collection, no saving,
+  // Admins are guest-equivalent : no personal collection, no saving,
   // no deck creation. They only ever see Discover.
   const isLearner = user && user.role === 'learner'
 
