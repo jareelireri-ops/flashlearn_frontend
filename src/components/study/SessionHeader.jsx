@@ -76,7 +76,7 @@ const SessionHeader = ({ deckTitle, current, total, onExit }) => {
           pointer-events: none;
         }
         .deck-badge {
-          background: rgba(59,130,246,0.15);
+          background: #1e2a3a;
           border: 1px solid rgba(59,130,246,0.3);
           color: #93c5fd;
           font-size: 12px;
