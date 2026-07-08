@@ -10,6 +10,7 @@ import {
 } from '../api/client'
 import Navbar from '../components/ReusableComponents/Navbar'
 import Breadcrumbs from '../components/ReusableComponents/Breadcrumbs'
+import MechLoader from '../components/ReusableComponents/MechLoader'
 
 function timeAgo(isoString) {
   const seconds = Math.floor((Date.now() - new Date(isoString)) / 1000)
@@ -117,7 +118,7 @@ function Notifications() {
         </div>
 
         {loading ? (
-          <div className="text-center py-20 text-slate-400">Loading notifications...</div>
+          <MechLoader />
         ) : notifications.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-200">
             <Bell size={32} className="mx-auto text-slate-300 mb-3" />

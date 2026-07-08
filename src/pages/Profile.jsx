@@ -40,7 +40,9 @@ function Profile() {
       return
     }
 
-    // Keep it reasonable in size for a text colum data type in our backend
+
+    
+    // Keep it reasonable in size for a text colum data type in our backend, so we limit the file size to 2MB(max size for txt column in db is 4mb, but safety first)
     const MAX_BYTES = 2 * 1024 * 1024 // 2MB
     if (file.size > MAX_BYTES) {
       setError('Image is too large. Please choose a file under 2MB.')
