@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import {
   pauseSession,
@@ -183,7 +183,7 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, initialRatings 
       )}
 
       <style>{`
-        .study-session { min-height: 100vh; background: #0f1729; display: flex; flex-direction: column; }
+        .study-session { min-height: 100dvh; background: #0f1729; display: flex; flex-direction: column; }
         .session-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px 140px; }
         .flash-card { width: 100%; max-width: 520px; cursor: pointer; }
         .card-face { padding: 32px 36px; border-radius: 18px; min-height: 200px; display: flex; flex-direction: column; gap: 16px; }

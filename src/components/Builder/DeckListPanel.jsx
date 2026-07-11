@@ -3,7 +3,7 @@ import { Globe, Lock, Archive, BookOpen } from 'lucide-react'
 // creating a list of the decks on the left
 function DeckListPanel({ decks, loadingDecks, selectedDeck, onSelectDeck }) {
   return (
-    <div className="w-72 shrink-0 space-y-2">
+    <div className="w-full md:w-72 shrink-0 space-y-2">
       <style>{`
         .deck-loader {
           display: inline-grid;

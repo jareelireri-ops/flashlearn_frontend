@@ -6,14 +6,14 @@ const client = axios.create({
 
 client.interceptors.request.use((config) => {
   const token = localStorage.getItem('access_token')
-  if (token) {
+  if (token && token !== 'undefined' && token !== 'null') {
     config.headers.Authorization = `Bearer ${token}`
   }
   return config
 })
 
-// Endpoints where a 401 means "bad credentials on this attempt",
-// not "your session expired" , so we don't log the user out on 401s from these endpoints.
+// these are the paths that are used for authentication attempts,
+//  which should not trigger a session expiration redirect if they fail.
 const AUTH_ATTEMPT_PATHS = [
   '/auth/login',
   '/auth/register',
@@ -25,8 +25,9 @@ function isAuthAttempt(url = '') {
   return AUTH_ATTEMPT_PATHS.some((path) => url.includes(path))
 }
 
-// Client-side redirect to "/" without a full page reload, to avoid losing React state.
-//  This is used when the backend returns a 401 on an authenticated route, indicating the session has expired.
+// Redirects the user to the home page if they are not already there.
+// This is used when the user session expires, to ensure they are not left on a page that requires authentication.
+// the auth state is managed in the frontend, so we need to redirect the user to the home page to trigger a re-render and show the navigation bar in the logged-out state.
 function redirectToHome() {
   if (window.location.pathname !== '/') {
     window.history.pushState({}, '', '/')
@@ -40,9 +41,8 @@ client.interceptors.response.use(
     const status = error.response?.status
     const url = error.config?.url || ''
 
-    // Only treat 401s from already-authenticated routes as an expiredsession.
-    //  401s from login/register/forgot-password/reset-password are treated as "bad credentials" and do not log the user out.
-    if (status === 401 && !isAuthAttempt(url)) {
+    // Treat 401s (expired) and the 422s (invalid token) as session expiration, unless the request was an auth attempt.
+    if ((status === 401 || status === 422) && !isAuthAttempt(url)) {
       localStorage.removeItem('access_token')
       localStorage.removeItem('user')
       redirectToHome()

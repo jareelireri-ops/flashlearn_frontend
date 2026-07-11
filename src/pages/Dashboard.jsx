@@ -72,7 +72,7 @@ function Dashboard() {
   }, [user])
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
+    <div className="flex h-dvh bg-slate-50 overflow-hidden font-sans">
 
       {/* Mobile sidebar overlay backdrop */}
       {sidebarOpen && (
@@ -82,7 +82,7 @@ function Dashboard() {
         />
       )}
 
-      {/* Sidebar — hidden on mobile, visible on md+. On mobile renders as a slide-in drawer */}
+      {/* we use fixed positioning for the sidebar on mobile, so it can slide in/out, but static positioning on desktop */}
       <div className={`fixed md:static inset-y-0 left-0 z-30 w-64 bg-slate-950 text-slate-400 flex flex-col h-full shrink-0 border-r border-slate-900 transition-transform duration-300 relative overflow-hidden ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
       }`}>
@@ -157,7 +157,7 @@ function Dashboard() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto h-full bg-slate-50">
+      <div className="flex-1 min-w-0 overflow-y-auto h-full bg-slate-50">
         <div className="flex items-center justify-between px-4 md:px-8 py-4 bg-white border-b border-slate-200">
           <div className="flex items-center gap-3">
             <button

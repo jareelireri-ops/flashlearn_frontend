@@ -229,22 +229,24 @@ function Library() {
   ]
 
   return (
-    <div className="relative min-h-screen bg-slate-200 overflow-hidden">
-      {PENCILS.map((p, i) => (
-        <Pencil
-          key={i}
-          className="absolute text-gray-900 pointer-events-none"
-          style={{
-            top: p.top,
-            left: p.left,
-            width: p.size,
-            height: p.size,
-            opacity: p.opacity,
-            transform: `rotate(${p.rotate}deg)`,
-          }}
-          strokeWidth={1.5}
-        />
-      ))}
+    <div className="relative min-h-screen bg-slate-200">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {PENCILS.map((p, i) => (
+          <Pencil
+            key={i}
+            className="absolute text-gray-900"
+            style={{
+              top: p.top,
+              left: p.left,
+              width: p.size,
+              height: p.size,
+              opacity: p.opacity,
+              transform: `rotate(${p.rotate}deg)`,
+            }}
+            strokeWidth={1.5}
+          />
+        ))}
+      </div>
 
       <div className="relative">
         <Navbar />
