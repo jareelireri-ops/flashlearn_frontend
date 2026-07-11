@@ -1,5 +1,6 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import ProtectedRoute from './ProtectedRoute'
+import PublicRoute from './PublicRoute'
 
 import Landing from '../pages/Landing'
 import Dashboard from '../pages/Dashboard'
@@ -14,7 +15,14 @@ import Admin from '../pages/Admin'
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Landing />} />
+      <Route
+        path="/"
+        element={
+          <PublicRoute>
+            <Landing />
+          </PublicRoute>
+        }
+      />
       <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* Public routes for guests, but logged-in users see full content */}
@@ -71,6 +79,8 @@ function AppRoutes() {
         }
       />
 
+      {/* Catch-all route to redirect unknown URLs to the home page */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }
