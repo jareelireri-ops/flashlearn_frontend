@@ -4,7 +4,7 @@ import TiltWrapper from '../ReusableComponents/3DTiltWrapper'
 const DIFFICULTY_STYLES = {
   easy: 'bg-emerald-50 text-emerald-600',
   medium: 'bg-amber-50 text-amber-600',
-  hard: 'bg-red-50 text-red-600',
+  hard: 'bg-emerald-50 text-emerald-600',
 }
 
 function DeckCard({ deck, completion, onClick, onSave, onRemove, hasNewCards, isOwner, isSaved, dueCount, isStudying }) {
@@ -21,7 +21,7 @@ function DeckCard({ deck, completion, onClick, onSave, onRemove, hasNewCards, is
               e.stopPropagation()
               onSave()
             }}
-            className="absolute top-3 right-3 p-1.5 bg-slate-100 hover:bg-red-100 text-slate-400 hover:text-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-all z-10"
+            className="absolute top-3 right-3 p-1.5 bg-slate-100 hover:bg-emerald-100 text-slate-400 hover:text-emerald-500 rounded-full opacity-0 group-hover:opacity-100 transition-all z-10"
             title="Save to My Collection"
           >
             <Plus size={16} strokeWidth={3} />
@@ -35,7 +35,7 @@ function DeckCard({ deck, completion, onClick, onSave, onRemove, hasNewCards, is
               e.stopPropagation()
               onRemove()
             }}
-            className="absolute top-3 right-3 p-1.5 bg-slate-100 hover:bg-red-100 text-slate-400 hover:text-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-all z-10"
+            className="absolute top-3 right-3 p-1.5 bg-slate-100 hover:bg-emerald-100 text-slate-400 hover:text-emerald-500 rounded-full opacity-0 group-hover:opacity-100 transition-all z-10"
             title="Remove from Collection"
           >
             <Minus size={16} strokeWidth={3} />
@@ -46,7 +46,7 @@ function DeckCard({ deck, completion, onClick, onSave, onRemove, hasNewCards, is
           <div className="flex flex-col gap-2">
             <div className="flex flex-wrap items-center gap-2">
               {dueCount > 0 && (
-                <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-50 text-red-600 text-[10px] font-bold tracking-wide uppercase border border-red-200 shadow-sm">
+                <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-bold tracking-wide uppercase border border-emerald-200 shadow-sm">
                   <Clock size={12} strokeWidth={3} className="animate-pulse" /> Due: {dueCount}
                 </span>
               )}
@@ -81,7 +81,7 @@ function DeckCard({ deck, completion, onClick, onSave, onRemove, hasNewCards, is
           <h3 className="font-semibold text-slate-900">{deck.title}</h3>
           {hasNewCards && (
             <span
-              className="flex items-center gap-0.5 text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded-full shrink-0"
+              className="flex items-center gap-0.5 text-[10px] font-bold text-emerald-500 bg-emerald-50 px-1.5 py-0.5 rounded-full shrink-0"
               title="New cards have been added since you last studied this deck"
             >
               <Sparkles size={10} /> NEW CARDS
@@ -111,7 +111,7 @@ function DeckCard({ deck, completion, onClick, onSave, onRemove, hasNewCards, is
         {pct !== null && (
           <div className="w-full h-1.5 bg-slate-100 rounded-full mt-2 overflow-hidden">
             <div
-              className={`h-full rounded-full ${isDone ? 'bg-emerald-500' : 'bg-red-400'}`}
+              className={`h-full rounded-full ${isDone ? 'bg-emerald-500' : 'bg-emerald-400'}`}
               style={{ width: `${pct}%` }}
             />
           </div>

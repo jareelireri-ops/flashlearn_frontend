@@ -6,15 +6,15 @@ function MarqueeStrip({ items, variant = 'default', icon = null, speed = 22 }) {
     <div
       className={
         isBrand
-          ? 'bg-red-600 py-3 overflow-hidden border-b border-gray-900'
-          : 'bg-red-50 border-b border-red-100 overflow-hidden py-2'
+          ? 'bg-emerald-600 py-3 overflow-hidden border-b border-gray-900'
+          : 'bg-emerald-50 border-b border-emerald-100 overflow-hidden py-2'
       }
     >
       <div
         className={
           isBrand
             ? 'flex gap-8 sm:gap-12 whitespace-nowrap text-white'
-            : 'inline-flex gap-2 text-sm font-medium text-red-600 items-center whitespace-nowrap'
+            : 'inline-flex gap-2 text-sm font-medium text-emerald-600 items-center whitespace-nowrap'
         }
         style={
           isBrand
@@ -29,7 +29,7 @@ function MarqueeStrip({ items, variant = 'default', icon = null, speed = 22 }) {
       >
         {doubled.map((item, i) => (
           <span key={i} className="flex items-center gap-8 sm:gap-12">
-            {isBrand && <span className="text-red-300 text-sm">✦</span>}
+            {isBrand && <span className="text-emerald-300 text-sm">✦</span>}
             {!isBrand && icon && i === 0 && icon}
             <span>{isBrand ? item.toUpperCase() : item}</span>
           </span>

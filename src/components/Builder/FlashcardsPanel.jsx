@@ -24,7 +24,7 @@ function FlashcardsPanel({
         {!showNewCardForm && (
           <button
             onClick={() => setShowNewCardForm(true)}
-            className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-600 transition"
+            className="flex items-center gap-1.5 text-sm font-medium text-emerald-500 hover:text-emerald-600 transition"
           >
             <Plus size={15} /> Add Card
           </button>

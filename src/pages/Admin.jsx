@@ -133,12 +133,12 @@ function Admin() {
       <div className="border-b border-zinc-800 px-4 sm:px-8 py-4 sm:py-6">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition">
-            <div className="w-9 h-9 rounded-lg bg-orange-500 flex items-center justify-center text-zinc-950 font-bold text-sm shrink-0">
-              FL
+            <div className="w-9 h-9 rounded-lg bg-emerald-600 flex items-center justify-center text-zinc-950 font-bold text-sm shrink-0">
+              EF
             </div>
             <div className="min-w-0">
-              <h1 className="text-lg font-bold tracking-tight truncate">Admin Console</h1>
-              <p className="text-xs text-zinc-500 font-mono truncate">Platform moderation &amp; user management</p>
+              <h1 className="text-lg font-bold tracking-tight truncate">EPR Compliance Dashboard</h1>
+              <p className="text-xs text-zinc-500 font-mono truncate">Technician certification &amp; compliance tracking</p>
             </div>
           </Link>
 
@@ -166,15 +166,15 @@ function Admin() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
             <div className="text-2xl font-bold text-zinc-100">{users.length}</div>
-            <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Total Users</div>
+            <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Registered Technicians</div>
           </div>
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
             <div className="text-2xl font-bold text-orange-400">{pendingReports}</div>
-            <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Pending Reports</div>
+            <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Policy Violations</div>
           </div>
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
             <div className="text-2xl font-bold text-zinc-100">{suspendedUsers}</div>
-            <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Suspended Users</div>
+            <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Revoked Certifications</div>
           </div>
         </div>
 
@@ -182,15 +182,15 @@ function Admin() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
               <div className="text-2xl font-bold text-zinc-100">{stats.total_decks}</div>
-              <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Total Decks</div>
+              <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Active Training Modules</div>
             </div>
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
               <div className="text-2xl font-bold text-zinc-100">{stats.total_flashcards}</div>
-              <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Total Flashcards</div>
+              <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Compliance Datapoints</div>
             </div>
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
               <div className="text-2xl font-bold text-orange-400">{stats.sessions_7d}</div>
-              <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Sessions (This week)</div>
+              <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider mt-1">Training Audits (7d)</div>
             </div>
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
               <div className="text-2xl font-bold text-orange-400">{stats.active_users_7d}</div>
@@ -206,7 +206,7 @@ function Admin() {
               tab === 'users' ? 'bg-orange-500 text-zinc-950' : 'text-zinc-400 hover:text-zinc-100'
             }`}
           >
-            <Users size={14} /> Users
+            <Users size={14} /> Technician Directory
           </button>
           <button
             onClick={() => setTab('reports')}
@@ -214,7 +214,7 @@ function Admin() {
               tab === 'reports' ? 'bg-orange-500 text-zinc-950' : 'text-zinc-400 hover:text-zinc-100'
             }`}
           >
-            <Flag size={14} /> Reports
+            <Flag size={14} /> Compliance Flags
             {pendingReports > 0 && (
               <span className="bg-zinc-950/30 text-xs font-bold px-1.5 rounded-full">{pendingReports}</span>
             )}

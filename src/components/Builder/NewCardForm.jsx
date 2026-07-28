@@ -22,7 +22,7 @@ function NewCardForm({ onAdd, onCancel }) {
   }
 
   return (
-    <div className="p-4 bg-red-50 border-2 border-red-200 rounded-xl space-y-3">
+    <div className="p-4 bg-emerald-50 border-2 border-emerald-200 rounded-xl space-y-3">
       <p className="text-sm font-semibold text-slate-800">New Flashcard</p>
       <div>
         <label className="text-xs font-semibold text-slate-500 mb-1 block">Question *</label>
@@ -31,9 +31,9 @@ function NewCardForm({ onAdd, onCancel }) {
           onChange={(e) => { setForm({ ...form, question: e.target.value }); setErrors({ ...errors, question: null }) }}
           rows={2}
           placeholder="What is the question?"
-          className={`w-full text-sm border rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-red-300 bg-white resize-none ${errors.question ? 'border-red-400' : 'border-slate-200'}`}
+          className={`w-full text-sm border rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-red-300 bg-white resize-none ${errors.question ? 'border-emerald-400' : 'border-slate-200'}`}
         />
-        {errors.question && <p className="text-xs text-red-500 mt-1">{errors.question}</p>}
+        {errors.question && <p className="text-xs text-emerald-500 mt-1">{errors.question}</p>}
       </div>
       <div>
         <label className="text-xs font-semibold text-slate-500 mb-1 block">Answer *</label>
@@ -42,9 +42,9 @@ function NewCardForm({ onAdd, onCancel }) {
           onChange={(e) => { setForm({ ...form, answer: e.target.value }); setErrors({ ...errors, answer: null }) }}
           rows={2}
           placeholder="What is the answer?"
-          className={`w-full text-sm border rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-red-300 bg-white resize-none ${errors.answer ? 'border-red-400' : 'border-slate-200'}`}
+          className={`w-full text-sm border rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-red-300 bg-white resize-none ${errors.answer ? 'border-emerald-400' : 'border-slate-200'}`}
         />
-        {errors.answer && <p className="text-xs text-red-500 mt-1">{errors.answer}</p>}
+        {errors.answer && <p className="text-xs text-emerald-500 mt-1">{errors.answer}</p>}
       </div>
       <div className="flex gap-3">
         <div className="flex-1">
@@ -72,7 +72,7 @@ function NewCardForm({ onAdd, onCancel }) {
         <button
           onClick={handleAdd}
           disabled={saving}
-          className="flex items-center gap-1.5 px-4 py-2 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition"
+          className="flex items-center gap-1.5 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition"
         >
           <Plus size={13} /> {saving ? 'Adding...' : 'Add Card'}
         </button>

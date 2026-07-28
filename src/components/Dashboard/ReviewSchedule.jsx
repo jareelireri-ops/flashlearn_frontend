@@ -13,10 +13,10 @@ function ReviewSchedule({ cardsDue }) {
 
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-semibold text-slate-600">Due Now</span>
-        <span className="text-sm font-bold text-red-500">{cardsDue}</span>
+        <span className="text-sm font-bold text-emerald-500">{cardsDue}</span>
       </div>
       <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mb-6">
-        <div className="h-full bg-red-500 rounded-full" style={{ width: cardsDue > 0 ? '100%' : '0%' }} />
+        <div className="h-full bg-emerald-500 rounded-full" style={{ width: cardsDue > 0 ? '100%' : '0%' }} />
       </div>
 
       <button

@@ -245,7 +245,7 @@ function Builder() {
       {/* Toast */}
       {toast && (
         <div className={`fixed top-5 right-5 z-50 px-4 py-3 rounded-xl shadow-lg text-sm font-medium transition ${
-          toast.type === 'error' ? 'bg-red-500 text-white' : 'bg-slate-900 text-white'
+          toast.type === 'error' ? 'bg-emerald-500 text-white' : 'bg-slate-900 text-white'
         }`}>
           {toast.msg}
         </div>
@@ -275,7 +275,7 @@ function Builder() {
           <h1 className="text-2xl font-bold text-slate-900">My Decks</h1>
           <button
             onClick={startNewDeck}
-            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2.5 rounded-xl transition shadow-sm"
+            className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium px-4 py-2.5 rounded-xl transition shadow-sm"
           >
             <Plus size={16} /> New Deck
           </button>

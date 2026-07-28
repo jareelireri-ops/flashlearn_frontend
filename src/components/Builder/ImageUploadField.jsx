@@ -48,7 +48,7 @@ function ImageUploadField({ value, onChange, error, onError }) {
           />
           <label
             htmlFor={inputId}
-            className="text-xs font-medium text-red-500 hover:text-red-600 cursor-pointer transition"
+            className="text-xs font-medium text-emerald-500 hover:text-emerald-600 cursor-pointer transition"
           >
             Replace
           </label>
@@ -78,7 +78,7 @@ function ImageUploadField({ value, onChange, error, onError }) {
         className="hidden"
       />
 
-      {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+      {error && <p className="text-xs text-emerald-500 mt-1">{error}</p>}
     </div>
   )
 }

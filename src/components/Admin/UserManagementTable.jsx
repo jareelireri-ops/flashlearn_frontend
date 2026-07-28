@@ -28,7 +28,7 @@ function UserManagementTable({ users, onToggleStatus }) {
           <tr className="bg-zinc-900 text-zinc-400 text-left font-mono text-xs uppercase tracking-wider">
             <th className="px-5 py-3 font-medium">User</th>
             <th className="px-5 py-3 font-medium">Role</th>
-            <th className="px-5 py-3 font-medium">Status</th>
+            <th className="px-5 py-3 font-medium">Compliance Status</th>
             <th className="px-5 py-3 font-medium">Joined</th>
             <th className="px-5 py-3 font-medium text-right">Action</th>
           </tr>
@@ -56,7 +56,7 @@ function UserManagementTable({ users, onToggleStatus }) {
                   }`}
                 >
                   {user.is_active ? <ShieldCheck size={14} /> : <ShieldOff size={14} />}
-                  {user.is_active ? 'Active' : 'Suspended'}
+                  {user.is_active ? 'Certified' : 'Uncertified'}
                 </span>
               </td>
               <td className="px-5 py-4 text-zinc-500 font-mono text-xs">{formatDate(user.created_at)}</td>
@@ -75,7 +75,7 @@ function UserManagementTable({ users, onToggleStatus }) {
                         : 'bg-orange-500 text-zinc-950 hover:bg-orange-400'
                     }`}
                   >
-                    {pendingId === user.id ? '...' : user.is_active ? 'Suspend' : 'Reactivate'}
+                    {pendingId === user.id ? '...' : user.is_active ? 'Revoke Certification' : 'Grant Certification'}
                   </button>
                 )}
               </td>

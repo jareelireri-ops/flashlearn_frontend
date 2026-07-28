@@ -22,7 +22,7 @@ function WeeklyActivity({ dailyActivity }) {
               <span className="text-xs font-bold text-slate-700">{day.cards_reviewed}</span>
               <div className="w-full bg-slate-100 rounded-lg overflow-hidden flex flex-col justify-end h-28">
                 <div
-                  className="w-full bg-red-500 rounded-lg transition-all duration-700"
+                  className="w-full bg-emerald-500 rounded-lg transition-all duration-700"
                   style={{ height: `${(day.cards_reviewed / maxCount) * 100}%` }}
                 />
               </div>

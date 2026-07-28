@@ -35,7 +35,7 @@ function TopDecks({ topDecks = [] }) {
             </div>
             <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
               <div
-                className="h-full bg-red-400 rounded-full"
+                className="h-full bg-emerald-400 rounded-full"
                 style={{ width: `${(deck.total_reviews / maxReviews) * 100}%` }}
               />
             </div>

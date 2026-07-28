@@ -100,13 +100,13 @@ function Dashboard() {
 
         <div className="relative p-6">
           <Link to="/" className="flex items-center gap-2 mb-10 transition hover:opacity-80">
-            <div className="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center text-white text-sm font-bold shadow-sm">FL</div>
-            <span className="font-bold text-white tracking-tight text-lg">FlashLearn</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white text-sm font-bold shadow-sm">EF</div>
+            <span className="font-bold text-white tracking-tight text-lg">EcoFlip</span>
           </Link>
 
           <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2 px-4">Main</p>
           <nav className="space-y-1 mb-6">
-            <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-red-500/10 text-red-500 font-medium transition text-sm">
+            <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-emerald-500/10 text-emerald-500 font-medium transition text-sm">
               <LayoutDashboard size={17} /> Dashboard
             </button>
             <button
@@ -150,7 +150,7 @@ function Dashboard() {
               <div className="text-sm font-bold text-white truncate">{user?.name}</div>
               <div className="text-xs text-slate-500 truncate">Learner</div>
             </div>
-            <button onClick={logout} className="text-slate-500 hover:text-red-400 transition shrink-0" title="Logout">
+            <button onClick={logout} className="text-slate-500 hover:text-emerald-400 transition shrink-0" title="Logout">
               <LogOut size={16} />
             </button>
           </div>

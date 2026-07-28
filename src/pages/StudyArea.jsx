@@ -134,7 +134,7 @@ const StudyArea = () => {
   if (error) {
     return (
       <div className="study-state">
-        <AlertCircle size={40} color="#f87171" />
+        <AlertCircle size={40} color="#10b981" />
         <p>{error}</p>
         <button className="back-btn" onClick={() => navigate(-1)}>Go Back</button>
         <style>{`
@@ -153,7 +153,7 @@ const StudyArea = () => {
           }
           .back-btn {
             padding: 10px 24px;
-            background: #3b82f6;
+            background: #10b981;
             color: #fff;
             border: none;
             border-radius: 20px;
@@ -222,7 +222,7 @@ const StudyArea = () => {
           }
           .btn-primary {
             padding: 10px 28px;
-            background: #3b82f6;
+            background: #10b981;
             color: #fff;
             border: none;
             border-radius: 25px;
@@ -231,7 +231,7 @@ const StudyArea = () => {
             cursor: pointer;
             transition: background 0.2s;
           }
-          .btn-primary:hover { background: #2563eb; }
+          .btn-primary:hover { background: #059669; }
           .btn-ghost {
             padding: 10px 28px;
             background: rgba(255,255,255,0.07);

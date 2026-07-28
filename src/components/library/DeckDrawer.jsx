@@ -127,24 +127,24 @@ function DeckDrawer({ deck, completion, isOwner, onClose }) {
         <h4 className="text-sm font-semibold text-slate-700 mt-6 mb-3">Card Preview</h4>
         <div className="space-y-3 relative">
           <div className="border border-slate-200 rounded-xl p-4 bg-white shadow-sm">
-            <span className="text-[10px] font-bold tracking-wider text-red-500 uppercase">Card 1</span>
+            <span className="text-[10px] font-bold tracking-wider text-emerald-500 uppercase">Card 1</span>
             <p className="text-sm text-slate-700 mt-1">
               {loadingPreview ? 'Loading question...' : firstQuestion || 'No cards yet'}
             </p>
           </div>
 
           <div className="border border-slate-200 rounded-xl p-4 bg-white shadow-sm transition-all blur-sm select-none">
-            <span className="text-[10px] font-bold tracking-wider text-red-500 uppercase">Card 2</span>
+            <span className="text-[10px] font-bold tracking-wider text-emerald-500 uppercase">Card 2</span>
             <p className="text-sm text-slate-700 mt-1">Sample flashcard question from this deck...</p>
           </div>
           <div className="border border-slate-200 rounded-xl p-4 bg-white shadow-sm transition-all blur-[6px] select-none opacity-60">
-            <span className="text-[10px] font-bold tracking-wider text-red-500 uppercase">Card 3</span>
+            <span className="text-[10px] font-bold tracking-wider text-emerald-500 uppercase">Card 3</span>
             <p className="text-sm text-slate-700 mt-1">Sample flashcard question from this deck...</p>
           </div>
 
           <div className="absolute inset-0 top-16 flex items-center justify-center z-10 pointer-events-none">
             <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg text-xs font-semibold flex items-center gap-2 text-slate-700 border border-slate-200">
-              <Lock size={12} className="text-red-500" />
+              <Lock size={12} className="text-emerald-500" />
               {!user ? 'Sign in & start studying to view more' : 'Start studying to view more'}
             </div>
           </div>
@@ -166,7 +166,7 @@ function DeckDrawer({ deck, completion, isOwner, onClose }) {
           className={`w-full mt-6 py-3.5 rounded-xl transition flex items-center justify-center gap-2 shadow-sm font-medium
             ${isAdmin 
               ? 'bg-slate-200 text-slate-500 cursor-not-allowed border border-slate-300' 
-              : 'bg-red-500 hover:bg-red-600 text-white'
+              : 'bg-emerald-500 hover:bg-emerald-600 text-white'
             }`}
           title={isAdmin ? "Administrators cannot study decks" : ""}
         >
@@ -194,15 +194,15 @@ function DeckDrawer({ deck, completion, isOwner, onClose }) {
             {!showReportForm ? (
               <button
                 onClick={handleReportClick}
-                className="flex items-center gap-2 text-xs text-slate-400 hover:text-red-500 transition font-medium"
+                className="flex items-center gap-2 text-xs text-slate-400 hover:text-emerald-500 transition font-medium"
               >
                 <Flag size={13} />
                 Report this deck
               </button>
             ) : (
-              <div className="bg-red-50 border border-red-100 rounded-xl p-4 space-y-3">
+              <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 space-y-3">
                 <div className="flex items-center gap-2">
-                  <AlertTriangle size={14} className="text-red-500" />
+                  <AlertTriangle size={14} className="text-emerald-500" />
                   <span className="text-sm font-semibold text-slate-800">Report Deck</span>
                 </div>
 
@@ -217,13 +217,13 @@ function DeckDrawer({ deck, completion, isOwner, onClose }) {
                       onChange={(e) => setReportReason(e.target.value)}
                       placeholder="Describe the issue with this deck..."
                       rows={3}
-                      className="w-full text-sm border border-red-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-red-300 bg-white resize-none"
+                      className="w-full text-sm border border-emerald-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-red-300 bg-white resize-none"
                     />
                     <div className="flex gap-2">
                       <button
                         onClick={handleSubmitReport}
                         disabled={!reportReason.trim() || reportSubmitting}
-                        className="flex-1 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white text-sm font-medium py-2 rounded-lg transition"
+                        className="flex-1 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white text-sm font-medium py-2 rounded-lg transition"
                       >
                         {reportSubmitting ? 'Submitting...' : 'Submit Report'}
                       </button>

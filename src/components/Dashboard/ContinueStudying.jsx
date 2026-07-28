@@ -12,7 +12,7 @@ function ContinueStudying({ activeSessions }) {
         <h2 className="text-lg font-bold text-slate-900">Continue Studying</h2>
         <button
           onClick={() => navigate('/library')}
-          className="text-sm font-semibold text-red-500 hover:text-red-600 transition flex items-center gap-1"
+          className="text-sm font-semibold text-emerald-500 hover:text-emerald-600 transition flex items-center gap-1"
         >
           <Sparkles size={14} /> Browse Library
         </button>
@@ -36,7 +36,7 @@ function ContinueStudying({ activeSessions }) {
                 </div>
                 <button
                   onClick={() => navigate(`/study/${session.deck_id}`)}
-                  className="w-8 h-8 rounded-full bg-slate-100 hover:bg-red-50 flex items-center justify-center text-slate-400 hover:text-red-500 transition"
+                  className="w-8 h-8 rounded-full bg-slate-100 hover:bg-emerald-50 flex items-center justify-center text-slate-400 hover:text-emerald-500 transition"
                 >
                   <Play size={14} fill="currentColor" />
                 </button>
@@ -48,7 +48,7 @@ function ContinueStudying({ activeSessions }) {
         <div className="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-500 font-medium">
           You have no decks currently in progress.
           <br />
-          <button onClick={() => navigate('/library')} className="text-red-500 mt-2 hover:underline">
+          <button onClick={() => navigate('/library')} className="text-emerald-500 mt-2 hover:underline">
             Start a new deck today!
           </button>
         </div>

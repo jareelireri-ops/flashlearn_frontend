@@ -8,7 +8,7 @@ function ConfirmDialog({ message, onConfirm, onCancel }) {
         <div className="flex gap-3">
           <button
             onClick={onConfirm}
-            className="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-2.5 rounded-xl transition"
+            className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2.5 rounded-xl transition"
           >
             Delete
           </button>

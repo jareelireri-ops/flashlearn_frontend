@@ -7,7 +7,7 @@ import TiltWrapper from '../ReusableComponents/3DTiltWrapper'
 const DIFFICULTY_STYLES = {
   easy: 'bg-emerald-50 text-emerald-600',
   medium: 'bg-amber-50 text-amber-600',
-  hard: 'bg-red-50 text-red-600',
+  hard: 'bg-emerald-50 text-emerald-600',
 }
 
 // Darker background pencils — gray-900 ink, tuned for visibility on bg-slate-100
@@ -17,26 +17,12 @@ const PENCILS = [
 ]
 
 function FeaturedDecks() {
-  const [decks, setDecks] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    getPublicDecks()
-      // Extract decks array from paginated response
-      .then((data) => setDecks((data.decks || []).slice(0, 4)))
-      .catch(() => setError('Could not load decks'))
-      .finally(() => setLoading(false))
-  }, [])
-
-  if (loading) return (
-    <section className="py-20 px-6 bg-slate-100">
-      <div className="max-w-6xl mx-auto">
-        <MechLoader />
-      </div>
-    </section>
-  )
-  if (error) return <div className="py-16 text-center text-red-500">{error}</div>
+  const decks = [
+    { id: 1, title: 'Secure HDD Eradication', category: 'Data Destruction', difficulty_level: 'medium', num_flashcards: 12 },
+    { id: 2, title: 'Battery Handling 101', category: 'Lithium Safety', difficulty_level: 'easy', num_flashcards: 8 },
+    { id: 3, title: 'Corporate ESG Basics', category: 'ESG Compliance', difficulty_level: 'easy', num_flashcards: 15 },
+    { id: 4, title: 'MacBook Teardown Safety', category: 'Device Teardowns', difficulty_level: 'hard', num_flashcards: 20 },
+  ]
 
   return (
     <section className="relative py-20 px-6 bg-slate-100 overflow-hidden">
@@ -58,7 +44,7 @@ function FeaturedDecks() {
 
       <div className="relative max-w-6xl mx-auto">
         <div className="text-center mb-10">
-          <span className="text-xs font-semibold text-red-500 uppercase tracking-wide">Ready to study</span>
+          <span className="text-xs font-semibold text-emerald-500 uppercase tracking-wide">Ready to study</span>
           <h2 className="text-3xl font-bold text-slate-900 mt-2">Featured Decks</h2>
         </div>
 

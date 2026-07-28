@@ -8,7 +8,7 @@ const PENCILS = [
 
 function Features() {
   return (
-    <section className="relative bg-slate-900 text-white px-6 py-20 overflow-hidden border-t-4 border-red-500">
+    <section className="relative bg-slate-900 text-white px-6 py-20 overflow-hidden border-t-4 border-emerald-500">
       {PENCILS.map((p, i) => (
         <Pencil
           key={i}
@@ -27,14 +27,12 @@ function Features() {
 
       <div className="relative max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
         <div>
-          <span className="text-xs font-bold text-red-500 uppercase tracking-[0.2em]">Inside every category</span>
+          <span className="text-xs font-bold text-emerald-500 uppercase tracking-[0.2em]">ESG & Safety Compliance</span>
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight mt-3 leading-none">
-            Decks full of <span className="text-red-500">flashcards</span>, made for studying.
+            Private decks made for <span className="text-emerald-500">enterprise</span> training.
           </h2>
           <p className="text-slate-400 mt-4">
-            Every category holds curated decks. Each deck is a set of flashcards — a
-            question on the front, the answer on the back. As your own learner account
-            grows, you can build a personal library too.
+            Whether it is securely wiping data from corporate hard drives or extracting lithium batteries, EcoFlip provides your corporate partners and technicians with secure, private decks built for maximum compliance retention.
           </p>
 
           <div className="grid grid-cols-3 gap-4 mt-8">
@@ -42,19 +40,19 @@ function Features() {
               <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-2">
                 <FolderPlus size={18} className="text-white" />
               </div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Create decks</p>
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Create Policies</p>
             </div>
             <div className="text-center">
               <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-2">
                 <PenSquare size={18} className="text-white" />
               </div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Edit anytime</p>
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Update Rapidly</p>
             </div>
             <div className="text-center">
               <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-2">
                 <Trash2 size={18} className="text-white" />
               </div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Delete freely</p>
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Track Scores</p>
             </div>
           </div>
         </div>
@@ -62,7 +60,7 @@ function Features() {
         <div className="relative h-64">
           <div className="absolute inset-0 bg-white/5 rotate-3" />
           <div className="absolute inset-0 bg-slate-800 border border-white/10 -rotate-2 shadow-xl flex items-center justify-center">
-            <Layers size={48} className="text-red-500" />
+            <Layers size={48} className="text-emerald-500" />
           </div>
         </div>
       </div>

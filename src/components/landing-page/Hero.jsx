@@ -6,12 +6,11 @@ import { AuthContext } from '../../context/AuthContext'
 import MarqueeStrip from '../ReusableComponents/MarqueeStrip'
 
 const MARQUEE_ITEMS = [
-  'Track progress',
-  'Use of spaced repetition',
-  'Customize personal decks',
-  'Browse community decks',
-  'Difficulty rating',
-  'View study streaks and more.',
+  'Gamify Corporate E-Waste Donations',
+  'Spaced Repetition for ESG Compliance',
+  'Private Decks for Technician Training',
+  'Secure Data Destruction Protocols',
+  'Track Global Collection Metrics',
 ]
 
 const PENCILS = [
@@ -55,33 +54,30 @@ function Hero() {
             <h1
               className="leading-none text-gray-900 font-black uppercase"
               style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: 'clamp(44px, 13vw, 108px)', letterSpacing: '0.02em' }}
-            >FLASH<br />
-              <span className="text-red-600">LEARN</span>
+            >ECO<br />
+              <span className="text-emerald-600">FLIP</span>
             </h1>
 
             <p className="mt-4 sm:mt-5 text-xs sm:text-sm text-gray-500 leading-relaxed max-w-sm">
-              The flashcard app built around how your brain actually works.
-              Q&A cards designed to guide you to excellence
+              The unified e-waste knowledge engine. Gamify corporate ESG compliance and train world-class refurbishment technicians in one platform.
             </p>
           </div>
 
           {/* Buttons — horizontal in mobile, vertical in wider screens*/}
           <div className="flex flex-row items-center gap-2 sm:gap-3">
-            {(!user || isLearner) && (
-              <button
-                onClick={() => isLearner ? navigate('/dashboard') : openAuthModal('register')}
-                className="flex-1 sm:flex-none min-w-0 justify-center px-3 sm:px-5 py-2 sm:py-2.5 bg-gray-900 text-white text-xs sm:text-sm font-semibold border border-gray-900 hover:bg-gray-800 transition-colors leading-tight"
-                style={{ borderRadius: 0 }}
-              >
-                {isLearner ? 'Go to Dashboard' : 'Start for free'}
-              </button>
-            )}
             <button
               onClick={() => navigate('/library')}
+              className="flex-1 sm:flex-none min-w-0 justify-center px-3 sm:px-5 py-2 sm:py-2.5 bg-gray-900 text-white text-xs sm:text-sm font-semibold border border-gray-900 hover:bg-gray-800 transition-colors leading-tight"
+              style={{ borderRadius: 0 }}
+            >
+              EPR Compliance Training
+            </button>
+            <button
+              onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
               className="flex-1 sm:flex-none min-w-0 justify-center px-3 sm:px-5 py-2 sm:py-2.5 bg-gray-300 text-gray-900 text-xs sm:text-sm font-semibold border border-gray-900 hover:bg-gray-50 transition-colors leading-tight"
               style={{ borderRadius: 0 }}
             >
-              Browse decks →
+              How It Works ↓
             </button>
           </div>
         </div>
@@ -89,19 +85,19 @@ function Hero() {
         {/* Right stats column — always stacked vertically, on the right side at every breakpoint */}
         <div className="flex flex-col divide-y divide-gray-900">
           <div className="flex-1 px-2 sm:px-4 md:px-6 py-3 sm:py-5 md:py-7 flex flex-col justify-between">
-            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-gray-400">Active users</p>
-            <p className="font-black text-gray-900 leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: 'clamp(20px, 6vw, 32px)' }}>342+</p>
+            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-gray-400">Corporate Donors</p>
+            <p className="font-black text-gray-900 leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: 'clamp(20px, 6vw, 32px)' }}>14,204+</p>
           </div>
 
           <div className="flex-1 px-2 sm:px-4 md:px-6 py-3 sm:py-5 md:py-7 flex flex-col justify-between">
-            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-gray-400">Retention rate</p>
-            <p className="font-black text-gray-900 leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: 'clamp(20px, 6vw, 32px)' }}>87%</p>
+            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-gray-400">Technician Accuracy</p>
+            <p className="font-black text-gray-900 leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: 'clamp(20px, 6vw, 32px)' }}>99.8%</p>
           </div>
 
           <div className="flex-1 px-2 sm:px-4 md:px-6 py-3 sm:py-5 md:py-7 flex flex-col justify-between bg-gray-900">
-            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-gray-500">Public decks</p>
-            <p className="font-black text-white leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: 'clamp(24px, 7vw, 44px)' }}>1101+</p>
-            <p className="hidden sm:block text-xs text-gray-600 mt-3 italic leading-snug">Join the community.<br />Educate as you get educated.</p>
+            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-gray-500">Tons Recycled</p>
+            <p className="font-black text-white leading-none mt-2" style={{ fontFamily: '"Bebas Neue", "Impact", sans-serif', fontSize: 'clamp(24px, 7vw, 44px)' }}>50,000+</p>
+            <p className="hidden sm:block text-xs text-gray-600 mt-3 italic leading-snug">Empower your corporate partners.<br />Upskill your technicians.</p>
           </div>
         </div>
       </div>

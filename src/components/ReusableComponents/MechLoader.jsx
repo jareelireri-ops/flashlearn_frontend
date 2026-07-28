@@ -1,7 +1,7 @@
 // Reusable animated loader (extracted from DeckListPanel)
 // Usage: <MechLoader /> or <MechLoader size={90} colors={['#1e3a8a', '#ef4444']} />
 
-function MechLoader({ size = 70, colors = ['#1e3a8a', '#ef4444'] }) {
+function MechLoader({ size = 70, colors = ['#0f172a', '#10b981'] }) {
   return (
     <div className="flex justify-center py-10">
       <style>{`

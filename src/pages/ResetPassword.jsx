@@ -67,7 +67,7 @@ function ResetPassword() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                <div className="text-sm text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
                   {error}
                 </div>
               )}
@@ -127,7 +127,7 @@ function ResetPassword() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2.5 rounded-lg transition disabled:opacity-60"
+                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2.5 rounded-lg transition disabled:opacity-60"
               >
                 {loading ? 'Resetting...' : 'Reset Password'}
               </button>
@@ -135,7 +135,7 @@ function ResetPassword() {
           )}
 
           <p className="text-xs text-slate-400 mt-4 text-center">
-            <Link to="/" className="text-red-500 hover:underline">Back to home</Link>
+            <Link to="/" className="text-emerald-500 hover:underline">Back to home</Link>
           </p>
         </div>
       </div>

@@ -2,10 +2,10 @@ import { Flame, Clock, Target, CalendarCheck } from 'lucide-react'
 
 function StatGrid({ streak, cardsDue, totalReviews, totalSessions }) {
   const stats = [
-    { icon: Flame, color: 'text-red-500', bg: 'bg-red-50', value: streak, label: 'Day Streak' },
-    { icon: Clock, color: 'text-red-500', bg: 'bg-red-50', value: cardsDue, label: 'Due Now' },
-    { icon: Target, color: 'text-red-500', bg: 'bg-red-50', value: totalReviews, label: 'Total Reviews' },
-    { icon: CalendarCheck, color: 'text-red-500', bg: 'bg-red-50', value: totalSessions, label: 'Sessions' },
+    { icon: Flame, color: 'text-emerald-500', bg: 'bg-emerald-50', value: streak, label: 'Day Streak' },
+    { icon: Clock, color: 'text-emerald-500', bg: 'bg-emerald-50', value: cardsDue, label: 'Due Now' },
+    { icon: Target, color: 'text-emerald-500', bg: 'bg-emerald-50', value: totalReviews, label: 'Total Reviews' },
+    { icon: CalendarCheck, color: 'text-emerald-500', bg: 'bg-emerald-50', value: totalSessions, label: 'Sessions' },
   ]
 
   return (

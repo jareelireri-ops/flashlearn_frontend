@@ -96,7 +96,7 @@ function Profile() {
               </div>
             )}
             {error && (
-              <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+              <div className="text-sm text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
                 {error}
               </div>
             )}
@@ -140,7 +140,7 @@ function Profile() {
                     type="file"
                     accept="image/*"
                     onChange={handleFileChange}
-                    className="w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-red-50 file:text-red-600 hover:file:bg-red-100 cursor-pointer"
+                    className="w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-emerald-50 file:text-emerald-600 hover:file:bg-emerald-100 cursor-pointer"
                   />
                   <p className="text-xs text-slate-400 mt-1">PNG or JPG, up to 2MB.</p>
                 </div>
@@ -151,7 +151,7 @@ function Profile() {
               <button
                 type="submit"
                 disabled={saving}
-                className="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition disabled:opacity-60"
+                className="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium rounded-lg transition disabled:opacity-60"
               >
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>

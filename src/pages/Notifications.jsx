@@ -95,7 +95,7 @@ function Notifications() {
           {hasUnread && (
             <button
               onClick={handleMarkAllRead}
-              className="text-sm font-semibold text-red-500 hover:text-red-600 transition flex items-center gap-1"
+              className="text-sm font-semibold text-emerald-500 hover:text-emerald-600 transition flex items-center gap-1"
             >
               <Check size={14} /> Mark all as read
             </button>
@@ -135,10 +135,10 @@ function Notifications() {
                 className={`group flex items-start gap-4 p-4 rounded-2xl border shadow-sm cursor-pointer transition ${
                   notification.is_read
                     ? 'bg-white border-slate-200'
-                    : 'bg-red-50 border-red-100 hover:bg-red-100/60'
+                    : 'bg-emerald-50 border-emerald-100 hover:bg-emerald-100/60'
                 }`}
               >
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${notification.is_read ? 'bg-slate-50 text-slate-400' : 'bg-red-500/10 text-red-500'}`}>
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${notification.is_read ? 'bg-slate-50 text-slate-400' : 'bg-emerald-500/10 text-emerald-500'}`}>
                   {notification.notification_type === 'review_due' ? <Clock size={18} /> : <BookOpen size={18} />}
                 </div>
 
@@ -150,7 +150,7 @@ function Notifications() {
                 </div>
 
                 {!notification.is_read && (
-                  <span className="w-2 h-2 rounded-full bg-red-500 mt-2 shrink-0" />
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 mt-2 shrink-0" />
                 )}
 
                 <button
@@ -158,7 +158,7 @@ function Notifications() {
                     e.stopPropagation()
                     handleDelete(notification.id)
                   }}
-                  className="text-slate-300 hover:text-red-500 transition opacity-0 group-hover:opacity-100 shrink-0"
+                  className="text-slate-300 hover:text-emerald-500 transition opacity-0 group-hover:opacity-100 shrink-0"
                   title="Delete notification"
                 >
                   <Trash2 size={16} />

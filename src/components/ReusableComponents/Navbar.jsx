@@ -21,12 +21,12 @@ function Navbar() {
       {/* Logo */}
       <Link to="/" className="flex items-center gap-2 sm:gap-2.5 hover:opacity-80 transition-opacity shrink-0">
         <div
-          className="w-7 h-7 bg-red-600 flex items-center justify-center text-white text-xs font-bold"
+          className="w-7 h-7 bg-emerald-600 flex items-center justify-center text-white text-xs font-bold"
           style={{ borderRadius: 0, fontFamily: '"Bebas Neue", "Impact", sans-serif', letterSpacing: '0.05em' }}
         >
-          FL
+          EF
         </div>
-        <span className="font-semibold text-gray-900 text-sm tracking-tight">FlashLearn</span>
+        <span className="font-semibold text-gray-900 text-sm tracking-tight">EcoFlip</span>
       </Link>
 
       {/* Auth right side that reflects based on authstate */}
@@ -84,7 +84,7 @@ function Navbar() {
           </button>
           <button
             onClick={() => openAuthModal('register')}
-            className="px-3 sm:px-5 py-2 bg-red-600 text-white text-xs sm:text-sm font-semibold border border-red-600 hover:bg-red-700 transition-colors whitespace-nowrap"
+            className="px-3 sm:px-5 py-2 bg-emerald-600 text-white text-xs sm:text-sm font-semibold border border-emerald-600 hover:bg-emerald-700 transition-colors whitespace-nowrap"
             style={{ borderRadius: 0 }}
           >
             Get started

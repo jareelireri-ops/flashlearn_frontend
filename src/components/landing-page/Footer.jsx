@@ -24,10 +24,10 @@ function Footer() {
     <footer className="bg-slate-950 text-slate-400 px-6 py-14">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
         <div>
-          <span className="text-red-400 text-xs font-semibold uppercase tracking-wide">
+          <span className="text-emerald-400 text-xs font-semibold uppercase tracking-wide">
             Spaced repetition, simplified
           </span>
-          <h4 className="text-white text-lg font-bold mt-2">FlashLearn</h4>
+          <h4 className="text-white text-lg font-bold mt-2">EcoFlip</h4>
           <p className="text-sm mt-3">
             A flashcard study platform covering Software Engineering, Philosophy,
             Biblical Studies, Business,Hospitality and other categories.
@@ -83,7 +83,7 @@ function Footer() {
       </div>
 
       <div className="max-w-6xl mx-auto border-t border-slate-800 mt-10 pt-6 flex flex-col md:flex-row justify-between gap-2 text-xs">
-        <span>© 2026 FlashLearn. All rights reserved.</span>
+        <span>© 2026 EcoFlip. All rights reserved.</span>
         <div className="flex gap-4">
           <a href="#" className="hover:text-white transition">Privacy Policy</a>
           <a href="#" className="hover:text-white transition">Terms of Use</a>

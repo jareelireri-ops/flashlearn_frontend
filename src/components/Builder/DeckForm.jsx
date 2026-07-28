@@ -16,9 +16,9 @@ function DeckForm({ deckForm, setDeckForm, deckErrors, setDeckErrors, deckSaving
             value={deckForm.title}
             onChange={(e) => { setDeckForm({ ...deckForm, title: e.target.value }); setDeckErrors({ ...deckErrors, title: null }) }}
             placeholder="e.g. JavaScript Basics"
-            className={`w-full text-sm border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-red-300 ${deckErrors.title ? 'border-red-400' : 'border-slate-200'}`}
+            className={`w-full text-sm border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-red-300 ${deckErrors.title ? 'border-emerald-400' : 'border-slate-200'}`}
           />
-          {deckErrors.title && <p className="text-xs text-red-500 mt-1">{deckErrors.title}</p>}
+          {deckErrors.title && <p className="text-xs text-emerald-500 mt-1">{deckErrors.title}</p>}
         </div>
 
         <div>
@@ -103,7 +103,7 @@ function DeckForm({ deckForm, setDeckForm, deckErrors, setDeckErrors, deckSaving
           <button
             onClick={onSave}
             disabled={deckSaving}
-            className="flex items-center gap-2 px-6 py-2.5 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition"
+            className="flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition"
           >
             <Check size={14} />
             {deckSaving ? 'Saving...' : isEditing ? 'Save Changes' : 'Create Deck'}

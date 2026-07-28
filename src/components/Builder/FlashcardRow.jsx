@@ -50,7 +50,7 @@ function FlashcardRow({ card, onSave, onDelete }) {
         </div>
         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 capitalize ${
           card.difficulty_level === 'easy' ? 'bg-emerald-50 text-emerald-600' :
-          card.difficulty_level === 'hard' ? 'bg-red-50 text-red-500' :
+          card.difficulty_level === 'hard' ? 'bg-emerald-50 text-emerald-500' :
           'bg-amber-50 text-amber-600'
         }`}>
           {card.difficulty_level}
@@ -64,7 +64,7 @@ function FlashcardRow({ card, onSave, onDelete }) {
           </button>
           <button
             onClick={() => onDelete(card.id)}
-            className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
+            className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition"
           >
             <Trash2 size={13} />
           </button>
@@ -74,7 +74,7 @@ function FlashcardRow({ card, onSave, onDelete }) {
   }
 
   return (
-    <div className="p-4 bg-slate-50 border-2 border-red-200 rounded-xl space-y-3">
+    <div className="p-4 bg-slate-50 border-2 border-emerald-200 rounded-xl space-y-3">
       <div>
         <label className="text-xs font-semibold text-slate-500 mb-1 block">Question *</label>
         <textarea
@@ -119,7 +119,7 @@ function FlashcardRow({ card, onSave, onDelete }) {
         <button
           onClick={handleSave}
           disabled={!form.question.trim() || !form.answer.trim() || saving}
-          className="flex items-center gap-1.5 px-4 py-2 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition"
+          className="flex items-center gap-1.5 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition"
         >
           <Check size={13} /> {saving ? 'Saving...' : 'Save'}
         </button>

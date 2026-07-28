@@ -191,8 +191,8 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, initialRatings 
         .card-back { background: #1e2a3a; color: #e2e8f0; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 32px rgba(0,0,0,0.4); display: none; }
         .flash-card.flipped .card-front { display: none; }
         .flash-card.flipped .card-back { display: flex; }
-        .card-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; color: #3b82f6; text-transform: uppercase; }
-        .answer-label { color: #f87171; }
+        .card-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; color: #10b981; text-transform: uppercase; }
+        .answer-label { color: #059669; }
         .card-text { font-size: 18px; font-weight: 500; line-height: 1.6; flex: 1; margin: 0; }
         .card-image { max-width: 100%; border-radius: 10px; max-height: 160px; object-fit: contain; }
         .card-hint { font-size: 12px; color: #94a3b8; margin-top: auto; }
@@ -205,10 +205,10 @@ const StudySession = ({ deck, cards, sessionId, resumeIndex = 0, initialRatings 
         .nav-arrow:hover:not(:disabled) { background: rgba(255,255,255,0.12); color: #fff; }
         .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
         
-        .reveal-btn { padding: 13px 36px; background: #ef4444; color: #fff; border: none; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-        .reveal-btn:hover { background: #dc2626; }
-        .next-btn { padding: 13px 40px; background: #3b82f6; color: #fff; border: none; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-        .next-btn:hover { background: #2563eb; }
+        .reveal-btn { padding: 13px 36px; background: #059669; color: #fff; border: none; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .reveal-btn:hover { background: #047857; }
+        .next-btn { padding: 13px 40px; background: #10b981; color: #fff; border: none; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .next-btn:hover { background: #059669; }
         
         .rating-row { display: flex; flex-direction: column; align-items: center; gap: 14px; }
         .rating-prompt { font-size: 13px; color: #64748b; margin: 0; }

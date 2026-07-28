@@ -11,22 +11,22 @@ function Testimonials() {
       />
 
       <div className="relative max-w-6xl mx-auto px-6 text-center">
-        <h2 className="text-3xl font-bold mb-12">Trusted by Learners Everywhere</h2>
+        <h2 className="text-3xl font-bold mb-12">Trusted by Global ESG Leaders</h2>
         <div className="grid md:grid-cols-3 gap-8">
           <div className="bg-slate-800 p-8 rounded-2xl text-left border border-slate-700">
-            <p className="text-slate-300 italic mb-6">"I used to spend hours re-reading notes. Thanks to FlashLearn's spaced repetition, my study time is cut in half and my grades have never been better!"</p>
-            <div className="font-bold text-lg text-white">Isaac N.</div>
-            <div className="text-sm text-red-400">Computer Science Student</div>
+            <p className="text-slate-300 italic mb-6">"EcoFlip transformed our corporate phone donation drive. Our employees actually enjoyed learning about e-waste, and our collection rates tripled."</p>
+            <div className="font-bold text-lg text-white">Philip Kairu.</div>
+            <div className="text-sm text-emerald-400">Corporate ESG Director</div>
           </div>
           <div className="bg-slate-800 p-8 rounded-2xl text-left border border-slate-700">
-            <p className="text-slate-300 italic mb-6">"The community library is a lifesaver. Being able to find and save decks created by others means I don't have to start from scratch."</p>
+            <p className="text-slate-300 italic mb-6">"Training our refurbishment technicians used to be a liability nightmare. With EcoFlip's spaced repetition, data destruction protocols are never forgotten."</p>
             <div className="font-bold text-lg text-white">Jareel I.</div>
-            <div className="text-sm text-red-400">Youth Pastor</div>
+            <div className="text-sm text-emerald-400">Warehouse Plant Manager</div>
           </div>
           <div className="bg-slate-800 p-8 rounded-2xl text-left border border-slate-700">
-            <p className="text-slate-300 italic mb-6">"The website's interface is quite orderly and easy to use. It makes me want to log in every day to keep my streak going."</p>
-            <div className="font-bold text-lg text-white">Dennis K.</div>
-            <div className="text-sm text-red-400">Technical Mentor</div>
+            <p className="text-slate-300 italic mb-6">"The ability to securely assign private decks to our logistics team means we can scale our global recycling operations with complete confidence."</p>
+            <div className="font-bold text-lg text-white">Gap Closer.</div>
+            <div className="text-sm text-emerald-400">Chief Sustainability Officer</div>
           </div>
         </div>
       </div>

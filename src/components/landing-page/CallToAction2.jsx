@@ -36,26 +36,26 @@ function CallToAction2() {
       <div className="relative max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         <div>
           <h3 className="text-2xl md:text-3xl font-bold text-slate-900">
-            {user ? 'Ready to keep the streak going?' : 'Ready to start learning?'}
+            {user ? 'Ready to maintain your ESG compliance streak?' : 'Ready to deploy corporate e-waste training?'}
           </h3>
           <p className="text-slate-500 mt-1">
             {user
               ? 'Head to the library and pick up where you left off.'
-              : "Join FlashLearn today. It's free."}
+              : "Join EcoFlip today. It's free."}
           </p>
         </div>
 
         {user ? (
           <button
             onClick={() => navigate('/library')}
-            className="px-6 py-3 rounded-full bg-red-500 hover:bg-red-600 text-white font-medium transition shrink-0"
+            className="px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium transition shrink-0"
           >
             Browse the Library →
           </button>
         ) : (
           <button
             onClick={() => openAuthModal('register')}
-            className="px-6 py-3 rounded-full bg-red-500 hover:bg-red-600 text-white font-medium transition shrink-0"
+            className="px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium transition shrink-0"
           >
             Start Now →
           </button>

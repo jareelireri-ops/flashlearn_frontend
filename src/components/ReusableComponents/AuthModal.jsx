@@ -34,7 +34,7 @@ function CharCounter({ length, max, minLength, showMinError }) {
   const atLimit = length >= max
   const isRed = atLimit || showMinError
   return (
-    <p className={`text-xs mt-1 text-right ${isRed ? 'text-red-500' : 'text-gray-400'}`}>
+    <p className={`text-xs mt-1 text-right ${isRed ? 'text-emerald-500' : 'text-gray-400'}`}>
       {showMinError ? `Min ${minLength} characters` : `${length}/${max}`}
     </p>
   )
@@ -200,8 +200,8 @@ function AuthModal() {
         </button>
 
         <div className="flex items-center gap-2 mb-5">
-          <div className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white text-sm font-bold">FL</div>
-          <span className="font-semibold text-gray-900">Flash Learn</span>
+          <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white text-sm font-bold">EF</div>
+          <span className="font-semibold text-gray-900">Eco Flip</span>
         </div>
 
         {authModalView !== 'forgot' && (
@@ -212,14 +212,14 @@ function AuthModal() {
         )}
 
         {serverError && (
-          <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+          <div className="mb-4 text-sm text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
             {serverError}
           </div>
         )}
 
         {authModalView === 'login' ? (
           <>
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Welcome to Flash Learn </h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Welcome to Eco Flip </h2>
             <form onSubmit={handleLogin} autoComplete="off" noValidate className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1">EMAIL</label>
@@ -228,9 +228,9 @@ function AuthModal() {
                   value={loginData.email} onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                   onFocus={() => setLoginEmailShowError(false)}
                   onBlur={() => setLoginEmailShowError(isEmailInvalid(loginData.email))}
-                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${loginEmailShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
+                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${loginEmailShowError ? 'border-emerald-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
                 />
-                {loginEmailShowError && <p className="text-xs text-red-500 mt-1">Please enter a valid email address with an '@'.</p>}
+                {loginEmailShowError && <p className="text-xs text-emerald-500 mt-1">Please enter a valid email address with an '@'.</p>}
                 <CharCounter length={loginData.email.length} max={requirements.email.max_length} />
               </div>
               <div>
@@ -239,7 +239,7 @@ function AuthModal() {
                   <button
                     type="button"
                     onClick={() => setAuthModalView('forgot')}
-                    className="text-xs text-red-500 hover:text-red-600 font-medium"
+                    className="text-xs text-emerald-500 hover:text-emerald-600 font-medium"
                   >
                     Forgot password?
                   </button>
@@ -255,8 +255,8 @@ function AuthModal() {
                   </button>
                 </div>
               </div>
-              <button type="submit" disabled={loading} className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2.5 rounded-lg transition disabled:opacity-60">
-                {loading ? 'Signing in...' : 'Sign In to FlashLearn'}
+              <button type="submit" disabled={loading} className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2.5 rounded-lg transition disabled:opacity-60">
+                {loading ? 'Signing in...' : 'Sign In to EcoFlip'}
               </button>
             </form>
           </>
@@ -285,7 +285,7 @@ function AuthModal() {
                     <Link
                       to={`/reset-password?token=${resetToken}`}
                       onClick={closeAuthModal}
-                      className="text-red-500 hover:underline break-all text-xs font-medium"
+                      className="text-emerald-500 hover:underline break-all text-xs font-medium"
                     >
                       Reset password now
                     </Link>
@@ -305,14 +305,14 @@ function AuthModal() {
                     onChange={(e) => setForgotEmail(e.target.value)}
                     onFocus={() => setForgotEmailShowError(false)}
                     onBlur={() => setForgotEmailShowError(isEmailInvalid(forgotEmail))}
-                    className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${forgotEmailShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
+                    className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${forgotEmailShowError ? 'border-emerald-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
                   />
                   <CharCounter length={forgotEmail.length} max={requirements.email.max_length} />
                 </div>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2.5 rounded-lg transition disabled:opacity-60"
+                  className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2.5 rounded-lg transition disabled:opacity-60"
                 >
                   {loading ? 'Sending...' : 'Send Reset Link'}
                 </button>
@@ -321,7 +321,7 @@ function AuthModal() {
           </>
         ) : (
           <>
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Create your Flash Learn account</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Create your Eco Flip account</h2>
             <form onSubmit={handleRegister} autoComplete="off" noValidate className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1">Full Name</label>
@@ -330,7 +330,7 @@ function AuthModal() {
                   value={registerData.name} onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
                   onFocus={() => setRegisterNameShowError(false)}
                   onBlur={() => setRegisterNameShowError(isNameInvalid)}
-                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${registerNameShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
+                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${registerNameShowError ? 'border-emerald-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
                 />
                 <CharCounter
                   length={registerData.name.length}
@@ -346,9 +346,9 @@ function AuthModal() {
                   value={registerData.email} onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
                   onFocus={() => setRegisterEmailShowError(false)}
                   onBlur={() => setRegisterEmailShowError(isEmailInvalid(registerData.email))}
-                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${registerEmailShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
+                  className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${registerEmailShowError ? 'border-emerald-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
                 />
-                {registerEmailShowError && <p className="text-xs text-red-500 mt-1">Please enter a valid email address with an '@'.</p>}
+                {registerEmailShowError && <p className="text-xs text-emerald-500 mt-1">Please enter a valid email address with an '@'.</p>}
                 <CharCounter length={registerData.email.length} max={requirements.email.max_length} />
               </div>
               <div>
@@ -359,7 +359,7 @@ function AuthModal() {
                     value={registerData.password} onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
                     onFocus={() => setRegisterPasswordShowError(false)}
                     onBlur={() => setRegisterPasswordShowError(registerData.password.length > 0 && isPasswordInvalid(registerData.password))}
-                    className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${registerPasswordShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
+                    className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${registerPasswordShowError ? 'border-emerald-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
                   />
                   <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -392,7 +392,7 @@ function AuthModal() {
                     value={registerData.confirmPassword} onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
                     onFocus={() => setRegisterConfirmShowError(false)}
                     onBlur={() => setRegisterConfirmShowError(isConfirmInvalid)}
-                    className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${registerConfirmShowError ? 'border-red-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
+                    className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${registerConfirmShowError ? 'border-emerald-400 ring-red-400' : 'border-gray-200 focus:ring-gray-300'}`}
                   />
                   <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                     {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -409,7 +409,7 @@ function AuthModal() {
               <button
                 type="submit"
                 disabled={loading || isNameInvalid || isEmailInvalid(registerData.email) || isPasswordInvalid(registerData.password) || isConfirmInvalid}
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2.5 rounded-lg transition disabled:opacity-60"
+                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2.5 rounded-lg transition disabled:opacity-60"
               >
                 {loading ? 'Creating account...' : 'Create Account'}
               </button>

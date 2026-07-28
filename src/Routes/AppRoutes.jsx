@@ -15,14 +15,7 @@ import Admin from '../pages/Admin'
 function AppRoutes() {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <PublicRoute>
-            <Landing />
-          </PublicRoute>
-        }
-      />
+      <Route path="/" element={<Landing />} />
       <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* Public routes for guests, but logged-in users see full content */}

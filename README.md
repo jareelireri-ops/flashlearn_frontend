@@ -1,6 +1,6 @@
-# FlashLearn — Frontend
+# EcoFlip — Frontend
 
-FlashLearn is a web-based learning platform built to help users retain what they study through active recall and spaced repetition. Users can build their own study collections, create flashcards, and browse public decks shared by other learners.
+EcoFlip is a web-based learning platform built to help users retain what they study through active recall and spaced repetition. Users can build their own study collections, create flashcards, and browse public decks shared by other learners.
 
 * **Live Frontend:** https://flashlearn-frontend-ten.vercel.app
 * **Backend API:** https://flashlearn-backend-ocnv.onrender.com
@@ -82,7 +82,7 @@ src/
 ## Getting Started
 
 ### Prerequisites
-Requires the FlashLearn backend running locally or deployed.
+Requires the EcoFlip backend running locally or deployed.
 
 ### Install
 ```bash

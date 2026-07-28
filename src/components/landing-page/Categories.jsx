@@ -5,11 +5,11 @@ import MechLoader from '../ReusableComponents/MechLoader'
 import TiltWrapper from '../ReusableComponents/3DTiltWrapper'
 
 const ICONS = {
-  'Software Engineering': Code2,
-  'Biblical Studies': BookOpen,
-  Philosophy: Brain,
-  'Business Management': Briefcase,
-  Hospitality: UtensilsCrossed,
+  'Data Destruction': Code2,
+  'Lithium Safety': BookOpen,
+  'ESG Compliance': Brain,
+  'Asset Recovery': Briefcase,
+  'Device Teardowns': Layers,
 }
 
 // Darker background pencils — gray-900 ink, tuned for visibility on bg-slate-100
@@ -19,25 +19,13 @@ const PENCILS = [
 ]
 
 function Categories() {
-  const [categories, setCategories] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    getPublicCategories()
-      .then(setCategories)
-      .catch(() => setError('Could not load categories'))
-      .finally(() => setLoading(false))
-  }, [])
-
-  if (loading) return (
-    <section className="py-20 px-6 bg-slate-100">
-      <div className="max-w-6xl mx-auto">
-        <MechLoader />
-      </div>
-    </section>
-  )
-  if (error) return <div className="py-16 text-center text-red-500">{error}</div>
+  const categories = [
+    { category: 'Data Destruction', deck_count: 14 },
+    { category: 'Lithium Safety', deck_count: 8 },
+    { category: 'ESG Compliance', deck_count: 22 },
+    { category: 'Asset Recovery', deck_count: 11 },
+    { category: 'Device Teardowns', deck_count: 19 },
+  ]
 
   return (
     <section className="relative py-20 px-6 bg-slate-100 overflow-hidden">
@@ -59,9 +47,9 @@ function Categories() {
 
       <div className="relative max-w-6xl mx-auto">
         <div className="text-center mb-10">
-          <span className="text-xs font-semibold text-red-500 uppercase tracking-wide">Explore</span>
-          <h2 className="text-3xl font-bold text-slate-900 mt-2"> Categories</h2>
-          <p className="text-slate-500 mt-2">Our Decks are grouped under various categories based on your need!</p>
+          <span className="text-xs font-semibold text-emerald-500 uppercase tracking-wide">Explore</span>
+          <h2 className="text-3xl font-bold text-slate-900 mt-2"> Compliance Categories</h2>
+          <p className="text-slate-500 mt-2">Master every aspect of E-Waste processing and corporate ESG compliance.</p>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -72,10 +60,10 @@ function Categories() {
                 <div
                   role="button"
                   tabIndex={0}
-                  className="group relative h-full bg-white border border-slate-200 rounded-2xl p-5 hover:shadow-xl hover:border-red-200 transition-all"
+                  className="group relative h-full bg-white border border-slate-200 rounded-2xl p-5 hover:shadow-xl hover:border-emerald-200 transition-all"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center mb-3 group-hover:bg-red-500 transition-colors">
-                    <Icon size={20} className="text-red-500 group-hover:text-white transition-colors" />
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center mb-3 group-hover:bg-emerald-500 transition-colors">
+                    <Icon size={20} className="text-emerald-500 group-hover:text-white transition-colors" />
                   </div>
                   <h3 className="font-semibold text-slate-900">{cat.category}</h3>
                   <p className="text-sm text-slate-400">{cat.deck_count} decks</p>

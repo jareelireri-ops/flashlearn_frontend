@@ -4,7 +4,7 @@ function Skeleton({ className = '', rounded = 'rounded' }) {
   return <div className={`bg-slate-200 animate-pulse ${rounded} ${className}`} />
 }
 
-export function ScanLens({ color = 'red' }) {
+export function ScanLens({ color = 'emerald' }) {
   return (
     <div className="scan-lens absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none">
       <span className={`absolute -inset-2 rounded-full bg-${color}-400/40 animate-ping`} />

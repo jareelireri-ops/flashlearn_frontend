@@ -1,4 +1,4 @@
-﻿import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { RotateCcw, PartyPopper } from 'lucide-react'
 
 const SessionComplete = ({ stats, onRestart }) => {
@@ -76,12 +76,12 @@ const SessionComplete = ({ stats, onRestart }) => {
           position: absolute;
           inset: 0;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(239,68,68,0.35) 0%, rgba(239,68,68,0) 70%);
+          background: radial-gradient(circle, rgba(16,185,129,0.35) 0%, rgba(16,185,129,0) 70%);
           animation: glowPulse 2.2s ease-in-out infinite;
         }
         .complete-icon {
           position: relative;
-          color: #ef4444;
+          color: #10b981;
           animation: popIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
         }
         @keyframes popIn {
@@ -141,7 +141,7 @@ const SessionComplete = ({ stats, onRestart }) => {
         .btn-restart:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
         .btn-more {
           padding: 10px 24px;
-          background: #ef4444;
+          background: #10b981;
           border: none;
           border-radius: 25px;
           color: #fff;
@@ -150,7 +150,7 @@ const SessionComplete = ({ stats, onRestart }) => {
           cursor: pointer;
           transition: background 0.2s;
         }
-        .btn-more:hover { background: #dc2626; }
+        .btn-more:hover { background: #059669; }
       `}</style>
     </div>
   )

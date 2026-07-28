@@ -17,7 +17,7 @@ function DeckHeaderCard({ deck, onEdit, onArchive, onDeleteRequest }) {
             {deck.difficulty_level && (
               <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${
                 deck.difficulty_level === 'easy' ? 'bg-emerald-50 text-emerald-600' :
-                deck.difficulty_level === 'hard' ? 'bg-red-50 text-red-500' :
+                deck.difficulty_level === 'hard' ? 'bg-emerald-50 text-emerald-500' :
                 'bg-amber-50 text-amber-600'
               }`}>{deck.difficulty_level}</span>
             )}
@@ -48,7 +48,7 @@ function DeckHeaderCard({ deck, onEdit, onArchive, onDeleteRequest }) {
           </button>
           <button
             onClick={onDeleteRequest}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium border border-slate-200 hover:bg-red-50 hover:border-red-200 text-slate-700 hover:text-red-500 rounded-xl transition"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium border border-slate-200 hover:bg-emerald-50 hover:border-emerald-200 text-slate-700 hover:text-emerald-500 rounded-xl transition"
           >
             <Trash2 size={13} />
           </button>

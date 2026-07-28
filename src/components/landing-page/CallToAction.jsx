@@ -5,19 +5,19 @@ const STEPS = [
     num: '01',
     icon: UserPlus,
     title: 'Create your account',
-    desc: 'Sign up for free and get instant access to every public deck on FlashLearn.',
+    desc: 'Sign up for free and get instant access to every public deck on EcoFlip.',
   },
   {
     num: '02',
     icon: FolderOpen,
     title: 'Pick a category',
-    desc: 'Choose from Software Engineering, Philosophy, Biblical Studies, Business, or other categories you are interested in.',
+    desc: 'Choose from ESG Basics, Lithium Safety, Data Destruction, or other categories critical to your operations.',
   },
   {
     num: '03',
     icon: Layers,
     title: 'Open a deck',
-    desc: 'Each category holds different decks, and every deck has a set of Q/A flashcards ready to use for your deeper study.',
+    desc: 'Each category holds different decks, and every deck has a set of Q/A flashcards ready to use for your team\'s compliance training.',
   },
   {
     num: '04',
@@ -33,7 +33,7 @@ const PENCIL_FIELD = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/20
 
 function CallToAction() {
   return (
-    <section className="relative bg-slate-900 text-white px-6 py-20 overflow-hidden border-t-4 border-red-500">
+    <section className="relative bg-slate-900 text-white px-6 py-20 overflow-hidden border-t-4 border-emerald-500">
       {/* Pencil texture.  */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -42,9 +42,9 @@ function CallToAction() {
 
       <div className="relative max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-xs font-bold text-red-500 uppercase tracking-[0.2em]">FL</span>
+          <span className="text-xs font-bold text-emerald-500 uppercase tracking-[0.2em]">EF</span>
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight mt-3 leading-none">
-            How To Begin <span className="text-red-500">Studying</span>
+            How To Reach <span className="text-emerald-500">Compliance</span>
           </h2>
         
         </div>
@@ -55,8 +55,8 @@ function CallToAction() {
             return (
               <div key={step.num} className="relative">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-4xl font-black text-red-500/80">{step.num}</span>
-                  <span className="text-red-500/40 text-xs">✦</span>
+                  <span className="text-4xl font-black text-emerald-500/80">{step.num}</span>
+                  <span className="text-emerald-500/40 text-xs">✦</span>
                 </div>
                 <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center mb-3">
                   <Icon size={18} className="text-white" />
@@ -66,7 +66,7 @@ function CallToAction() {
 
               
                 {i < STEPS.length - 1 && (
-                  <span className="hidden md:block absolute top-[52px] -right-5 w-4 h-[2px] bg-red-500/30" />
+                  <span className="hidden md:block absolute top-[52px] -right-5 w-4 h-[2px] bg-emerald-500/30" />
                 )}
               </div>
             )
@@ -74,7 +74,7 @@ function CallToAction() {
         </div>
 
         <div className="mt-16 flex flex-col items-center text-slate-500 text-xs gap-1 animate-bounce">
-          <span>Why use Flash Learn ?</span>
+          <span>Why use Eco Flip ?</span>
           <span>↓</span>
         </div>
       </div>
