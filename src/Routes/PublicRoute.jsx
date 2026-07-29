@@ -9,12 +9,10 @@ function PublicRoute({ children }) {
     return <div>Loading...</div>
   }
 
-  // If the user is already logged in, redirect them away from public pages (like Landing)
   if (user) {
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace />
   }
 
-  // If no user is logged in, show the public page
   return children
 }
 
