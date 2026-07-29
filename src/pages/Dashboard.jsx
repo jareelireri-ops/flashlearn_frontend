@@ -82,8 +82,8 @@ function Dashboard() {
         />
       )}
 
-      {/* we use fixed positioning for the sidebar on mobile, so it can slide in/out, but static positioning on desktop */}
-      <div className={`fixed md:static inset-y-0 left-0 z-30 w-64 bg-slate-950 text-slate-400 flex flex-col h-full shrink-0 border-r border-slate-900 transition-transform duration-300 relative overflow-hidden ${
+      {/* we use fixed positioning for the sidebar on mobile, so it can slide in/out, but relative positioning on desktop */}
+      <div className={`fixed md:relative inset-y-0 left-0 z-30 w-64 bg-slate-950 text-slate-400 flex flex-col h-full shrink-0 border-r border-slate-900 transition-transform duration-300 overflow-hidden ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
       }`}>
         <div
