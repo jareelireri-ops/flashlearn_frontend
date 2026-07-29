@@ -26,7 +26,7 @@ function UserManagementTable({ users, onToggleStatus }) {
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-zinc-900 text-zinc-400 text-left font-mono text-xs uppercase tracking-wider">
-            <th className="px-5 py-3 font-medium">User</th>
+            <th className="sticky left-0 z-10 bg-zinc-900 px-5 py-3 font-medium shadow-[4px_0_8px_-4px_rgba(0,0,0,0.5)]">User</th>
             <th className="px-5 py-3 font-medium">Role</th>
             <th className="px-5 py-3 font-medium">Status</th>
             <th className="px-5 py-3 font-medium">Joined</th>
@@ -35,8 +35,8 @@ function UserManagementTable({ users, onToggleStatus }) {
         </thead>
         <tbody className="divide-y divide-zinc-800">
           {users.map((user) => (
-            <tr key={user.id} className="bg-zinc-950 hover:bg-zinc-900/60 transition">
-              <td className="px-5 py-4">
+            <tr key={user.id} className="bg-zinc-950 hover:bg-zinc-900/60 transition group">
+              <td className="sticky left-0 z-10 bg-zinc-950 group-hover:bg-zinc-900 px-5 py-4 shadow-[4px_0_8px_-4px_rgba(0,0,0,0.5)]">
                 <div className="font-semibold text-zinc-100">{user.name || 'Unnamed'}</div>
                 <div className="text-zinc-500 font-mono text-xs">{user.email}</div>
               </td>
